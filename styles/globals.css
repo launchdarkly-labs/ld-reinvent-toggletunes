@@ -2,26 +2,77 @@
 @tailwind components;
 @tailwind utilities;
 
+.playlist-card.active {
+  height: 100vh;
+}
+
+.outfitters {
+  /* font-size: 83.4429px; */
+  /* font-family: 'Sohne Mono'; */
+  /* padding-bottom: 1rem; */
+  /* line-height: 125%; */
+  /* or 104px */
+
+  letter-spacing: 0.075em;
+
+  /* Icon/yellow green */
+
+  background: linear-gradient(126.73deg, #eaff38 -2.64%, #38c7e4 72.44%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+html,
+body,
+#__next {
+  @apply flex flex-col h-screen;
+}
+
+.bg-context {
+  transition: background-color 1s ease;
+}
+
 :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+  --color-primary: theme(colors.green.500);
+  --color-background: theme(colors.zinc.950);
+  --color-foreground: theme(colors.zinc.900);
 }
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
-}
-
 body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+  background: var(--color-background);
+  color: white;
+}
+
+* {
+  scrollbar-width: 10px;
+  scrollbar-color: rgb(50, 50, 50) rgb(30, 30, 30);
+}
+*::-webkit-scrollbar {
+  height: 10px;
+  width: 10px;
+}
+*::-webkit-scrollbar-track {
+  border-radius: 5px;
+  background-color: transparent;
+}
+
+*::-webkit-scrollbar-track:hover {
+  background-color: rgb(30, 30, 30);
+}
+
+*::-webkit-scrollbar-track:active {
+  background-color: rgb(30, 30, 30);
+}
+
+*::-webkit-scrollbar-thumb {
+  border-radius: 5px;
+  background-color: rgb(50, 50, 50);
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background-color: rgb(70, 70, 70);
+}
+
+*::-webkit-scrollbar-thumb:active {
+  background-color: rgb(70, 70, 70);
 }
