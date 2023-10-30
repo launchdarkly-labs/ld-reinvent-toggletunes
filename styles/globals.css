@@ -76,3 +76,12 @@ body {
 *::-webkit-scrollbar-thumb:active {
   background-color: rgb(70, 70, 70);
 }
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
