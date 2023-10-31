@@ -234,12 +234,12 @@ export default function MusicApp() {
               duration: 0.5,
               ease: [0, 0.71, 0.2, 1.01],
             }}
-            className="flex items-center justify-center w-full h-screen" // Added justify-center to center the image
+            className="flex items-center justify-center w-full" // Added justify-center to center the image
           >
             <img
               src="/images/ld-light.png"
               className="mx-auto mt-8 2xl:mt-[100px] h-48 w-48 2xl:h-96 2xl:w-96"
-            />{" "}
+            />
           </motion.div>
 
           <div className="absolute bottom-0 h-36 w-full items-center px-4 bg-ldbackground shadow-xl justify-center grid grid-cols-3">

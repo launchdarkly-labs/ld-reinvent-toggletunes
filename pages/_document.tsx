@@ -8,7 +8,7 @@ export default function Document() {
   return (
     <Html lang="en">
       <Head />
-      <body className="dark bg-gradient-to-br from-lddblue to-green-400 h-screen">
+      <body className="dark bg-black h-screen">
           <main className="">
             <div className="">
               <Main />
