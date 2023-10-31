@@ -1,4 +1,5 @@
 import type { Config } from 'tailwindcss'
+const { fontFamily } = require("tailwindcss/defaultTheme")
 
 const config: Config = {
   content: [
@@ -32,6 +33,11 @@ const config: Config = {
         ldbackground: '#191919',
         ldsiteblue: '#405BFF',
         ldsitehover: '#7084FF',
+      },
+      fontFamily: {
+        sans: ["var(--font-sans)", ...fontFamily.sans],
+        sohne: ["Sohne"],
+        sohnemono: ["Sohne Mono"],
       },
     },
   },

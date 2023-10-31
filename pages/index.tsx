@@ -45,11 +45,11 @@ export default function Home() {
   const handleMouseEnter = (color: string) => setContextColor(color);
 
   return (
-    <div className="flex flex-col h-screen gap-2">
+    <div className="flex flex-col h-screen gap-2 font-sohne font-normal">
       {playlist ? (
-        <div className="flex flex-row bg-black gap-2 ">
+        <div className="flex flex-row bg-black gap-2" style={{ maxHeight: 'calc(100vh - 70px)' }}>
           {sidebar && (
-            <div className="w-2/5 xl:w-1/5 min-h-screen">
+            <div className="w-3/5 xl:w-2/5 min-h-screen">
               <SideBar />
             </div>
           )}
@@ -60,7 +60,7 @@ export default function Home() {
               duration: 0.5,
               ease: [0, 0.71, 0.2, 1.01],
             }}
-            className={`h-screen mx-auto bg-ldgray ${sidebar ? "w-3/5 xl:w-4/5" : "w-full"}`}          >
+            className={`h-screen mx-auto bg-ldbackground ${sidebar ? "w-3/5 xl:w-4/5" : "w-full"}`}          >
             {!sidebar && (
               <div className="py-5">
                 <img src="/images/tunes.png" className="ml-auto mr-5" />
@@ -79,6 +79,8 @@ export default function Home() {
             >
               {userplaylist && (
                 <div>
+                  <PageHeader />
+
                   <div className="flex pt-4 ml-5 font-bold items-center z-10">
                     <p className="text-2xl">Recommended Playlist</p>
                   </div>
@@ -101,7 +103,7 @@ export default function Home() {
               </div>
               <div className="ml-8">
                 {userplaylist ? (
-                  <div className="relative flex-row space-x-2 overflow-x-auto whitespace-nowrap scrollbar-hide">
+                  <div className="relative flex-row space-x-6 overflow-x-auto whitespace-nowrap scrollbar-hide">
                     {songs.map((song, index) => (
                       <motion.div
                       initial={{ opacity: 0, scale: 0.25 }}
@@ -111,7 +113,7 @@ export default function Home() {
                         ease: [0, 0.71, 0.2, 1.01],
                         delay: index * 0.2,
                       }} 
-                      className="place-items-center border-white bg-gray-900/20 hover:bg-gray-900/50 rounded-lg inline-block py-4">
+                      className="place-items-center border-white bg-ldinputback hover:bg-gray-900/50  inline-block py-4">
                         <img
                           className="p-4 object-cover transition-all hover:scale-105 h-48 w-48"
                           alt="astronaut"
@@ -119,8 +121,8 @@ export default function Home() {
 
                           // style={{ width: "150px", height: "150px" }}
                         />
-                        <p className="text-lg px-4">{song.title}</p>
-                        <p className="text-sm px-4">{song.duration}</p>
+                        <p className="text-lg px-4 text-center font-sohne pb-4">{song.title}</p>
+                        <p className="text-xs text-gray-500 px-4 text-center font-sohne font-thin">{song.duration}</p>
                       </motion.div>
                     ))}
                   </div>
@@ -161,11 +163,11 @@ export default function Home() {
             </div>
           </motion.div>
 
-          <div className="absolute bottom-0 h-24 w-full items-center px-4 bg-ldgray shadow-xl justify-center grid grid-cols-3 border-t-8 border-t-black">
+          <div className="absolute bottom-0 h-36 w-full items-center px-4 bg-ldbackground shadow-xl justify-center grid grid-cols-3 border-t-8 border-t-black">
             <div className="flex items-center ml-5">
               <img
                 src={songs[currentSongIndex].image}
-                className="h-16 w-16 mr-4"
+                className="h-28 mr-4"
               />
               <div>
                 <p className="text-2xl">{songs[currentSongIndex].title}</p>
@@ -185,11 +187,15 @@ export default function Home() {
                 onClick={handleNextSong}
               />
             </div>
-            <div className="flex space-x-2 items-center justify-center">
+            <div className="absolute right-5 flex space-x-2 items-center justify-center">
               <SpeakerIcon className="w-8 h-8 text-white" />
               <Volume2 className="w-8 h-8 text-white" />
             </div>
           </div>
+          {/* <div className="grid w-2/5 xl:w-1/5 justify-between">
+            <img src="/images/AD1.png" className="" />
+            <img src="/images/AD2.png" className="" />
+          </div> */}
         </div>
       ) : (
         <motion.div
@@ -199,7 +205,7 @@ export default function Home() {
             duration: 0.5,
             ease: [0, 0.71, 0.2, 1.01],
           }}
-          className="relative bg-ldgray rounded-xl h-screen w-1/2 mx-auto flex-grow"
+          className="relative bg-ldbackground rounded-xl h-screen w-1/2 mx-auto flex-grow"
         >
           <div className="py-5">
             <img src="/images/tunes.png" className="ml-auto mr-5" />
@@ -224,7 +230,7 @@ export default function Home() {
             />{" "}
           </motion.div>
 
-          <div className="absolute bottom-0 h-24 w-full items-center px-4 bg-ldgray shadow-xl justify-center grid grid-cols-3">
+          <div className="absolute bottom-0 h-36 w-full items-center px-4 bg-ldbackground shadow-xl justify-center grid grid-cols-3">
             <div className="flex items-center ml-5">
               <img
                 src='/images/ld-light.png'
