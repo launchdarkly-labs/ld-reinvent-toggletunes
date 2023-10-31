@@ -9,7 +9,7 @@ import ScoreTable from '@/components/table'
 
 const inter = Inter({ subsets: ['latin'] })
 
-export default function Home() {
+export default function Scoreboard() {
   const { playlist, sidebar, userplaylist } = useFlags();
   const [redProgress, setRedProgress] = useState(0);
   const [purpleProgress, setPurpleProgress] = useState(0);
