@@ -18,7 +18,7 @@ export default function Home() {
   const [resetScores, setResetScores] = useState(false);
   const [winnerName, setWinnerName] = useState("");
   const [isExploding, setIsExploding] = useState(false);
-  const [timer, setTimer] = useState(300);
+  const [timer, setTimer] = useState(300000);
   const [isTimerRunning, setIsTimerRunning] = useState(false);
   const [greenProgress, setGreenProgress] = useState(0);
   const [eventSource, setEventSource] = useState(null);
@@ -33,11 +33,14 @@ export default function Home() {
       setTimer((timer) => timer - 1);
     }
   };
-  const timerToMinutesSeconds = (timer: any) => {
-    const minutes = Math.floor(timer / 60);
-    const seconds = timer % 60;
-    return `${minutes}:${seconds.toString().padStart(2, "0")}`;
-  };
+const timerToMinutesSecondsMilliseconds = (timer: number) => {
+  const minutes = Math.floor(timer / 60000);
+  const seconds = Math.floor((timer % 60000) / 1000);
+  const milliseconds = timer % 1000;
+  return `${minutes.toString().padStart(2, "0")}:${seconds
+    .toString()
+    .padStart(2, "0")}:${milliseconds.toString().padStart(2, "0")}`;
+};
 
 
   useEffect(() => {
@@ -108,28 +111,12 @@ export default function Home() {
         isExploding={isExploding}
         setIsExploding={setIsExploding}
       />
-      <h1 className="text-8xl font-sohnemono m-5 text-transparent bg-clip-text bg-gradient-to-r from-ldred from-10% to-ldyellow to-100% p-4">
-        ToggleTunes Scoreboard
-      </h1>
-      <img
-        src="/images/GridIcon.png"
-        alt="Ship"
-        className="absolute top-0 left-0 z-10"
-      />
-      <img
-        src="/images/Stickers.png"
-        alt="Ship"
-        className="absolute bottom-0 right-0 z-10"
-      />
-      <img
-        src="/images/HolyShip.png"
-        alt="Ship"
-        className="absolute bottom-0 left-0 z-10"
-      />
-      <div className="flex items-center justify-center mt-8">
-        <div className="text-4xl font-bold text-white mr-4">
-          {timerToMinutesSeconds(timer)}
+      <div className="flex place-items-center border border-zinc-500 mt-8 w-1/3 xl:w-1/6 bg-gradient-to-b from-zinc-900 from-10% via-zinc-600 via-50% to-zinc-900 to-90% justify-center rounded-xl">
+        <div className="flex text-8xl sm:text-6xl font-bold text-white font-audimat mt-4">
+          {timerToMinutesSecondsMilliseconds(timer)}
         </div>
+      </div>
+      {/*<div className="flex items-center justify-center mt-4">
         <button
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
           onClick={() => {
@@ -150,18 +137,19 @@ export default function Home() {
           Reset
         </button>
       </div>
+        */}
       <ProgressStatus
         greenProgress={greenProgress}
         purpleProgress={purpleProgress}
         redProgress={redProgress}
         blueProgress={blueProgress}
       />
-      <ScoreTable
-        greenProgress={greenProgress}
-        redProgress={redProgress}
-        purpleProgress={purpleProgress}
-        blueProgress={blueProgress}
-      />
+        <ScoreTable
+          greenProgress={greenProgress}
+          redProgress={redProgress}
+          purpleProgress={purpleProgress}
+          blueProgress={blueProgress}
+        />
     </main>
   );
 }

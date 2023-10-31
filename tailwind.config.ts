@@ -36,6 +36,11 @@ const config: Config = {
         ldsiteblue: '#405BFF',
         ldsitehover: '#7084FF',
       },
+      fontFamily: {
+        audimat: ["Audimat"],
+        sohne: ["Sohne"],
+        sohnemono: ["Sohne Mono"]
+      }
     },
   },
   plugins: [],

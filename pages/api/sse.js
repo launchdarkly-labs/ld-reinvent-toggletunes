@@ -22,7 +22,7 @@ export default function handler(req, res) {
     const data = {score: eventData, teamname: teamName}
     sendSSEEvent(data); // Send initial eventData
     console.log(data)
-  }, 3000); 
+  }, 60000); 
 }
   
   if (req.method === "POST") {
