@@ -4,8 +4,10 @@ import Link from "next/link";
 
 const SideBar = () => {
   return (
-    <div className="flex flex-col h-screen gap-2" >
-      <div className="bg-ldbackground rounded-lg">
+    <div className="flex flex-col h-screen gap-2" 
+    style={{ maxHeight: 'calc(100vh - 150px)' }}
+    >
+      <div className="bg-ldbackground rounded-xl">
         <img src="/images/tuneslogo.png" className="ml-5 mt-5 pb-4" />
         <ul>
           <li>
@@ -29,7 +31,7 @@ const SideBar = () => {
         </ul>
       </div>
 
-      <div className="bg-ldbackground rounded-lg flex-1 min-h-0 overflow-auto">
+      <div className="bg-ldbackground rounded-lg flex-1 min-h-0 overflow-auto scrollbar-hide">
         <ul>
           <li>
             <Link
@@ -41,7 +43,7 @@ const SideBar = () => {
             </Link>
           </li>
         </ul>
-        <div className="px-4 overflow-y-auto scrollbar-hide" style={{ maxHeight: 'calc(100vh - 450px)' }} >
+        <div className="px-4 overflow-y-auto scrollbar-hide ml-2">
           <ul>
             {songs.map((song) => (
               <li key={song.id} className="flex items-center gap-2 py-2">
