@@ -25,12 +25,82 @@ import { useFlags } from "launchdarkly-react-client-sdk";
 
 const inter = Inter({ subsets: ["latin"] });
 
-export default function MusicApp() {
+export default function MusicApp({teamName}: any) {
   const { playlist, sidebar, userplaylist, adspace } = useFlags();
   console.log(playlist);
   console.log(sidebar);
   const [contextColor, setContextColor] = useState("");
   const [currentSongIndex, setCurrentSongIndex] = useState(0);
+         const apiURL = "/api/sse/";
+
+         useEffect(() => {
+           // first step trigger
+           if (playlist === true) {
+             const firstTrigger = async () => {
+               try {
+                 const firstStep = {
+                   event: "first step complete",
+                   teamname: `${teamName}`,
+                 };
+                 const response = await fetch(`${apiURL}`, {
+                   method: "POST",
+                   mode: "cors",
+                   headers: { "Content-Type": "application/json" },
+                   body: JSON.stringify(firstStep),
+                 });
+                 await response.json();
+               } catch (err) {
+                 console.error(err);
+               }
+             };
+             firstTrigger();
+           } else {
+             console.log("You already completed this step");
+           }
+
+           // second step trigger
+           if (sidebar === true) {
+             const secondTrigger = async () => {
+               try {
+                 const secondStep = {
+                   event: "second step complete",
+                   teamname: `${teamName}`,
+                 };
+                 const response = await fetch(`${apiURL}`, {
+                   method: "POST",
+                   mode: "cors",
+                   headers: { "Content-Type": "application/json" },
+                   body: JSON.stringify(secondStep),
+                 });
+                 await response.json();
+               } catch (err) {
+                 console.error(err);
+               }
+             };
+             secondTrigger();
+           }
+           // second step trigger
+           if (userplaylist === true) {
+             const thirdTrigger = async () => {
+               try {
+                 const thirdStep = {
+                   event: "third step complete",
+                   teamname: `${teamName}`,
+                 };
+                 const response = await fetch(`${apiURL}`, {
+                   method: "POST",
+                   mode: "cors",
+                   headers: { "Content-Type": "application/json" },
+                   body: JSON.stringify(thirdStep),
+                 });
+                 await response.json();
+               } catch (err) {
+                 console.error(err);
+               }
+             };
+             thirdTrigger();
+           }
+         }, [playlist, sidebar, userplaylist]);
 
   const handleNextSong = () => {
     setCurrentSongIndex((prevIndex) => (prevIndex + 1) % songs.length);

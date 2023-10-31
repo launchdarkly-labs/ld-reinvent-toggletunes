@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, {useState} from 'react';
 import MusicApp from '@/components/musicapp';
 import { asyncWithLDProvider } from 'launchdarkly-react-client-sdk';
 
@@ -31,10 +31,11 @@ if (typeof window !== "undefined") {
 
 
   Team2 = () => {
+    const [teamName, setTeamName] = useState("Red Team");
     return (
-        <LDProviderT2>
-          <MusicApp />
-        </LDProviderT2>
+      <LDProviderT2>
+        <MusicApp teamName={teamName} />
+      </LDProviderT2>
     );
   };
 } else {
