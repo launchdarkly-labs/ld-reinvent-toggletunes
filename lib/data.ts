@@ -22,7 +22,7 @@ export const playlists: Playlist[] = [
     title: "Shipper Beats",
     color: colors.green,
     cover:
-      "/images/LDTunnel.png",
+      "/images/Shipper beats cover.png",
     artists: ["Killswitches"],
   },
   {
@@ -141,7 +141,7 @@ export const songs: Song[] = [
   {
     id: "7",
     title: "The Rollback",
-    image: `/images/chasing-pipelines.png`,
+    image: `/images/Rollin back to code cover.png`,
     artists: ["The Killswitches"],
     album: "When We All Fall Asleep, Where Do We Go?",
     duration: "3:14",
@@ -176,6 +176,14 @@ export const songs: Song[] = [
     image: `/images/chasing-pipelines.png`,
     artists: ["DevRelish"],
     album: "Today & Tomorrow",
+    duration: "4:38",
+  }, 
+  {
+    id: "12",
+    title: "Set fire to the flags",
+    image: `/images/Set fire to the flags cover.png`,
+    artists: ["DevRelish"],
+    album: "Reinvent Ship", 
     duration: "4:38",
   }
   

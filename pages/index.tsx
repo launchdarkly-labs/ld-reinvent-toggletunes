@@ -1,8 +1,5 @@
-import {createContext } from 'react';
+import MusicApp from "@/components/musicapp";
 
 export default function Home() {
-return (
-        <div className="flex flex-col h-screen gap-2">
-        </div>
-)
+  return <MusicApp />;
 }

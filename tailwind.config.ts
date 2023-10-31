@@ -1,4 +1,5 @@
 import type { Config } from 'tailwindcss'
+const { fontFamily } = require("tailwindcss/defaultTheme")
 
 const config: Config = {
   content: [
@@ -37,10 +38,11 @@ const config: Config = {
         ldsitehover: '#7084FF',
       },
       fontFamily: {
-        audimat: ["Audimat"],
+        sans: ["var(--font-sans)", ...fontFamily.sans],
         sohne: ["Sohne"],
-        sohnemono: ["Sohne Mono"]
-      }
+        sohnemono: ["Sohne Mono"],
+        audimat: ["Audimat"]
+      },
     },
   },
   plugins: [],
