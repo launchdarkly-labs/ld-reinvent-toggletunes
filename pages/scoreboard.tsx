@@ -1,11 +1,12 @@
 //@ts-nocheck
 import { Inter } from 'next/font/google'
 import { ProgressStatus } from '@/components/progress-screen'
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 import { Modal } from '@/components/modal';
+import useSWR from 'swr'
 
-const inter = Inter({ subsets: ['latin'] })
+const fetcher = url => fetch(url).then(r => r.json());
 
 export default function Scoreboard() {
   const { playlist, sidebar, userplaylist } = useFlags();
@@ -20,9 +21,7 @@ export default function Scoreboard() {
   const [isTimerRunning, setIsTimerRunning] = useState(false);
   const [greenProgress, setGreenProgress] = useState(0);
   const [eventSource, setEventSource] = useState(null);
-
-
-  // handling scoring logic
+  const {data} = useSWR('/api/score-list', fetcher, {refreshInterval: 500})
 
 
   // main display timer
@@ -42,15 +41,12 @@ const timerToMinutesSecondsMilliseconds = (timer: number) => {
 
 
   useEffect(() => {
-    const eventSource = new EventSource('/api/sse')    
-    eventSource.onmessage = (e) => {
-      const data = JSON.parse(e.data);
-      console.log(greenProgress)
-      setGreenProgress(data[0].green.score);
-      setRedProgress(data[0].red.score);
-      setPurpleProgress(data[0].purple.score);
-      setBlueProgress(data[0].blue.score);
-      }
+    if (data) {
+      setGreenProgress(data[0].score[1])
+      setRedProgress(data[1].score[1]);
+      setPurpleProgress(data[2].score[1]);
+      setBlueProgress(data[3].score[1]);
+    }
     if (
       greenProgress >= 100 ||
       redProgress >= 100 ||
@@ -72,10 +68,9 @@ const timerToMinutesSecondsMilliseconds = (timer: number) => {
   const timerInterval = setInterval(decreaseMainTimer, 1000);
   return () => {
     clearInterval(timerInterval);
-    eventSource.close();
   };
   
-  }, []);
+  }, [greenProgress, redProgress, blueProgress, purpleProgress, data]);
 
   
 

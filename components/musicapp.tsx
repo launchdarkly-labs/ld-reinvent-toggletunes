@@ -35,11 +35,11 @@ export default function MusicApp({teamName}: any) {
   const [stepTwoComplete, setStepTwoComplete] = useState(false);
   const [stepThreeComplete, setStepThreeComplete] = useState(false);
 
-          const apiURL = "/api/sse/";
+          const apiURL = "/api/score-add/";
 
           useEffect(() => {
             // first step trigger
-            if ((playlist === true) && (stepOneComplete === false)) {
+            if (playlist === true) {
               const firstTrigger = async () => {
                 try {
                   const firstStep = {
@@ -56,9 +56,6 @@ export default function MusicApp({teamName}: any) {
                     body: JSON.stringify(firstStep),
                   });
                   await response.json();
-                  if (response.ok) {
-                    setStepOneComplete(true);
-                  }
                 } catch (err) {
                   console.error(err);
                 }
@@ -69,7 +66,7 @@ export default function MusicApp({teamName}: any) {
             }
 
             // second step trigger
-            if ((sidebar === true) && (stepTwoComplete === false)) {
+            if (sidebar === true) {
               const secondTrigger = async () => {
                 try {
                   console.log(teamName)
@@ -97,7 +94,7 @@ export default function MusicApp({teamName}: any) {
               secondTrigger();
             }
             // second step trigger
-            if ((userplaylist === true) && (stepThreeComplete === false)) {
+            if (userplaylist === true) {
               const thirdTrigger = async () => {
                 try {
                   const thirdStep = {
