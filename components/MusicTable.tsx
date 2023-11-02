@@ -4,7 +4,7 @@ import PlaylistArtists from "./PlaylistArtists";
 
 const MusicTable = () => {
     return (
-        <table className="table-auto text-left min-w-full divide-y-2 divide-gray-500/30">
+        <table className="table-auto font-sohne text-left min-w-full divide-y-2 divide-gray-500/30">
   <thead>
     <tr className="text-gray-300">
       <th className="font-normal px-4 py-2 whitespace-nowrap">#</th>

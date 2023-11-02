@@ -149,7 +149,7 @@ export default function MusicApp({ teamName }: any) {
       {playlist ? (
         <div className="flex flex-row bg-black gap-2">
           {sidebar && (
-            <div className="w-3/5 xl:w-1/5 min-h-screen">
+            <div className="w-3/5 xl:w-1/5 min-h-screen" style={{ maxHeight: "calc(100vh - 150px)" }} >
               <SideBar playlist={playlist} userplaylist={userplaylist} />
             </div>
           )}
@@ -356,12 +356,11 @@ export default function MusicApp({ teamName }: any) {
           <div className="py-5">
             <img src="/images/tunes.png" className="ml-auto mr-5" />
           </div>
-          <div className="text-center">
+          <div className="flex flex-col  items-center text-center justify-center">
             <p className="text-2xl 2xl:text-7xl font-bold outfitters w-2/3 mx-auto">
               Launching ToggleTunes at AWS re:Invent
             </p>
-          </div>
-          <motion.div
+            <motion.div
             key={songs[currentSongIndex].id}
             initial={{ opacity: 0, scale: 0.25 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -369,73 +368,69 @@ export default function MusicApp({ teamName }: any) {
               duration: 0.5,
               ease: [0, 0.71, 0.2, 1.01],
             }}
-            className="flex items-center justify-center w-full" // Added justify-center to center the image
+            className="flex items-center justify-center w-full"
           >
             <img
               src="/images/ld-light.png"
-              className="mx-auto mt-8 2xl:mt-[100px] h-48 w-48 2xl:h-96 2xl:w-96"
+              className="m-auto mt-8 2xl:mt-[100px] h-48 w-48 2xl:h-96 2xl:w-96"
             />
           </motion.div>
+          </div>
+          
 
-          <div className="absolute bottom-0 h-36 w-full items-center px-4 bg-ldbackground shadow-xl justify-center grid grid-cols-3">
-            <div className="flex items-center ml-5">
-              <img src="/images/ld-light.png" className="h-10 w-10 mr-4" />
+          <div className="absolute bottom-0 h-36 w-full items-center px-4 bg-ldbackground shadow-xl justify-center grid grid-cols-3 ">
+            <div className="flex items-center ml-2">
+              {playlist && !userplaylist ? (
+                <Music2Icon className="h-14 w-14 mr-2" />
+              ) : (
+                <img
+                  src={songs[currentSongIndex].image}
+                  className="h-12 mr-4"
+                />
+              )}
               <div>
-                <p className="text-2xl">{songs[currentSongIndex].title}</p>
-                {/* <p className="text-xl text-gray-500">
-              {songs[currentSongIndex].artists.join(", ")}
-            </p> */}
+                <p className="text-lg">{songs[currentSongIndex].title}</p>
+                <p className="text-md text-gray-500">
+                  {songs[currentSongIndex].artists.join(", ")}
+                </p>
               </div>
             </div>
-            <div className="flex mx-auto justify-center space-x-4 items-center">
-              <SkipBackIcon
-                className="w-10 h-10 text-ldcomplicatedwhite"
-                onClick={handlePreviousSong}
-              />
-              <Play className="w-10 h-10 text-ldcomplicatedwhite" />
-              <SkipForwardIcon
-                className="w-10 h-10 text-ldcomplicatedwhite"
-                onClick={handleNextSong}
-              />
-            </div>
-            <div className="flex space-x-2 items-center justify-center">
-              <SpeakerIcon className="w-8 h-8 text-ldcomplicatedwhite" />
-              <Volume2 className="w-8 h-8 text-ldcomplicatedwhite" />
-            </div>
-          </div>
-          {/* <div
-        id="playlist-container"
-        className="relative bg-context"
-        style={
-          {
-            minHeight: "300px",
-            backgroundColor: contextColor,
-          } as React.CSSProperties
-        }
-      >
-        <PageHeader />
-        <div className="grid place-content-center pt-10 border-2 border-gray-600/50 shadow-2xl rounded-2xl m-4">
-                <p className="text-3xl xl:text-6xl 2xl:text-8xl font-bold z-20 outfitters pb-4">Welcome to ToggleTunes</p>
-                <p className="text-4xl mx-auto z-20 my-10">Streaming now!</p>
+            <div className="flex flex-col items-center">
+              <div className="flex justify-center space-x-12 items-center">
+                <IoPlaySkipBackSharp
+                  className="w-7 h-7 text-ldskipbuttons"
+                  onClick={handlePreviousSong}
+                />
+                <IoPlaySharp className="w-10 h-10 text-ldcomplicatedwhite" />
+                <IoPlaySkipForwardSharp
+                  className="w-7 h-7 text-ldskipbuttons"
+                  onClick={handleNextSong}
+                />
               </div>
-        <div className="relative z-10 px-6">
-          <Greeting />
-          <div className="grid gap-y-4 gap-x-6 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 mt-6">
-            {playlists.map((playlist) => (
-              <ItemCard playlist={playlist} onMouseEnter={handleMouseEnter} />
-            ))}
+              <div className="w-full h-2 bg-lddarkstatus rounded-full mt-6">
+                <div
+                  className="h-full text-center  bg-white rounded-full"
+                  style={{ width: "10%" }}
+                ></div>
+              </div>
+            </div>
+
+            <div className="absolute right-5 flex space-x-2 items-center justify-center">
+              {/* <SpeakerIcon className="w-8 h-8 text-ldcomplicatedwhite" /> */}
+              <IoMdVolumeHigh
+                className="w-8 h-8 text-ldcomplicatedwhite"
+                onClick={() => setVolumeVisibility(!volumeVisibility)}
+              />
+              {volumeVisibility && (
+                <input
+                  type="range"
+                  min={0}
+                  max={100}
+                  className="accent-white  w-14 md:w-28"
+                />
+              )}
+            </div>
           </div>
-        </div>
-        <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/80"></div>
-      </div>
-      <div className="px-6 relative z-10 mt-4">
-        <h2 className="text-2xl font-bold">Made for you</h2>
-        <div className="flex flex-wrap mt-6 gap-4">
-          {morePlaylists.map((playlist) => (
-            <PlaylistCard playlist={playlist} />
-          ))}
-        </div>
-      </div> */}
         </motion.div>
       )}
     </div>

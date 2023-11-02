@@ -8,7 +8,7 @@ import { RxCounterClockwiseClock } from "react-icons/rx";
 const SideBar = ({ playlist, userplaylist }: any) => {
   return (
     <div
-      className="flex flex-col h-screen gap-2"
+      className="flex flex-col gap-2"
       style={{ maxHeight: "calc(100vh - 150px)" }}
     >
       <div className="bg-ldbackground rounded-xl">
