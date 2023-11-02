@@ -11,7 +11,7 @@ const SideBar = () => {
     style={{ maxHeight: 'calc(100vh - 150px)' }}
     >
       <div className="bg-ldbackground rounded-xl">
-        <img src="/images/tuneslogo.png" className="ml-5 mt-5 pb-4" />
+        <img src="/images/ToggleTunes.png" className="ml-5 mt-5 pb-4 w-2/3" />
         <ul>
           <li>
             <Link
