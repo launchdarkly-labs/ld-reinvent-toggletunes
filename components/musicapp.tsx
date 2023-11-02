@@ -22,10 +22,15 @@ import {
 } from "lucide-react";
 import { songs } from "../lib/data";
 import { useFlags } from "launchdarkly-react-client-sdk";
+import { FaPlay } from "react-icons/fa";
+import { IoPlaySkipForwardSharp, IoPlaySkipBackSharp } from "react-icons/io5";
+import { IoMdVolumeHigh } from "react-icons/io";
+import { IoPlaySharp } from "react-icons/io5";
+import { IoIosMusicalNotes } from "react-icons/io";
 
 const inter = Inter({ subsets: ["latin"] });
 
-export default function MusicApp({teamName}: any) {
+export default function MusicApp({ teamName }: any) {
   const { playlist, sidebar, userplaylist, adspace } = useFlags();
   console.log(playlist);
   console.log(sidebar);
@@ -34,96 +39,97 @@ export default function MusicApp({teamName}: any) {
   const [stepOneComplete, setStepOneComplete] = useState(false);
   const [stepTwoComplete, setStepTwoComplete] = useState(false);
   const [stepThreeComplete, setStepThreeComplete] = useState(false);
+  const [volumeVisibility, setVolumeVisibility] = useState(true);
 
-          const apiURL = "/api/sse/";
+  const apiURL = "/api/sse/";
 
-          useEffect(() => {
-            // first step trigger
-            if ((playlist === true) && (stepOneComplete === false)) {
-              const firstTrigger = async () => {
-                try {
-                  const firstStep = {
-                    event: "first step complete",
-                    team: {
-                      name: `${teamName}`,
-                      stepCompleted: 'stepOneComplete',
-                    },
-                  };
-                  const response = await fetch(`${apiURL}`, {
-                    method: "POST",
-                    mode: "cors",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(firstStep),
-                  });
-                  await response.json();
-                  if (response.ok) {
-                    setStepOneComplete(true);
-                  }
-                } catch (err) {
-                  console.error(err);
-                }
-              };
-              firstTrigger();
-            } else {
-              console.log("You already completed this step");
-            }
+  useEffect(() => {
+    // first step trigger
+    if (playlist === true && stepOneComplete === false) {
+      const firstTrigger = async () => {
+        try {
+          const firstStep = {
+            event: "first step complete",
+            team: {
+              name: `${teamName}`,
+              stepCompleted: "stepOneComplete",
+            },
+          };
+          const response = await fetch(`${apiURL}`, {
+            method: "POST",
+            mode: "cors",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(firstStep),
+          });
+          await response.json();
+          if (response.ok) {
+            setStepOneComplete(true);
+          }
+        } catch (err) {
+          console.error(err);
+        }
+      };
+      firstTrigger();
+    } else {
+      console.log("You already completed this step");
+    }
 
-            // second step trigger
-            if ((sidebar === true) && (stepTwoComplete === false)) {
-              const secondTrigger = async () => {
-                try {
-                  console.log(teamName)
-                  const secondStep = {
-                    event: "second step complete",
-                    team: {
-                      name: `${teamName}`,
-                      stepCompleted: "stepTwoComplete",
-                    },
-                  };
-                  const response = await fetch(`${apiURL}`, {
-                    method: "POST",
-                    mode: "cors",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(secondStep),
-                  });
-                  await response.json();
-                  if (response.ok) {
-                      setStepTwoComplete(true);
-                  }
-                } catch (err) {
-                  console.error(err);
-                }
-              };
-              secondTrigger();
-            }
-            // second step trigger
-            if ((userplaylist === true) && (stepThreeComplete === false)) {
-              const thirdTrigger = async () => {
-                try {
-                  const thirdStep = {
-                    event: "third step complete",
-                    team: {
-                      name: `${teamName}`,
-                      stepCompleted: 'stepThreeComplete',
-                    },
-                  };
-                  const response = await fetch(`${apiURL}`, {
-                    method: "POST",
-                    mode: "cors",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(thirdStep),
-                  });
-                  await response.json();
-                  if (response.ok) {
-                    setStepThreeComplete(true)
-                  }
-                } catch (err) {
-                  console.error(err);
-                }
-              };
-              thirdTrigger();
-            }
-          }, [playlist, sidebar, userplaylist, teamName]);
+    // second step trigger
+    if (sidebar === true && stepTwoComplete === false) {
+      const secondTrigger = async () => {
+        try {
+          console.log(teamName);
+          const secondStep = {
+            event: "second step complete",
+            team: {
+              name: `${teamName}`,
+              stepCompleted: "stepTwoComplete",
+            },
+          };
+          const response = await fetch(`${apiURL}`, {
+            method: "POST",
+            mode: "cors",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(secondStep),
+          });
+          await response.json();
+          if (response.ok) {
+            setStepTwoComplete(true);
+          }
+        } catch (err) {
+          console.error(err);
+        }
+      };
+      secondTrigger();
+    }
+    // second step trigger
+    if (userplaylist === true && stepThreeComplete === false) {
+      const thirdTrigger = async () => {
+        try {
+          const thirdStep = {
+            event: "third step complete",
+            team: {
+              name: `${teamName}`,
+              stepCompleted: "stepThreeComplete",
+            },
+          };
+          const response = await fetch(`${apiURL}`, {
+            method: "POST",
+            mode: "cors",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(thirdStep),
+          });
+          await response.json();
+          if (response.ok) {
+            setStepThreeComplete(true);
+          }
+        } catch (err) {
+          console.error(err);
+        }
+      };
+      thirdTrigger();
+    }
+  }, [playlist, sidebar, userplaylist, teamName]);
 
   const handleNextSong = () => {
     setCurrentSongIndex((prevIndex) => (prevIndex + 1) % songs.length);
@@ -140,9 +146,7 @@ export default function MusicApp({teamName}: any) {
   return (
     <div className="flex flex-col h-screen gap-2 font-sohne bg-black overflow-x-hidden">
       {playlist ? (
-        <div
-          className="flex flex-row bg-black gap-2"
-        >
+        <div className="flex flex-row bg-black gap-2">
           {sidebar && (
             <div className="w-3/5 xl:w-1/5 min-h-screen">
               <SideBar />
@@ -155,14 +159,14 @@ export default function MusicApp({teamName}: any) {
               duration: 0.5,
               ease: [0, 0.71, 0.2, 1.01],
             }}
-            style={{ maxHeight: 'calc(100vh - 150px)' }}
+            style={{ maxHeight: "calc(100vh - 150px)" }}
             className={`mx-auto rounded-xl pt-2 bg-ldbackground overflow-y-auto ${
               sidebar && adspace
                 ? "w-2/5 xl:w-3/5"
                 : sidebar
                 ? "w-3/5 xl:w-4/5"
                 : "w-full"
-            }` }
+            }`}
           >
             {!sidebar && (
               <div className="">
@@ -170,9 +174,7 @@ export default function MusicApp({teamName}: any) {
               </div>
             )}
 
-            <div 
-              
-            >
+            <div>
               {userplaylist && (
                 <div>
                   <PageHeader />
@@ -194,7 +196,13 @@ export default function MusicApp({teamName}: any) {
                 </div>
               )}
               <div className="relative flex  ml-5 font-bold items-center">
-                <p className="text-2xl py-5">Trending Hits</p>
+                {userplaylist ? (<p className="text-2xl py-5">Trending Hits</p>):(
+                <div className="flex items-center space-x-4">
+                <IoIosMusicalNotes className="w-10 h-10 text-ldcomplicatedwhite" />
+                <p className="text-2xl py-5">Track List</p>
+                </div>
+                )}
+                
               </div>
               <div className="ml-8">
                 {userplaylist ? (
@@ -241,21 +249,21 @@ export default function MusicApp({teamName}: any) {
                           delay: index * 0.2,
                         }}
                         key={song.id}
-                        className="grid grid-cols-5 items-center w-full text-xl border-b-2 border-b-gray-600/40 py-2 hover:bg-gray-500/20"
+                        className="grid grid-cols-5  w-full text-xl border-b-2 border-b-gray-600/40 py-4 hover:bg-gray-500/20"
                       >
-                        <div className="col-span-1">
+                        <div className="">
                           <img src={song.image} className="h-10 w-10 ml-8" />
                         </div>
-                        <div className="col-span-1">
+                        <div className="">
                           <p>{song.title}</p>
                         </div>
-                        <div className="col-span-1 text-lg text-gray-500">
+                        <div className=" text-lg text-gray-500">
                           <p>{song.artists.join(", ")}</p>
                         </div>
-                        <div className="col-span-1">
+                        <div className="">
                           <p>{song.album}</p>
                         </div>
-                        <div className="col-span-1">
+                        <div className="">
                           <p>{song.duration}</p>
                         </div>
                       </motion.div>
@@ -276,25 +284,46 @@ export default function MusicApp({teamName}: any) {
                 </p>
               </div>
             </div>
-            <div className="flex mx-auto justify-center space-x-4 items-center">
-              <SkipBackIcon
-                className="w-10 h-10 text-white"
-                onClick={handlePreviousSong}
-              />
-              <Play className="w-10 h-10 text-white" />
-              <SkipForwardIcon
-                className="w-10 h-10 text-white"
-                onClick={handleNextSong}
-              />
+            <div className="flex flex-col items-center">
+              <div className="flex justify-center space-x-12 items-center">
+                <IoPlaySkipBackSharp
+                  className="w-7 h-7 text-ldskipbuttons"
+                  onClick={handlePreviousSong}
+                />
+                <IoPlaySharp className="w-10 h-10 text-ldcomplicatedwhite" />
+                <IoPlaySkipForwardSharp
+                  className="w-7 h-7 text-ldskipbuttons"
+                  onClick={handleNextSong}
+                />
+              </div>
+              <div className="w-full h-2 bg-lddarkstatus rounded-full mt-6">
+                <div
+                  className="h-full text-center  bg-white rounded-full"
+                  style={{ width: "10%" }}
+                ></div>
+              </div>
             </div>
+
             <div className="absolute right-5 flex space-x-2 items-center justify-center">
-              <SpeakerIcon className="w-8 h-8 text-white" />
-              <Volume2 className="w-8 h-8 text-white" />
+              {/* <SpeakerIcon className="w-8 h-8 text-ldcomplicatedwhite" /> */}
+              <IoMdVolumeHigh
+                className="w-8 h-8 text-ldcomplicatedwhite"
+                onClick={() => setVolumeVisibility(!volumeVisibility)}
+              />
+              {volumeVisibility && (
+                <input
+                  type="range"
+                  min={0}
+                  max={100}
+                  className="accent-white  w-14 md:w-28"
+                />
+              )}
             </div>
           </div>
           {adspace && (
-            <div className="w-2/5 xl:w-1/5 items-between flex flex-col justify-between"
-            style={{ maxHeight: 'calc(100vh - 150px)' }}
+            <div
+              className="w-2/5 xl:w-1/5 items-between flex flex-col justify-between"
+              style={{ maxHeight: "calc(100vh - 150px)" }}
             >
               <img src="/images/AD1.png" className="self-start" />
               <img src="/images/AD2.png" className="self-end" />
@@ -347,18 +376,18 @@ export default function MusicApp({teamName}: any) {
             </div>
             <div className="flex mx-auto justify-center space-x-4 items-center">
               <SkipBackIcon
-                className="w-10 h-10 text-white"
+                className="w-10 h-10 text-ldcomplicatedwhite"
                 onClick={handlePreviousSong}
               />
-              <Play className="w-10 h-10 text-white" />
+              <Play className="w-10 h-10 text-ldcomplicatedwhite" />
               <SkipForwardIcon
-                className="w-10 h-10 text-white"
+                className="w-10 h-10 text-ldcomplicatedwhite"
                 onClick={handleNextSong}
               />
             </div>
             <div className="flex space-x-2 items-center justify-center">
-              <SpeakerIcon className="w-8 h-8 text-white" />
-              <Volume2 className="w-8 h-8 text-white" />
+              <SpeakerIcon className="w-8 h-8 text-ldcomplicatedwhite" />
+              <Volume2 className="w-8 h-8 text-ldcomplicatedwhite" />
             </div>
           </div>
           {/* <div

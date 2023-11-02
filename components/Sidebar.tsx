@@ -1,6 +1,9 @@
 import { songs } from "@/lib/data";
 import { Home, Library, Search } from "lucide-react";
 import Link from "next/link";
+import { MdHome } from "react-icons/md";
+import { FiSearch } from "react-icons/fi"
+import { RxCounterClockwiseClock } from "react-icons/rx";
 
 const SideBar = () => {
   return (
@@ -13,18 +16,19 @@ const SideBar = () => {
           <li>
             <Link
               href="/"
-              className="flex gap-4 text-zinc-100 py-3.5 px-5 font-semibold transition-all duration-300"
+              className="flex gap-4 text-ldcomplicatedwhite py-3.5 px-5 font-semibold transition-all duration-300"
             >
-              <Home className="h-6 w-6" />
+              <MdHome size={"1.5rem"} />
+              {/* <Home className="h-6 w-6" /> */}
               Home
             </Link>
           </li>
           <li>
             <Link
               href="/"
-              className="flex gap-4 text-zinc-400 hover:text-zinc-100 py-3.5 px-5 font-semibold transition-all duration-300"
+              className="flex gap-4 text-zinc-400 hover:text-ldcomplicatedwhite py-3.5 px-5 font-semibold transition-all duration-300"
             >
-              <Search className="h-6 w-6" />
+              <FiSearch size={"1.5rem"} />
               Search
             </Link>
           </li>
@@ -36,9 +40,9 @@ const SideBar = () => {
           <li>
             <Link
               href="/"
-              className="flex gap-4 text-zinc-100  py-3.5 px-5 font-semibold text-2xl items-center font-extra pb-8"
+              className="flex gap-4 text-ldcomplicatedwhite  py-3.5 px-5 font-semibold text-2xl items-center font-extra pb-8"
             >
-              <Library className="h-6 w-6" />
+              <RxCounterClockwiseClock className="h-6 w-6" />
               Recently Played
             </Link>
           </li>
