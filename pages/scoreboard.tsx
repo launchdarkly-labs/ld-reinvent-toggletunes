@@ -4,8 +4,6 @@ import { ProgressStatus } from '@/components/progress-screen'
 import { useEffect, useState } from 'react';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 import { Modal } from '@/components/modal';
-import { TeamModal } from '@/components/Team-Modal';
-import ScoreTable from '@/components/table'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -47,23 +45,12 @@ const timerToMinutesSecondsMilliseconds = (timer: number) => {
     const eventSource = new EventSource('/api/sse')    
     eventSource.onmessage = (e) => {
       const data = JSON.parse(e.data);
-      if (data.teamname === 'Green Team') {
-      setGreenProgress(data.score)
+      console.log(greenProgress)
+      setGreenProgress(data[0].green.score);
+      setRedProgress(data[0].red.score);
+      setPurpleProgress(data[0].purple.score);
+      setBlueProgress(data[0].blue.score);
       }
-      if (data.teamname === 'Red Team') {
-      setRedProgress(data.score)
-      }
-      if (data.teamname === "Purple Team") {
-      setPurpleProgress(data.score);
-      }
-      if (data.teamname === "Blue Team") {
-      setBlueProgress(data.score);
-      }
-      console.log(data.score);
-      console.log(data);
-    }
-    
-    
     if (
       greenProgress >= 100 ||
       redProgress >= 100 ||
@@ -79,30 +66,21 @@ const timerToMinutesSecondsMilliseconds = (timer: number) => {
       setGreenProgress(0);
       setResetScores(false);
       setIsTimerRunning(false);
-      setTimer(300);
+      setTimer(300000);
     }
   
   const timerInterval = setInterval(decreaseMainTimer, 1000);
   return () => {
     clearInterval(timerInterval);
-    if (eventSource) {
-      eventSource.close();
-    }
+    eventSource.close();
   };
   
-  }, [
-    playlist,
-    sidebar,
-    userplaylist,
-    resetScores,
-    isTimerRunning,
-    greenProgress,
-  ]);
+  }, []);
 
   
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-24 bg-black">
+    <main className="container mx-auto flex min-h-screen flex-col items-center justify-center bg-black">
       <Modal
         winnerState={winnerState}
         setWinnerState={setWinnerState}
@@ -111,7 +89,7 @@ const timerToMinutesSecondsMilliseconds = (timer: number) => {
         isExploding={isExploding}
         setIsExploding={setIsExploding}
       />
-      <div className="flex place-items-center border border-zinc-500 mt-8 w-1/3 xl:w-1/6 bg-gradient-to-b from-zinc-900 from-10% via-zinc-600 via-50% to-zinc-900 to-90% justify-center rounded-xl">
+      <div className="flex sticky top-10 place-items-center border border-zinc-500 mt-10 w-1/3 xl:w-1/6 bg-gradient-to-b from-zinc-900 from-10% via-zinc-600 via-50% to-zinc-900 to-90% justify-center rounded-xl">
         <div className="flex text-8xl sm:text-6xl font-bold text-white font-audimat mt-4">
           {timerToMinutesSecondsMilliseconds(timer)}
         </div>
@@ -144,12 +122,6 @@ const timerToMinutesSecondsMilliseconds = (timer: number) => {
         redProgress={redProgress}
         blueProgress={blueProgress}
       />
-        <ScoreTable
-          greenProgress={greenProgress}
-          redProgress={redProgress}
-          purpleProgress={purpleProgress}
-          blueProgress={blueProgress}
-        />
     </main>
   );
 }

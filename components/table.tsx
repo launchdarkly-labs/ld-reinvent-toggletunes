@@ -24,7 +24,7 @@ const sortedTableData = tableData.sort((a, b) => Number(b.currentScore) - Number
       <div className="flex flex-col mt-8 overflow-auto-x">
         <Reorder.Group values={tableData} onReorder={setTableData}>
           <table className="min-w-full text-white text-sm text-center auto font-sohne">
-            <thead className="px-8 border-b dark:border-neutral-500">
+            <thead className="px-8 border-b dark:border-neutral-500 text-lddblue">
               <tr>
                 <th scope="col" className="px-6 py-4 text-6xl sm:text-2xl">
                   Team Name

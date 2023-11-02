@@ -11,6 +11,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import ConfettiExplosion, {ConfettiProps} from 'react-confetti-explosion';
+import {motion} from 'framer-motion'
 
 const largeProps: ConfettiProps = {
   force: 0.8,
@@ -20,10 +21,10 @@ const largeProps: ConfettiProps = {
   colors: ['#041E43', '#1471BF', '#5BB4DC', '#FC027B', '#66D805'],
 };
 
-export function Modal({ setWinnerState, setResetScores, isExploding, setIsExploding}: any) {
-let winnerState = false;
+export function Modal({ winnerState, setWinnerState, setResetScores, isExploding, setIsExploding}: any) {
+
 let winnerName;
-let winner = 'purple';
+let winner = 'green';
 
 if (winnerName === 'Green Team') {
   winner = 'green'
@@ -40,14 +41,13 @@ if (winnerName === "Blue Team") {
 
   return (
     <>
-      <AlertDialog defaultOpen={true}>
-        <AlertDialogTrigger asChild={winnerState}>
-          {winnerState && (
+        <AlertDialog defaultOpen={true}>
+          <AlertDialogTrigger asChild={winnerState}>
+            {winnerState && (
             <AlertDialogContent variant={winner}>
-              {isExploding && <ConfettiExplosion {...largeProps} />}
               <AlertDialogHeader></AlertDialogHeader>
               <AlertDialogDescription className="flex place-content-center text-8xl pb-4 text-center font-audimat">
-                Winner!
+                WINNER!
               </AlertDialogDescription>
               <AlertDialogFooter>
                 <AlertDialogAction
@@ -61,9 +61,9 @@ if (winnerName === "Blue Team") {
                 </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
-          )}
-        </AlertDialogTrigger>
-      </AlertDialog>
+            )}
+          </AlertDialogTrigger>
+        </AlertDialog>
     </>
   );
 }
