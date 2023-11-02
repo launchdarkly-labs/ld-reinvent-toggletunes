@@ -146,7 +146,7 @@ export const songs: Song[] = [
     duration: "4:38",
   },
   {
-    id: "9",
+    id: "8",
     title: "All Too Released",
     image: `/images/Such great insights cover.png`,
     artists: ["Jen Velocity"],

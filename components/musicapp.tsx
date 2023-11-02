@@ -12,6 +12,7 @@ import { useCallback, useEffect, useState } from "react";
 import {
   LucideSlidersHorizontal,
   Music,
+  Music2Icon,
   Play,
   SkipBackIcon,
   SkipForwardIcon,
@@ -149,7 +150,7 @@ export default function MusicApp({ teamName }: any) {
         <div className="flex flex-row bg-black gap-2">
           {sidebar && (
             <div className="w-3/5 xl:w-1/5 min-h-screen">
-              <SideBar />
+              <SideBar playlist={playlist} userplaylist={userplaylist} />
             </div>
           )}
           <motion.div
@@ -196,13 +197,14 @@ export default function MusicApp({ teamName }: any) {
                 </div>
               )}
               <div className="relative flex  ml-5 font-bold items-center">
-                {userplaylist ? (<p className="text-2xl py-5">Trending Hits</p>):(
-                <div className="flex items-center space-x-4">
-                <IoIosMusicalNotes className="w-10 h-10 text-ldcomplicatedwhite" />
-                <p className="text-2xl py-5">Track List</p>
-                </div>
+                {userplaylist ? (
+                  <p className="text-2xl py-5">Trending Hits</p>
+                ) : (
+                  <div className="flex items-center space-x-4">
+                    <IoIosMusicalNotes className="w-10 h-10 text-ldcomplicatedwhite" />
+                    <p className="text-2xl py-5">Track List</p>
+                  </div>
                 )}
-                
               </div>
               <div className="ml-8">
                 {userplaylist ? (
@@ -252,7 +254,11 @@ export default function MusicApp({ teamName }: any) {
                         className="grid grid-cols-5  w-full text-xl border-b-2 border-b-gray-600/40 py-4 hover:bg-gray-500/20"
                       >
                         <div className="">
-                          <img src={song.image} className="h-10 w-10 ml-8" />
+                          {playlist && !userplaylist ? (
+                            <Music2Icon className="h-10 w-10 ml-8" />
+                          ) : (
+                            <img src={song.image} className="h-10 w-10 ml-8" />
+                          )}
                         </div>
                         <div className="">
                           <p>{song.title}</p>
@@ -276,7 +282,14 @@ export default function MusicApp({ teamName }: any) {
 
           <div className="absolute bottom-0 h-36 w-full items-center px-4 bg-ldbackground shadow-xl justify-center grid grid-cols-3 ">
             <div className="flex items-center ml-5">
-              <img src={songs[currentSongIndex].image} className="h-28 mr-4" />
+              {playlist && !userplaylist ? (
+                <Music2Icon className="h-14 w-14 mr-4" />
+              ) : (
+                <img
+                  src={songs[currentSongIndex].image}
+                  className="h-28 mr-4"
+                />
+              )}
               <div>
                 <p className="text-2xl">{songs[currentSongIndex].title}</p>
                 <p className="text-xl text-gray-500">
