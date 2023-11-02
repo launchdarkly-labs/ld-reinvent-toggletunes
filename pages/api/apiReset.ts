@@ -1,6 +1,8 @@
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
 
+// we need to list the project keys for each of the projects that we want to clean up
+// this prevents us from accidentally deleting flags from the wrong project
+// since the API key has access to all projects
 const projectKeys: Array<string> = ["temp-test"];
 const API_KEY: string = process.env.LD_API_KEY as string;
 
@@ -39,7 +41,11 @@ async function getEnvironments(projectKey: string) {
   );
 
   const data = await resp.json();
-  return data;
+  if (resp.ok) {
+    return data;
+  } else {
+    throw new Error(`Cannot get environments: ${data.message}` ?? "unknown");
+  }
 }
 
 async function getFlags(projectKey: string) {
@@ -54,16 +60,16 @@ async function getFlags(projectKey: string) {
   );
 
   const data = await resp.json();
-  return data;
+  if (resp.ok) {
+    return data;
+  } else {
+    throw new Error(`Cannot get flags: ${data.message}` ?? "unknown");
+  }
 }
 
 async function deleteFlag(projectKey: string, flagKey: string) {
-  if (projectKey !== "temp-test") {
-    throw new Error("Cannot delete flags from non-temp-test project");
-  }
-  if (!(flagKey === "test-flag-2" || flagKey === "test-flag-1")) {
-    console.log(flagKey);
-    throw new Error("Cannot delete flag");
+  if (!projectKeys.includes(projectKey)) {
+    throw new Error("Cannot delete flags from an unspecified project");
   }
 
   const resp = await fetch(
@@ -75,6 +81,13 @@ async function deleteFlag(projectKey: string, flagKey: string) {
       },
     }
   );
+
+  const data = await resp.json();
+  if (!resp.ok) {
+    throw new Error(
+      `Cannot delete flag ${flagKey}: ${data.message}` ?? "unknown"
+    );
+  }
 }
 
 async function getSegments(projectKey: string, environmentKey: string) {
@@ -89,7 +102,11 @@ async function getSegments(projectKey: string, environmentKey: string) {
   );
 
   const data = await resp.json();
-  return data;
+  if (resp.ok) {
+    return data;
+  } else {
+    throw new Error(`Cannot get segments: ${data.message}` ?? "unknown");
+  }
 }
 
 async function deleteSegment(
@@ -97,11 +114,8 @@ async function deleteSegment(
   environmentKey: string,
   segmentKey: string
 ) {
-  if (projectKey !== "temp-test") {
-    throw new Error("Cannot delete segments from non-temp-test project");
-  }
-  if (segmentKey !== "dumb-segment") {
-    throw new Error("Cannot delete segment");
+  if (!projectKeys.includes(projectKey)) {
+    throw new Error("Cannot delete segments from an unspecified project");
   }
   const resp = await fetch(
     `https://app.launchdarkly.com/api/v2/segments/${projectKey}/${environmentKey}/${segmentKey}`,
@@ -112,4 +126,11 @@ async function deleteSegment(
       },
     }
   );
+
+  const data = await resp.json();
+  if (!resp.ok) {
+    throw new Error(
+      `Cannot delete segment ${segmentKey}: ${data.message}` ?? "unknown"
+    );
+  }
 }
