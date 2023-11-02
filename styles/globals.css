@@ -100,3 +100,13 @@ body {
   font-family: 'Audimat';
   src: url('/fonts/Audimat3000-Regulier.otf')
 }
+
+input[type=range].onoff::-webkit-slider-thumb {
+  -webkit-appearance: none;
+}
+input[type=range].onoff::-moz-slider-thumb {
+  -moz-appearance: none;
+}
+input[type=range].onoff::slider-thumb {
+  appearance: none;
+}

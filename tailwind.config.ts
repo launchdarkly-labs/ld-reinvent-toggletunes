@@ -36,6 +36,9 @@ const config: Config = {
         ldbackground: '#191919',
         ldsiteblue: '#405BFF',
         ldsitehover: '#7084FF',
+        lddarkstatus: '#58595B',
+        ldskipbuttons: '#D1D3D4',
+        ldcomplicatedwhite: '#E6E6E6'
       },
       fontFamily: {
         sans: ["var(--font-sans)", ...fontFamily.sans],

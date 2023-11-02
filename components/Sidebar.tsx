@@ -1,30 +1,35 @@
 import { songs } from "@/lib/data";
-import { Home, Library, Search } from "lucide-react";
+import { Home, Library, Music2Icon, Search } from "lucide-react";
 import Link from "next/link";
+import { MdHome } from "react-icons/md";
+import { FiSearch } from "react-icons/fi";
+import { RxCounterClockwiseClock } from "react-icons/rx";
 
-const SideBar = () => {
+const SideBar = ({ playlist, userplaylist }: any) => {
   return (
-    <div className="flex flex-col h-screen gap-2" 
-    style={{ maxHeight: 'calc(100vh - 150px)' }}
+    <div
+      className="flex flex-col h-screen gap-2"
+      style={{ maxHeight: "calc(100vh - 150px)" }}
     >
       <div className="bg-ldbackground rounded-xl">
-        <img src="/images/tuneslogo.png" className="ml-5 mt-5 pb-4" />
+        <img src="/images/ToggleTunes.png" className="ml-5 mt-5 pb-4 w-2/3" />
         <ul>
           <li>
             <Link
               href="/"
-              className="flex gap-4 text-zinc-100 py-3.5 px-5 font-semibold transition-all duration-300"
+              className="flex gap-4 text-ldcomplicatedwhite py-3.5 px-5 font-semibold transition-all duration-300"
             >
-              <Home className="h-6 w-6" />
+              <MdHome size={"1.5rem"} />
+              {/* <Home className="h-6 w-6" /> */}
               Home
             </Link>
           </li>
           <li>
             <Link
               href="/"
-              className="flex gap-4 text-zinc-400 hover:text-zinc-100 py-3.5 px-5 font-semibold transition-all duration-300"
+              className="flex gap-4 text-zinc-400 hover:text-ldcomplicatedwhite py-3.5 px-5 font-semibold transition-all duration-300"
             >
-              <Search className="h-6 w-6" />
+              <FiSearch size={"1.5rem"} />
               Search
             </Link>
           </li>
@@ -36,9 +41,9 @@ const SideBar = () => {
           <li>
             <Link
               href="/"
-              className="flex gap-4 text-zinc-100  py-3.5 px-5 font-semibold text-2xl items-center font-extra pb-8"
+              className="flex gap-4 text-ldcomplicatedwhite py-3.5 px-5 font-semibold text-2xl items-center font-extra pb-8"
             >
-              <Library className="h-6 w-6" />
+              <RxCounterClockwiseClock className="h-6 w-6" />
               Recently Played
             </Link>
           </li>
@@ -47,7 +52,11 @@ const SideBar = () => {
           <ul>
             {songs.map((song) => (
               <li key={song.id} className="flex items-center gap-2 py-2">
-                <img src={song.image} alt={song.title} className="h-8 w-8" />
+                {playlist && !userplaylist ? (
+                  <Music2Icon className="h-10 w-10 mr-5" />
+                ) : (
+                  <img src={song.image} alt={song.title} className="h-8 w-8" />
+                )}
                 <span className="flex-grow">{song.title}</span>
                 {/* <span>{song.duration}</span> */}
               </li>

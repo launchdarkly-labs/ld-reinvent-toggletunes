@@ -25,7 +25,7 @@ const Item = () => {
           duration: 1,
           ease: [0, 0.71, 0.2, 1.01],
         }}
-        className="relative bg-zinc-900 min-h-full flex flex-col overflow-x-hidden rounded-lg"
+        className="relative font-sohne bg-zinc-900 min-h-full flex flex-col overflow-x-hidden rounded-lg"
       >
         <PageHeader />
         <div className="flex flex-col items-center md:flex-row md:items-stretch gap-8 px-6 z-10">
