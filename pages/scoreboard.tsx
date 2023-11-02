@@ -1,12 +1,13 @@
 //@ts-nocheck
-import { Inter } from 'next/font/google'
-import { ProgressStatus } from '@/components/progress-screen'
-import { useCallback, useEffect, useState } from 'react';
-import { useFlags } from 'launchdarkly-react-client-sdk';
-import { Modal } from '@/components/modal';
-import useSWR from 'swr'
+import { Inter } from "next/font/google";
+import { ProgressStatus } from "@/components/progress-screen";
+import { useCallback, useEffect, useState, useRef } from "react";
+import { useFlags } from "launchdarkly-react-client-sdk";
+import { Modal } from "@/components/modal";
+import { Timer } from "@/components/Timer";
+import useSWR from "swr";
 
-const fetcher = url => fetch(url).then(r => r.json());
+const fetcher = (url) => fetch(url).then((r) => r.json());
 
 export default function Scoreboard() {
   const { playlist, sidebar, userplaylist } = useFlags();
@@ -17,32 +18,14 @@ export default function Scoreboard() {
   const [resetScores, setResetScores] = useState(false);
   const [winnerName, setWinnerName] = useState("");
   const [isExploding, setIsExploding] = useState(false);
-  const [timer, setTimer] = useState(300000);
-  const [isTimerRunning, setIsTimerRunning] = useState(false);
   const [greenProgress, setGreenProgress] = useState(0);
   const [eventSource, setEventSource] = useState(null);
-  const {data} = useSWR('/api/score-list', fetcher, {refreshInterval: 500})
-
-
-  // main display timer
-  const decreaseMainTimer = () => {
-    if (isTimerRunning) {
-      setTimer((timer) => timer - 1);
-    }
-  };
-const timerToMinutesSecondsMilliseconds = (timer: number) => {
-  const minutes = Math.floor(timer / 60000);
-  const seconds = Math.floor((timer % 60000) / 1000);
-  const milliseconds = timer % 1000;
-  return `${minutes.toString().padStart(2, "0")}:${seconds
-    .toString()
-    .padStart(2, "0")}:${milliseconds.toString().padStart(2, "0")}`;
-};
-
+  const { data } = useSWR("/api/score-list", fetcher, { refreshInterval: 500 });
+  const timerRef = useRef();
 
   useEffect(() => {
     if (data) {
-      setGreenProgress(data[0].score[1])
+      setGreenProgress(data[0].score[1]);
       setRedProgress(data[1].score[1]);
       setPurpleProgress(data[2].score[1]);
       setBlueProgress(data[3].score[1]);
@@ -64,15 +47,7 @@ const timerToMinutesSecondsMilliseconds = (timer: number) => {
       setIsTimerRunning(false);
       setTimer(300000);
     }
-  
-  const timerInterval = setInterval(decreaseMainTimer, 1000);
-  return () => {
-    clearInterval(timerInterval);
-  };
-  
   }, [greenProgress, redProgress, blueProgress, purpleProgress, data]);
-
-  
 
   return (
     <main className="container mx-auto flex min-h-screen flex-col items-center justify-center bg-black">
@@ -84,11 +59,7 @@ const timerToMinutesSecondsMilliseconds = (timer: number) => {
         isExploding={isExploding}
         setIsExploding={setIsExploding}
       />
-      <div className="flex sticky top-10 place-items-center border border-zinc-500 mt-10 w-1/3 xl:w-1/6 bg-gradient-to-b from-zinc-900 from-10% via-zinc-600 via-50% to-zinc-900 to-90% justify-center rounded-xl">
-        <div className="flex text-8xl sm:text-6xl font-bold text-white font-audimat mt-4">
-          {timerToMinutesSecondsMilliseconds(timer)}
-        </div>
-      </div>
+      <Timer ref={timerRef} />
       {/*<div className="flex items-center justify-center mt-4">
         <button
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
