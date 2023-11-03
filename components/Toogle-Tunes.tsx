@@ -6,7 +6,6 @@ import Greeting from "@/components/Greeting";
 import { playlists, morePlaylists } from "../lib/data";
 import PlaylistCard from "@/components/PlaylistCard";
 import ItemCard from "@/components/ItemCard";
-import { TeamModal } from "@/components/Team-Modal";
 import { useRouter } from "next/router";
 import { motion } from "framer-motion";
 import { asyncWithLDProvider, useFlags } from "launchdarkly-react-client-sdk";
