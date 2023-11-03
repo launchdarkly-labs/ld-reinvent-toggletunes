@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export function Timer() {
+export default function Timer() {
   const [timer, setTimer] = useState(300000);
   const [isTimerRunning, setIsTimerRunning] = useState(false);
   // main display timer
