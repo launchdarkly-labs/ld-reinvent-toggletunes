@@ -3,10 +3,10 @@ import { ProgressStatus } from "@/components/progress-screen";
 import { useEffect, useState, useContext } from "react";
 import { Modal } from "@/components/modal";
 import { StartModal } from "@/components/start-modal";
-import useSWR from "swr";
 import TimerContext from "@/lib/contexts";
-import { TimerProvider } from "@/lib/contexts";
-const fetcher = (url) => fetch(url).then((r) => r.json());
+import {createClient} from '@supabase/supabase-js'
+// import useSWR from "swr";
+// const fetcher = (url) => fetch(url).then((r) => r.json());
 
 export default function Scoreboard() {
   const [redProgress, setRedProgress] = useState(0);
@@ -17,17 +17,33 @@ export default function Scoreboard() {
   const [winnerName, setWinnerName] = useState("");
   const [isExploding, setIsExploding] = useState(false);
   const [greenProgress, setGreenProgress] = useState(0);
-  const { data } = useSWR("/api/score-list", fetcher, { refreshInterval: 500 });
+  // const { data } = useSWR("/api/score-list", fetcher);
   const { timer, isTimerRunning, setTimer, setIsTimerRunning, timerToMinutesSecondsMilliseconds } = useContext(TimerContext);
+  const supabase = createClient(process.env.NEXT_PUBLIC_DB_URL, process.env.NEXT_PUBLIC_DB_ANON_KEY);
+
+
 
 
   useEffect(() => {
-    if (data) {
-      setGreenProgress(data[0].score[1]);
-      setRedProgress(data[1].score[1]);
-      setPurpleProgress(data[2].score[1]);
-      setBlueProgress(data[3].score[1]);
-    }
+    //subscribing to supabase events
+    const scoreboardUpdates = supabase
+      .channel("custom-all-channel")
+      .on(
+        "postgres_changes",
+        {
+          event: "UPDATE",
+          schema: "public",
+          table: "scoreboard",
+          filter: "id=eq.1",
+        },
+        (payload) => {
+          setGreenProgress(payload.new.green);
+          setRedProgress(payload.new.red);
+          setPurpleProgress(payload.new.purple);
+          setBlueProgress(payload.new.blue);
+        }
+      )
+      .subscribe();
     if (
       greenProgress >= 100 ||
       redProgress >= 100 ||
@@ -46,7 +62,12 @@ export default function Scoreboard() {
       setTimer(300000);
     }
     if (timer === 0) {
-      const maxProgress = Math.max(greenProgress, redProgress, purpleProgress, blueProgress);
+      const maxProgress = Math.max(
+        greenProgress,
+        redProgress,
+        purpleProgress,
+        blueProgress
+      );
       if (maxProgress === greenProgress) {
         setWinnerName("green");
       } else if (maxProgress === redProgress) {
@@ -57,7 +78,7 @@ export default function Scoreboard() {
         setWinnerName("blue");
       }
     }
-  }, [greenProgress, redProgress, blueProgress, purpleProgress, isTimerRunning, data]);
+  }, [greenProgress, redProgress, blueProgress, purpleProgress, isTimerRunning]);
 
   return (
     <TimerContext.Provider
@@ -79,25 +100,6 @@ export default function Scoreboard() {
           <div className="flex text-8xl sm:text-6xl font-bold text-white font-audimat mt-4">
             {timerToMinutesSecondsMilliseconds(timer)}
           </div>
-        </div>
-        <div className="flex items-center justify-center mt-4">
-          <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-            onClick={() => {
-              setIsTimerRunning(!isTimerRunning);
-            }}
-          >
-            {isTimerRunning ? "Stop" : "Start"}
-          </button>
-          <button
-            className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded ml-4"
-            onClick={() => {
-              setTimer(300000);
-              setIsTimerRunning(false);
-            }}
-          >
-            Reset
-          </button>
         </div>
         <ProgressStatus
           greenProgress={greenProgress}

@@ -41,8 +41,7 @@ export default function MusicApp({ teamName }: any) {
   const [stepTwoComplete, setStepTwoComplete] = useState(false);
   const [stepThreeComplete, setStepThreeComplete] = useState(false);
   const [volumeVisibility, setVolumeVisibility] = useState(true);
-
-          const apiURL = "/api/score-add/";
+  const apiURL = "/api/sb-score-add/";
 
           useEffect(() => {
             // first step trigger
@@ -127,7 +126,7 @@ export default function MusicApp({ teamName }: any) {
               };
               thirdTrigger();
             }
-          }, [playlist, sidebar, userplaylist, teamName]);
+          }, [playlist, sidebar, userplaylist]);
 
   const handleNextSong = () => {
     setCurrentSongIndex((prevIndex) => (prevIndex + 1) % songs.length);
