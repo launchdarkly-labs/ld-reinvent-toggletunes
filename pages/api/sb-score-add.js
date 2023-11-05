@@ -19,18 +19,23 @@ export default async function databaseConnection(req, res) {
 
     switch (event) {
       case "first step complete":
+        console.log("Running update from step 1")
         updateEventData(req.body.team.name, req.body.team.stepCompleted);
         break;
       case "second step complete":
+        console.log("Running update from step 2")
         updateEventData(req.body.team.name, req.body.team.stepCompleted);
         break;
       case "third step complete":
+        console.log("Running update from step 3")
         updateEventData(req.body.team.name, req.body.team.stepCompleted);
         break;
       case "fourth step complete":
+        console.log("Running update from step 4")
         updateEventData(req.body.team.name, req.body.team.stepCompleted);
         break;
       case "fifth step complete":
+        console.log("Running update from step 5")
         updateEventData(req.body.team.name, req.body.team.stepCompleted);
         break;
       case "Reset":

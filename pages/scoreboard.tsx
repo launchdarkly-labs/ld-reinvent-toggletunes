@@ -37,9 +37,8 @@ async function GetAllScoreValues() {
   setGreenProgress(data[0].green);
 }
 
-  useEffect(() => {
-    //subscribing to supabase events
-    supabase
+useEffect(() => {
+  supabase
       .channel("supabase")
       .on(
         "postgres_changes",
@@ -60,6 +59,10 @@ async function GetAllScoreValues() {
         }
       )
       .subscribe();
+}, [])  
+
+useEffect(() => {
+    //subscribing to supabase events
     if (
       greenProgress >= 100 ||
       redProgress >= 100 ||

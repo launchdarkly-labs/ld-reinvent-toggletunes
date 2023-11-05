@@ -29,147 +29,81 @@ export default function MusicApp({ teamName }: any) {
   const [playlistAPI, setPlaylistAPI] = useState([]);
   const [songsAPI, setSongsAPI] = useState([]);
   const [upgradeAd, setUpgradeAd] = useState(true);
+  const [flagOne, setFlagOne] = useState(false);
+  const [flagTwo, setFlagTwo] = useState(false);
+  const [flagThree, setFlagThree] = useState(false);
+  const [flagFour, setFlagFour] = useState(false);
+  const [flagFive, setFlagFive] = useState(false);
 
+  
   const apiURL = "/api/sb-score-add/";
 
   useEffect(() => {
-    // first step trigger
-    if (playlist === true) {
-      console.log("first step running")
-      const firstTrigger = async () => {
-        try {
-          const firstStep = {
-            event: "first step complete",
-            team: {
-              name: `${teamName}`,
-              stepCompleted: "stepOneComplete",
-            },
-          };
-          const response = await fetch(`${apiURL}`, {
-            method: "POST",
-            mode: "cors",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(firstStep),
-          });
-          await response.json();
-        } catch (err) {
-          console.error(err);
+    const triggerSteps = async () => {
+      try {
+        if (playlist === true && flagOne === false) {
+          console.log("first step running");
+          await triggerStep("first step complete", "stepOneComplete");
+          setFlagOne(true);
+        } else {
+          console.log("Step 1 not eligible for evaluation!");
         }
-      };
-      firstTrigger();
-    } else {
-      console.log("You already completed this step");
-    }
 
-    // second step trigger
-    if (sidebar === true) {
-      const secondTrigger = async () => {
-        try {
-          console.log(teamName);
-          const secondStep = {
-            event: "second step complete",
-            team: {
-              name: `${teamName}`,
-              stepCompleted: "stepTwoComplete",
-            },
-          };
-          const response = await fetch(`${apiURL}`, {
-            method: "POST",
-            mode: "cors",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(secondStep),
-          });
-          await response.json();
-          if (response.ok) {
-            setStepTwoComplete(true);
-          }
-        } catch (err) {
-          console.error(err);
+        if (sidebar === true && flagTwo === false) {
+          console.log("second step running");
+          await triggerStep("second step complete", "stepTwoComplete");
+          setFlagTwo(true);
+        } else {
+          console.log("Step 2 not eligible for evaluation!");
         }
-      };
-      secondTrigger();
-    }
-    // third step trigger
-    if (newToggleDB === "complete") {
-      const thirdTrigger = async () => {
-        try {
-          const thirdStep = {
-            event: "third step complete",
-            team: {
-              name: `${teamName}`,
-              stepCompleted: "stepThreeComplete",
-            },
-          };
-          const response = await fetch(`${apiURL}`, {
-            method: "POST",
-            mode: "cors",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(thirdStep),
-          });
-          await response.json();
-          if (response.ok) {
-            setStepThreeComplete(true);
-          }
-        } catch (err) {
-          console.error(err);
+  
+        if (newToggleDB === "complete" && flagThree === false) {
+          console.log("third step running");
+          await triggerStep("third step complete", "stepThreeComplete");
+          setFlagThree(true);
+        } else {
+          console.log("Step 3 not eligible for evaluation!");
         }
-      };
-      thirdTrigger();
-    }
+  
+        if (userplaylist === true && flagFour === false) {
+          console.log("fourth step running");
+          await triggerStep("fourth step complete", "stepFourComplete");
+          setFlagFour(true);
+        } else {
+          console.log("Step 4 not eligible for evaluation!");
+        }
+  
+        if (adspace === true && flagFive === false) {
+          console.log("fifth step running");
+          await triggerStep("fifth step complete", "stepFiveComplete");
+          setFlagFive(true);
+        } else {
+          console.log("Step 5 not eligible for evaluation!");
+        }
 
-    if (userplaylist === true) {
-      const fourthTrigger = async () => {
-        try {
-          const fourthStep = {
-            event: "fourth step complete",
-            team: {
-              name: `${teamName}`,
-              stepCompleted: "stepFourComplete",
-            },
-          };
-          const response = await fetch(`${apiURL}`, {
-            method: "POST",
-            mode: "cors",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(fourthStep),
-          });
-          await response.json();
-          if (response.ok) {
-            setStepFourComplete(true);
-          }
-        } catch (err) {
-          console.error(err);
-        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+  
+    const triggerStep = async (event:any , stepCompleted: any) => {
+      const step = {
+        event,
+        team: {
+          name: `${teamName}`,
+          stepCompleted,
+        },
       };
-      fourthTrigger();
-    }
+      const response = await fetch(`${apiURL}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(step),
+      });
 
-    if (adspace === true) {
-      const fifthTrigger = async () => {
-        try {
-          const fifthStep = {
-            event: "fifth step complete",
-            team: {
-              name: `${teamName}`,
-              stepCompleted: "stepFiveComplete",
-            },
-          };
-          const response = await fetch(`${apiURL}`, {
-            method: "POST",
-            mode: "cors",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(fifthStep),
-          });
-          await response.json();
-          if (response.ok) {
-            setStepFiveComplete(true);
-          }
-        } catch (err) {
-          console.error(err);
-        }
-      };
-      fifthTrigger();
-    }
+      await console.log(response)
+    };
+  
+    triggerSteps();
   }, [playlist, sidebar, userplaylist, adspace, newToggleDB]);
 
   useEffect(() => {
