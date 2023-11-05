@@ -51,6 +51,7 @@ async function GetAllScoreValues() {
         },
         (payload) => {
           console.log(payload)
+          // Adjusted for debugging inconsistent scoreboard updates
           GetAllScoreValues()
           // setGreenProgress(payload.new.green);
           // setRedProgress(payload.new.red);
