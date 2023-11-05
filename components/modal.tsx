@@ -21,10 +21,10 @@ const largeProps: ConfettiProps = {
   colors: ['#041E43', '#1471BF', '#5BB4DC', '#FC027B', '#66D805'],
 };
 
-export function Modal({ winnerState, setWinnerState, setResetScores, isExploding, setIsExploding}: any) {
+export function Modal({ winnerName, setWinnerState, setResetScores, isExploding, setIsExploding}: any) {
 
-let winnerName;
-let winner = 'green';
+  let winnerState = false;
+  let winner = 'red';
 
 if (winnerName === 'Green Team') {
   winner = 'green'
@@ -45,7 +45,7 @@ if (winnerName === "Blue Team") {
           <AlertDialogTrigger asChild={winnerState}>
             {winnerState && (
             <AlertDialogContent variant={winner}>
-              <AlertDialogHeader></AlertDialogHeader>
+              <AlertDialogHeader />
               <AlertDialogDescription className="flex place-content-center text-8xl pb-4 text-center font-audimat">
                 WINNER!
               </AlertDialogDescription>

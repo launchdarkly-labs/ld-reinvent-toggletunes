@@ -28,7 +28,8 @@ export default function MusicApp({ teamName }: any) {
   const [songsAPI, setSongsAPI] = useState([]);
   const [upgradeAd, setUpgradeAd] = useState(true);
 
-  const apiURL = "/api/score-add/";
+  const apiURL = "/api/sb-score-add/";
+
 
   useEffect(() => {
     // first step trigger
@@ -59,61 +60,62 @@ export default function MusicApp({ teamName }: any) {
     }
 
     // second step trigger
-    if (sidebar === true) {
-      const secondTrigger = async () => {
-        try {
-          console.log(teamName);
-          const secondStep = {
-            event: "second step complete",
-            team: {
-              name: `${teamName}`,
-              stepCompleted: "stepTwoComplete",
-            },
-          };
-          const response = await fetch(`${apiURL}`, {
-            method: "POST",
-            mode: "cors",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(secondStep),
-          });
-          await response.json();
-          if (response.ok) {
-            setStepTwoComplete(true);
-          }
-        } catch (err) {
-          console.error(err);
-        }
-      };
-      secondTrigger();
-    }
-    // second step trigger
-    if (userplaylist === true) {
-      const thirdTrigger = async () => {
-        try {
-          const thirdStep = {
-            event: "third step complete",
-            team: {
-              name: `${teamName}`,
-              stepCompleted: "stepThreeComplete",
-            },
-          };
-          const response = await fetch(`${apiURL}`, {
-            method: "POST",
-            mode: "cors",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(thirdStep),
-          });
-          await response.json();
-          if (response.ok) {
-            setStepThreeComplete(true);
-          }
-        } catch (err) {
-          console.error(err);
-        }
-      };
-      thirdTrigger();
-    }
-  }, [playlist, sidebar, userplaylist, teamName]);
+            // second step trigger
+            if (sidebar === true) {
+              const secondTrigger = async () => {
+                try {
+                  console.log(teamName)
+                  const secondStep = {
+                    event: "second step complete",
+                    team: {
+                      name: `${teamName}`,
+                      stepCompleted: "stepTwoComplete",
+                    },
+                  };
+                  const response = await fetch(`${apiURL}`, {
+                    method: "POST",
+                    mode: "cors",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(secondStep),
+                  });
+                  await response.json();
+                  if (response.ok) {
+                      setStepTwoComplete(true);
+                  }
+                } catch (err) {
+                  console.error(err);
+                }
+              };
+              secondTrigger();
+            }
+            // second step trigger
+            if (userplaylist === true) {
+              const thirdTrigger = async () => {
+                try {
+                  const thirdStep = {
+                    event: "third step complete",
+                    team: {
+                      name: `${teamName}`,
+                      stepCompleted: 'stepThreeComplete',
+                    },
+                  };
+                  const response = await fetch(`${apiURL}`, {
+                    method: "POST",
+                    mode: "cors",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(thirdStep),
+                  });
+                  await response.json();
+                  if (response.ok) {
+                    setStepThreeComplete(true)
+                  }
+                } catch (err) {
+                  console.error(err);
+                }
+              };
+              thirdTrigger();
+            }
+          }, [playlist, sidebar, userplaylist]);
 
   useEffect(() => {
     setPlaylistAPI([]);
