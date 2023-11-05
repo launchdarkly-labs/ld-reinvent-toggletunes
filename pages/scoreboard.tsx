@@ -5,6 +5,7 @@ import { Modal } from "@/components/modal";
 import { StartModal } from "@/components/start-modal";
 import TimerContext from "@/lib/contexts";
 import {createClient} from '@supabase/supabase-js'
+import KeyboardNavigation from "@/components/KeyboardNavigation";
 // import useSWR from "swr";
 // const fetcher = (url) => fetch(url).then((r) => r.json());
 
@@ -26,8 +27,8 @@ export default function Scoreboard() {
 
   useEffect(() => {
     //subscribing to supabase events
-    const scoreboardUpdates = supabase
-      .channel("custom-all-channel")
+    supabase
+      .channel("supabase")
       .on(
         "postgres_changes",
         {
@@ -85,6 +86,7 @@ export default function Scoreboard() {
       value={{ timer, isTimerRunning, setIsTimerRunning, setTimer }}
     >
       <main className="container mx-auto flex min-h-screen flex-col items-center justify-center bg-black">
+        <KeyboardNavigation />
         <Modal
           winnerState={winnerState}
           setWinnerState={setWinnerState}

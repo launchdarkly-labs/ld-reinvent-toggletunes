@@ -26,6 +26,7 @@
     "framer-motion": "^10.16.4",
     "fs": "^0.0.1-security",
     "ioredis": "^5.3.2",
+    "is-typedarray": "^1.0.0",
     "launchdarkly-node-server-sdk": "^7.0.3",
     "launchdarkly-react-client-sdk": "^3.0.9",
     "lucide-react": "^0.274.0",

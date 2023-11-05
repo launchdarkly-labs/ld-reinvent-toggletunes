@@ -15,6 +15,8 @@ export default async function databaseConnection(req, res) {
   if (req.method === "POST") {
     const { event } = req.body;
 
+    console.log(event)
+
     switch (event) {
       case "first step complete":
         updateEventData(req.body.team.name, req.body.team.stepCompleted);

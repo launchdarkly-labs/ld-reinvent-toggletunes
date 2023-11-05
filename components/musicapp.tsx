@@ -23,6 +23,8 @@ export default function MusicApp({ teamName }: any) {
   const [stepOneComplete, setStepOneComplete] = useState(false);
   const [stepTwoComplete, setStepTwoComplete] = useState(false);
   const [stepThreeComplete, setStepThreeComplete] = useState(false);
+  const [stepFourComplete, setStepFourComplete] = useState(false);
+  const [stepFiveComplete, setStepFiveComplete] = useState(false);
   const [volumeVisibility, setVolumeVisibility] = useState(true);
   const [playlistAPI, setPlaylistAPI] = useState([]);
   const [songsAPI, setSongsAPI] = useState([]);
@@ -30,10 +32,10 @@ export default function MusicApp({ teamName }: any) {
 
   const apiURL = "/api/sb-score-add/";
 
-
   useEffect(() => {
     // first step trigger
     if (playlist === true) {
+      console.log("first step running")
       const firstTrigger = async () => {
         try {
           const firstStep = {
@@ -60,81 +62,134 @@ export default function MusicApp({ teamName }: any) {
     }
 
     // second step trigger
-            // second step trigger
-            if (sidebar === true) {
-              const secondTrigger = async () => {
-                try {
-                  console.log(teamName)
-                  const secondStep = {
-                    event: "second step complete",
-                    team: {
-                      name: `${teamName}`,
-                      stepCompleted: "stepTwoComplete",
-                    },
-                  };
-                  const response = await fetch(`${apiURL}`, {
-                    method: "POST",
-                    mode: "cors",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(secondStep),
-                  });
-                  await response.json();
-                  if (response.ok) {
-                      setStepTwoComplete(true);
-                  }
-                } catch (err) {
-                  console.error(err);
-                }
-              };
-              secondTrigger();
-            }
-            // second step trigger
-            if (userplaylist === true) {
-              const thirdTrigger = async () => {
-                try {
-                  const thirdStep = {
-                    event: "third step complete",
-                    team: {
-                      name: `${teamName}`,
-                      stepCompleted: 'stepThreeComplete',
-                    },
-                  };
-                  const response = await fetch(`${apiURL}`, {
-                    method: "POST",
-                    mode: "cors",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(thirdStep),
-                  });
-                  await response.json();
-                  if (response.ok) {
-                    setStepThreeComplete(true)
-                  }
-                } catch (err) {
-                  console.error(err);
-                }
-              };
-              thirdTrigger();
-            }
-          }, [playlist, sidebar, userplaylist]);
+    if (sidebar === true) {
+      const secondTrigger = async () => {
+        try {
+          console.log(teamName);
+          const secondStep = {
+            event: "second step complete",
+            team: {
+              name: `${teamName}`,
+              stepCompleted: "stepTwoComplete",
+            },
+          };
+          const response = await fetch(`${apiURL}`, {
+            method: "POST",
+            mode: "cors",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(secondStep),
+          });
+          await response.json();
+          if (response.ok) {
+            setStepTwoComplete(true);
+          }
+        } catch (err) {
+          console.error(err);
+        }
+      };
+      secondTrigger();
+    }
+    // third step trigger
+    if (newToggleDB === "complete") {
+      const thirdTrigger = async () => {
+        try {
+          const thirdStep = {
+            event: "third step complete",
+            team: {
+              name: `${teamName}`,
+              stepCompleted: "stepThreeComplete",
+            },
+          };
+          const response = await fetch(`${apiURL}`, {
+            method: "POST",
+            mode: "cors",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(thirdStep),
+          });
+          await response.json();
+          if (response.ok) {
+            setStepThreeComplete(true);
+          }
+        } catch (err) {
+          console.error(err);
+        }
+      };
+      thirdTrigger();
+    }
+
+    if (userplaylist === true) {
+      const fourthTrigger = async () => {
+        try {
+          const fourthStep = {
+            event: "fourth step complete",
+            team: {
+              name: `${teamName}`,
+              stepCompleted: "stepFourComplete",
+            },
+          };
+          const response = await fetch(`${apiURL}`, {
+            method: "POST",
+            mode: "cors",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(fourthStep),
+          });
+          await response.json();
+          if (response.ok) {
+            setStepFourComplete(true);
+          }
+        } catch (err) {
+          console.error(err);
+        }
+      };
+      fourthTrigger();
+    }
+
+    if (adspace === true) {
+      const fifthTrigger = async () => {
+        try {
+          const fifthStep = {
+            event: "fifth step complete",
+            team: {
+              name: `${teamName}`,
+              stepCompleted: "stepFiveComplete",
+            },
+          };
+          const response = await fetch(`${apiURL}`, {
+            method: "POST",
+            mode: "cors",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(fifthStep),
+          });
+          await response.json();
+          if (response.ok) {
+            setStepFiveComplete(true);
+          }
+        } catch (err) {
+          console.error(err);
+        }
+      };
+      fifthTrigger();
+    }
+  }, [playlist, sidebar, userplaylist, adspace, newToggleDB]);
 
   useEffect(() => {
     setPlaylistAPI([]);
     const fetchPlaylists = async () => {
       try {
-        const subroute = window.location.pathname.split('/')[1];
+        const subroute = window.location.pathname.split("/")[1];
         const response = await fetch(`/api/playlists/?team=${subroute}`);
         const data = await response.json();
-        setPlaylistAPI(data);
+        await setPlaylistAPI(data);
       } catch (err) {
         console.error(err);
       }
     };
     const fetchSongs = async () => {
       try {
-        const subroute = window.location.pathname.split('/')[1]; 
+        const subroute = window.location.pathname.split("/")[1];
         const response = await fetch(`/api/songs/?team=${subroute}`);
         const data = await response.json();
-        setSongsAPI(data);
+        await setSongsAPI(data);
       } catch (err) {
         console.error(err);
       }
@@ -202,9 +257,8 @@ export default function MusicApp({ teamName }: any) {
             <div>
               {userplaylist && (
                 <div className="">
-                  
                   <div className="flex items-center justify-center pb-4">
-                  {/* {upgradeAd && (
+                    {/* {upgradeAd && (
                     <motion.button
                       whileTap={{ scale: 0.9 }}
                       transition={{ delay: 2 }}
@@ -217,7 +271,6 @@ export default function MusicApp({ teamName }: any) {
                     </motion.button>
                      )} */}
                   </div>
-                 
 
                   <div className="flex ml-5 font-bold items-center z-10">
                     <p className="text-2xl">Recommended Playlist</p>
