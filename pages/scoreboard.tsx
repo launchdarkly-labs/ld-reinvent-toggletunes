@@ -23,7 +23,19 @@ export default function Scoreboard() {
   const supabase = createClient(process.env.NEXT_PUBLIC_DB_URL, process.env.NEXT_PUBLIC_DB_ANON_KEY);
 
 
+async function GetAllScoreValues() {
+  console.log("running update")
+  let { data, error } = await supabase
+    .from('scoreboard')
+    .select('*')
 
+  if (error) throw error
+
+  setBlueProgress(data[0].blue);
+  setRedProgress(data[0].red);
+  setPurpleProgress(data[0].purple);
+  setGreenProgress(data[0].green);
+}
 
   useEffect(() => {
     //subscribing to supabase events
@@ -32,16 +44,18 @@ export default function Scoreboard() {
       .on(
         "postgres_changes",
         {
-          event: "UPDATE",
+          event: "*",
           schema: "public",
           table: "scoreboard",
           filter: "id=eq.1",
         },
         (payload) => {
-          setGreenProgress(payload.new.green);
-          setRedProgress(payload.new.red);
-          setPurpleProgress(payload.new.purple);
-          setBlueProgress(payload.new.blue);
+          console.log(payload)
+          GetAllScoreValues()
+          // setGreenProgress(payload.new.green);
+          // setRedProgress(payload.new.red);
+          // setPurpleProgress(payload.new.purple);
+          // setBlueProgress(payload.new.blue);
         }
       )
       .subscribe();
