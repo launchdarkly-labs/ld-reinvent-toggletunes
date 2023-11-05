@@ -18,7 +18,7 @@ if (typeof window !== "undefined") {
       user: {
         key: uniqueKey, 
         name: "anonymous",
-        appName: "ToggleTunes"
+        appName: "ToggleTunes",
       },
       device: {
         key: uniqueKey,

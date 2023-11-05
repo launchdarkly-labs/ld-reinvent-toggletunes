@@ -46,7 +46,7 @@ const Item = () => {
             </div>
             <div className="flex-1 flex items-end">
               <div className="text-sm">
-                <PlaylistArtists artists={playlist?.artists || []} />
+                {/* <PlaylistArtists artists={playlist?.artists} /> */}
                 <div className="mt-1">
                   <span className="font-semibold">58 likes</span>, 83 musics,{" "}
                   <span className="text-gray-300">about 3h 15min</span>

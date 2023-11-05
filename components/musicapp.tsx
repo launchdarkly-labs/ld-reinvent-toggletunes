@@ -1,133 +1,145 @@
-import Image from "next/image";
-import { Inter } from "next/font/google";
 import SideBar from "@/components/Sidebar";
 import PageHeader from "@/components/PageHeader";
-import Greeting from "@/components/Greeting";
-import { playlists, morePlaylists } from "../lib/data";
-import PlaylistCard from "@/components/PlaylistCard";
+import { playlists } from "../lib/data";
 import ItemCard from "@/components/ItemCard";
-import { useRouter } from "next/router";
 import { motion } from "framer-motion";
-import { useCallback, useEffect, useState } from "react";
-import {
-  LucideSlidersHorizontal,
-  Music,
-  Music2Icon,
-  Play,
-  SkipBackIcon,
-  SkipForwardIcon,
-  Speaker,
-  SpeakerIcon,
-  Volume,
-  Volume2,
-} from "lucide-react";
+import { useEffect, useState } from "react";
+import { Music2, Music2Icon, Sparkle } from "lucide-react";
 import { songs } from "../lib/data";
-import { useFlags } from "launchdarkly-react-client-sdk";
-import { FaPlay } from "react-icons/fa";
+import { useFlags, useLDClient } from "launchdarkly-react-client-sdk";
 import { IoPlaySkipForwardSharp, IoPlaySkipBackSharp } from "react-icons/io5";
 import { IoMdVolumeHigh } from "react-icons/io";
 import { IoPlaySharp } from "react-icons/io5";
 import { IoIosMusicalNotes } from "react-icons/io";
 
-const inter = Inter({ subsets: ["latin"] });
-
 export default function MusicApp({ teamName }: any) {
-  const { playlist, sidebar, userplaylist, adspace } = useFlags();
+  const { playlist, sidebar, userplaylist, adspace, newToggleDB } = useFlags();
+
+  const ldClient = useLDClient();
+
   console.log(playlist);
   console.log(sidebar);
-  const [contextColor, setContextColor] = useState("");
   const [currentSongIndex, setCurrentSongIndex] = useState(0);
   const [stepOneComplete, setStepOneComplete] = useState(false);
   const [stepTwoComplete, setStepTwoComplete] = useState(false);
   const [stepThreeComplete, setStepThreeComplete] = useState(false);
   const [volumeVisibility, setVolumeVisibility] = useState(true);
+  const [playlistAPI, setPlaylistAPI] = useState([]);
+  const [songsAPI, setSongsAPI] = useState([]);
+  const [upgradeAd, setUpgradeAd] = useState(true);
 
-          const apiURL = "/api/score-add/";
+  const apiURL = "/api/score-add/";
 
-          useEffect(() => {
-            // first step trigger
-            if (playlist === true) {
-              const firstTrigger = async () => {
-                try {
-                  const firstStep = {
-                    event: "first step complete",
-                    team: {
-                      name: `${teamName}`,
-                      stepCompleted: 'stepOneComplete',
-                    },
-                  };
-                  const response = await fetch(`${apiURL}`, {
-                    method: "POST",
-                    mode: "cors",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(firstStep),
-                  });
-                  await response.json();
-                } catch (err) {
-                  console.error(err);
-                }
-              };
-              firstTrigger();
-            } else {
-              console.log("You already completed this step");
-            }
+  useEffect(() => {
+    // first step trigger
+    if (playlist === true) {
+      const firstTrigger = async () => {
+        try {
+          const firstStep = {
+            event: "first step complete",
+            team: {
+              name: `${teamName}`,
+              stepCompleted: "stepOneComplete",
+            },
+          };
+          const response = await fetch(`${apiURL}`, {
+            method: "POST",
+            mode: "cors",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(firstStep),
+          });
+          await response.json();
+        } catch (err) {
+          console.error(err);
+        }
+      };
+      firstTrigger();
+    } else {
+      console.log("You already completed this step");
+    }
 
-            // second step trigger
-            if (sidebar === true) {
-              const secondTrigger = async () => {
-                try {
-                  console.log(teamName)
-                  const secondStep = {
-                    event: "second step complete",
-                    team: {
-                      name: `${teamName}`,
-                      stepCompleted: "stepTwoComplete",
-                    },
-                  };
-                  const response = await fetch(`${apiURL}`, {
-                    method: "POST",
-                    mode: "cors",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(secondStep),
-                  });
-                  await response.json();
-                  if (response.ok) {
-                      setStepTwoComplete(true);
-                  }
-                } catch (err) {
-                  console.error(err);
-                }
-              };
-              secondTrigger();
-            }
-            // second step trigger
-            if (userplaylist === true) {
-              const thirdTrigger = async () => {
-                try {
-                  const thirdStep = {
-                    event: "third step complete",
-                    team: {
-                      name: `${teamName}`,
-                      stepCompleted: 'stepThreeComplete',
-                    },
-                  };
-                  const response = await fetch(`${apiURL}`, {
-                    method: "POST",
-                    mode: "cors",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(thirdStep),
-                  });
-                  await response.json();
-                  if (response.ok) {
-                    setStepThreeComplete(true)
-                  }
-                } catch (err) {
-                  console.error(err);
-                }
-              };
-              thirdTrigger();
-            }
-          }, [playlist, sidebar, userplaylist, teamName]);
+    // second step trigger
+    if (sidebar === true) {
+      const secondTrigger = async () => {
+        try {
+          console.log(teamName);
+          const secondStep = {
+            event: "second step complete",
+            team: {
+              name: `${teamName}`,
+              stepCompleted: "stepTwoComplete",
+            },
+          };
+          const response = await fetch(`${apiURL}`, {
+            method: "POST",
+            mode: "cors",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(secondStep),
+          });
+          await response.json();
+          if (response.ok) {
+            setStepTwoComplete(true);
+          }
+        } catch (err) {
+          console.error(err);
+        }
+      };
+      secondTrigger();
+    }
+    // second step trigger
+    if (userplaylist === true) {
+      const thirdTrigger = async () => {
+        try {
+          const thirdStep = {
+            event: "third step complete",
+            team: {
+              name: `${teamName}`,
+              stepCompleted: "stepThreeComplete",
+            },
+          };
+          const response = await fetch(`${apiURL}`, {
+            method: "POST",
+            mode: "cors",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(thirdStep),
+          });
+          await response.json();
+          if (response.ok) {
+            setStepThreeComplete(true);
+          }
+        } catch (err) {
+          console.error(err);
+        }
+      };
+      thirdTrigger();
+    }
+  }, [playlist, sidebar, userplaylist, teamName]);
+
+  useEffect(() => {
+    setPlaylistAPI([]);
+    const fetchPlaylists = async () => {
+      try {
+        const subroute = window.location.pathname.split('/')[1];
+        const response = await fetch(`/api/playlists/?team=${subroute}`);
+        const data = await response.json();
+        setPlaylistAPI(data);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    const fetchSongs = async () => {
+      try {
+        const subroute = window.location.pathname.split('/')[1]; 
+        const response = await fetch(`/api/songs/?team=${subroute}`);
+        const data = await response.json();
+        setSongsAPI(data);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchPlaylists();
+    fetchSongs();
+  }, [newToggleDB]);
 
   const handleNextSong = () => {
     setCurrentSongIndex((prevIndex) => (prevIndex + 1) % songs.length);
@@ -139,15 +151,28 @@ export default function MusicApp({ teamName }: any) {
     );
   };
 
-  const handleMouseEnter = (color: string) => setContextColor(color);
+  const handleSubscriptionClick = async () => {
+    const context: any = ldClient?.getContext();
+    context.user.tier = "Platinum";
+    ldClient?.identify(context);
+    setUpgradeAd(false);
+  };
 
   return (
-    <div className="flex flex-col h-screen gap-2 font-sohne bg-black overflow-x-hidden">
+    <div className="flex flex-col h-screen gap-2 font-sohne bg-black overflow-y-hidden scrollbar-hide">
       {playlist ? (
-        <div className="flex flex-row bg-black gap-2">
+        <div className="flex flex-row bg-black gap-2 mt-2">
           {sidebar && (
-            <div className="w-3/5 xl:w-1/5 min-h-screen" style={{ maxHeight: "calc(100vh - 150px)" }} >
-              <SideBar playlist={playlist} userplaylist={userplaylist} />
+            <div
+              className="w-3/5 xl:w-1/5 min-h-screen"
+              style={{ maxHeight: "calc(100vh - 150px)" }}
+            >
+              <SideBar
+                playlist={playlist}
+                userplaylist={userplaylist}
+                songsAPI={songsAPI}
+                newToggleDB={newToggleDB}
+              />
             </div>
           )}
           <motion.div
@@ -158,7 +183,7 @@ export default function MusicApp({ teamName }: any) {
               ease: [0, 0.71, 0.2, 1.01],
             }}
             style={{ maxHeight: "calc(100vh - 150px)" }}
-            className={`mx-auto rounded-xl pt-2 bg-ldbackground overflow-y-auto ${
+            className={`mx-auto rounded-xl pt-2 bg-ldbackground h-screen overflow-y-auto scrollbar-hide ${
               sidebar && adspace
                 ? "w-2/5 xl:w-3/5"
                 : sidebar
@@ -174,21 +199,42 @@ export default function MusicApp({ teamName }: any) {
 
             <div>
               {userplaylist && (
-                <div>
-                  <PageHeader />
+                <div className="">
+                  
+                  <div className="flex items-center justify-center pb-4">
+                  {/* {upgradeAd && (
+                    <motion.button
+                      whileTap={{ scale: 0.9 }}
+                      transition={{ delay: 2 }}
+                      onClick={handleSubscriptionClick}
+                      className="flex w-full m-2 px-4 py-3 border-2 border-gray-600 font-sohne rounded-md text-xl items-center justify-center"
+                    >
+                      <Sparkle className="w-8 h-8 mr-2" />
+                      Special Offer! Upgrade to DJ Toggle's Platinum Plan!
+                      <Sparkle className="w-8 h-8 ml-2" />
+                    </motion.button>
+                     )} */}
+                  </div>
+                 
 
                   <div className="flex ml-5 font-bold items-center z-10">
                     <p className="text-2xl">Recommended Playlist</p>
                   </div>
 
                   <div className="relative grid gap-y-4 gap-x-6 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 mt-6 mx-8 z-10">
-                    {playlists.map((playlist, index) => (
-                      <div>
-                        <ItemCard
-                          playlist={playlist}
-                          onMouseEnter={handleMouseEnter}
-                        />
-                      </div>
+                    {playlistAPI.map((playlist, index) => (
+                      <motion.div
+                        initial={{ opacity: 0, scale: 0.25 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{
+                          duration: 0.5,
+                          ease: [0, 0.71, 0.2, 1.01],
+                          delay: index * 0.2,
+                        }}
+                        key={index}
+                      >
+                        <ItemCard playlist={playlist} />
+                      </motion.div>
                     ))}
                   </div>
                 </div>
@@ -203,10 +249,10 @@ export default function MusicApp({ teamName }: any) {
                   </div>
                 )}
               </div>
-              <div className="ml-8">
+              <div className="ml-8 pb-8">
                 {userplaylist ? (
                   <div className="relative flex-row space-x-6 overflow-x-auto whitespace-nowrap scrollbar-hide">
-                    {songs.map((song, index) => (
+                    {songsAPI.map((song: any, index) => (
                       <motion.div
                         initial={{ opacity: 0, scale: 0.25 }}
                         animate={{ opacity: 1, scale: 1 }}
@@ -221,8 +267,6 @@ export default function MusicApp({ teamName }: any) {
                           className="p-4 object-cover transition-all hover:scale-105 h-48 w-48"
                           alt="astronaut"
                           src={song.image}
-
-                          // style={{ width: "150px", height: "150px" }}
                         />
                         <p className="text-lg px-4 text-center font-sohne pb-4">
                           {song.title}
@@ -236,9 +280,9 @@ export default function MusicApp({ teamName }: any) {
                 ) : (
                   <div
                     className="relative flex flex-col w-full space-y-2 mx-auto overflow-auto h-4/5 z-10 scrollbar-hide"
-                    style={{ maxHeight: "calc(100vh - 250px)" }}
+                    style={{ maxHeight: "calc(100vh - 150px)" }}
                   >
-                    {songs.map((song, index) => (
+                    {songsAPI.map((song: any, index: number) => (
                       <motion.div
                         initial={{ opacity: 0, scale: 0.25 }}
                         animate={{ opacity: 1, scale: 1 }}
@@ -248,25 +292,25 @@ export default function MusicApp({ teamName }: any) {
                           delay: index * 0.2,
                         }}
                         key={song.id}
-                        className="grid grid-cols-5  w-full text-xl border-b-2 border-b-gray-600/40 py-4 hover:bg-gray-500/20"
+                        className="grid grid-cols-5 tracklist  w-full text-xl border-b-2 border-b-gray-600/40 py-4 hover:bg-gray-500/20"
                       >
                         <div className="">
-                          {playlist && !userplaylist ? (
+                          {newToggleDB !== "complete" ? (
                             <Music2Icon className="h-10 w-10 ml-8" />
                           ) : (
                             <img src={song.image} className="h-10 w-10 ml-8" />
                           )}
                         </div>
-                        <div className="">
+                        <div className="titletext">
                           <p>{song.title}</p>
                         </div>
                         <div className=" text-lg text-gray-500">
-                          <p>{song.artists.join(", ")}</p>
+                          <p>{song.artists}</p>
                         </div>
-                        <div className="">
+                        <div className="titletext">
                           <p>{song.album}</p>
                         </div>
-                        <div className="">
+                        <div className="timer start-end">
                           <p>{song.duration}</p>
                         </div>
                       </motion.div>
@@ -277,7 +321,7 @@ export default function MusicApp({ teamName }: any) {
             </div>
           </motion.div>
 
-          <div className="absolute bottom-0 h-36 w-full items-center px-4 bg-ldbackground shadow-xl justify-center grid grid-cols-3 ">
+          <div className="absolute bottom-0 h-32 w-full items-center px-4 bg-ldbackground shadow-xl justify-center grid grid-cols-3 ">
             <div className="flex items-center ml-5">
               {playlist && !userplaylist ? (
                 <Music2Icon className="h-14 w-14 mr-4" />
@@ -290,7 +334,7 @@ export default function MusicApp({ teamName }: any) {
               <div>
                 <p className="text-2xl">{songs[currentSongIndex].title}</p>
                 <p className="text-xl text-gray-500">
-                  {songs[currentSongIndex].artists.join(", ")}
+                  {songs[currentSongIndex].artists}
                 </p>
               </div>
             </div>
@@ -331,13 +375,16 @@ export default function MusicApp({ teamName }: any) {
             </div>
           </div>
           {adspace && (
-            <div
+            <motion.div
+              initial={{ x: 100 }}
+              animate={{ x: 0 }}
+              transition={{ duration: 1 }}
               className="w-2/5 xl:w-1/5 items-between flex flex-col justify-between"
               style={{ maxHeight: "calc(100vh - 150px)" }}
             >
-              <img src="/images/AD1.png" className="self-start" />
-              <img src="/images/AD2.png" className="self-end" />
-            </div>
+              <img src="/images/Platinum.png" className="self-start" />
+              <img src="/images/Skipper.png" className="self-end" />
+            </motion.div>
           )}
         </div>
       ) : (
@@ -348,16 +395,13 @@ export default function MusicApp({ teamName }: any) {
             duration: 0.5,
             ease: [0, 0.71, 0.2, 1.01],
           }}
-          className="relative bg-ldbackground rounded-xl h-screen w-1/2 mx-auto flex-grow"
+          className="h-screen mx-auto w-full"
+          style={{ maxHeight: "calc(100vh - 150px)" }}
         >
-          <div className="py-5">
-            <img src="/images/tunes.png" className="ml-auto mr-5" />
+          <div>
+            <img src="/images/ToggleTunes.png" className="h-16 my-10 mx-auto" />
           </div>
-          <div className="flex flex-col  items-center text-center justify-center">
-            <p className="text-2xl 2xl:text-7xl font-bold outfitters w-2/3 mx-auto">
-              Launching ToggleTunes at AWS re:Invent
-            </p>
-            <motion.div
+          <motion.div
             key={songs[currentSongIndex].id}
             initial={{ opacity: 0, scale: 0.25 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -365,31 +409,17 @@ export default function MusicApp({ teamName }: any) {
               duration: 0.5,
               ease: [0, 0.71, 0.2, 1.01],
             }}
-            className="flex items-center justify-center w-full"
+            className="flex items-center justify-center cardgradient h-2/3 w-1/3 mx-auto rounded-xl"
+            // Force the div to be a square by setting equal viewport width values to width and height
           >
-            <img
-              src="/images/ld-light.png"
-              className="m-auto mt-8 2xl:mt-[100px] h-48 w-48 2xl:h-96 2xl:w-96"
-            />
+            <IoIosMusicalNotes className="h-96 w-96 mx-auto" />
           </motion.div>
-          </div>
-          
 
           <div className="absolute bottom-0 h-36 w-full items-center px-4 bg-ldbackground shadow-xl justify-center grid grid-cols-3 ">
-            <div className="flex items-center ml-2">
-              {playlist && !userplaylist ? (
-                <Music2Icon className="h-14 w-14 mr-2" />
-              ) : (
-                <img
-                  src={songs[currentSongIndex].image}
-                  className="h-12 mr-4"
-                />
-              )}
+            <div className="flex items-center ml-8">
               <div>
-                <p className="text-lg">{songs[currentSongIndex].title}</p>
-                <p className="text-md text-gray-500">
-                  {songs[currentSongIndex].artists.join(", ")}
-                </p>
+                <p className="subtext">{songs[currentSongIndex].title}</p>
+                <p className="titletext">{songs[currentSongIndex].artists}</p>
               </div>
             </div>
             <div className="flex flex-col items-center">

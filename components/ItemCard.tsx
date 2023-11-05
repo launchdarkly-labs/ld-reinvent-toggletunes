@@ -4,18 +4,16 @@ import Link from "next/link";
 
 interface Props {
   playlist: Playlist;
-  onMouseEnter: (color: string) => void;
 }
 
-const ItemCard = ({ playlist, onMouseEnter }: Props) => {
+const ItemCard = ({ playlist }: Props) => {
 
   return (
     <Link
       key={playlist.id}
       href={`/playlist/${playlist.id}`}
-      onMouseEnter={() => onMouseEnter(playlist.color.dark)}
       className="playlist-item flex group relative transition-all duration-300 overflow-hidden items-center gap-5 rounded-md shadow-lg hover:shadow-xl outline-none bg-zinc-500/30 hover:bg-zinc-500/50 focus:bg-zinc-500/50"
-      data-color={playlist.color.dark}
+      // data-color={playlist.color.dark}
     >
       <div className="h-20 w-20">
         <img

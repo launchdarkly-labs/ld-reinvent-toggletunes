@@ -1,13 +1,17 @@
-import { songs } from "@/lib/data";
-import { Home, Library, Music2Icon, Search } from "lucide-react";
+import {  Music2Icon } from "lucide-react";
 import Link from "next/link";
 import { MdHome } from "react-icons/md";
 import { FiSearch } from "react-icons/fi";
 import { RxCounterClockwiseClock } from "react-icons/rx";
+import { motion } from "framer-motion";
 
-const SideBar = ({ playlist, userplaylist }: any) => {
+const SideBar = ({ playlist, userplaylist, songsAPI, newToggleDB }: any) => {
+  console.log("New Toggle DB "+ newToggleDB)
   return (
-    <div
+    <motion.div
+      initial={{ x: -100 }}
+      animate={{ x: 0 }}
+      transition={{ duration: 1 }}
       className="flex flex-col h-screen gap-2"
       style={{ maxHeight: "calc(100vh - 150px)" }}
     >
@@ -20,7 +24,6 @@ const SideBar = ({ playlist, userplaylist }: any) => {
               className="flex gap-4 text-ldcomplicatedwhite py-3.5 px-5 font-semibold transition-all duration-300"
             >
               <MdHome size={"1.5rem"} />
-              {/* <Home className="h-6 w-6" /> */}
               Home
             </Link>
           </li>
@@ -36,7 +39,7 @@ const SideBar = ({ playlist, userplaylist }: any) => {
         </ul>
       </div>
 
-      <div className="bg-ldbackground rounded-lg flex-1 min-h-0 overflow-auto scrollbar-hide">
+      <div className="bg-ldbackground rounded-lg flex-1 min-h-0 overflow-auto scrollbar-hide pb-4">
         <ul>
           <li>
             <Link
@@ -50,9 +53,9 @@ const SideBar = ({ playlist, userplaylist }: any) => {
         </ul>
         <div className="px-4 overflow-y-auto scrollbar-hide ml-2">
           <ul>
-            {songs.map((song) => (
-              <li key={song.id} className="flex items-center gap-2 py-2">
-                {playlist && !userplaylist ? (
+            {songsAPI.map((song: any, index: any) => (
+              <li key={index} className="flex items-center gap-2 py-2">
+                {newToggleDB !== 'complete' ? (
                   <Music2Icon className="h-10 w-10 mr-5" />
                 ) : (
                   <img src={song.image} alt={song.title} className="h-8 w-8" />
@@ -64,7 +67,7 @@ const SideBar = ({ playlist, userplaylist }: any) => {
           </ul>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

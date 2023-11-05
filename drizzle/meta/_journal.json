@@ -1,0 +1,20 @@
+{
+  "version": "5",
+  "dialect": "pg",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1698995079551,
+      "tag": "0000_cheerful_the_twelve",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1699083175512,
+      "tag": "0001_deep_quasimodo",
+      "breakpoints": true
+    }
+  ]
+}

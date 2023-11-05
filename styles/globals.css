@@ -110,3 +110,45 @@ input[type=range].onoff::-moz-slider-thumb {
 input[type=range].onoff::slider-thumb {
   appearance: none;
 }
+
+.cardgradient {
+  border-radius: 24px;
+background: var(--Card-gradient, linear-gradient(201deg, #58595B -25.37%, #212121 75.5%));
+}
+
+.subtext {
+  color: var(--grayscale-gray-01, #F8F8F8);
+font-family: Sohne;
+font-size: 23.094px;
+font-style: normal;
+font-weight: 400;
+line-height: 150%; /* 34.642px */
+}
+
+.titletext {
+  color: var(--grayscale-gray-04, #BCBEC0);
+font-family: Sohne;
+font-size: 16px;
+font-style: normal;
+font-weight: 400;
+line-height: 150%; /* 24px */
+}
+
+.tracklist {
+  color: var(--grayscale-gray-04, #BCBEC0);
+font-family: Sohne;
+font-size: 20.186px;
+font-style: normal;
+font-weight: 400;
+line-height: 150%; /* 30.279px */
+}
+
+.timer {
+  color: var(--grayscale-gray-06, #939598);
+text-align: center;
+font-family: Sohne;
+font-size: 15px;
+font-style: normal;
+font-weight: 400;
+line-height: 150%; /* 22.5px */
+}
