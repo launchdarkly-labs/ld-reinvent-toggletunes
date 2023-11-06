@@ -4,7 +4,7 @@ import { useEffect, useState, useContext } from "react";
 import { Modal } from "@/components/modal";
 import { StartModal } from "@/components/start-modal";
 import TimerContext from "@/lib/contexts";
-import {createClient} from '@supabase/supabase-js'
+import { createClient } from "@supabase/supabase-js";
 import KeyboardNavigation from "@/components/KeyboardNavigation";
 // import useSWR from "swr";
 // const fetcher = (url) => fetch(url).then((r) => r.json());
@@ -19,26 +19,32 @@ export default function Scoreboard() {
   const [isExploding, setIsExploding] = useState(false);
   const [greenProgress, setGreenProgress] = useState(0);
   // const { data } = useSWR("/api/score-list", fetcher);
-  const { timer, isTimerRunning, setTimer, setIsTimerRunning, timerToMinutesSecondsMilliseconds } = useContext(TimerContext);
-  const supabase = createClient(process.env.NEXT_PUBLIC_DB_URL, process.env.NEXT_PUBLIC_DB_ANON_KEY);
+  const {
+    timer,
+    isTimerRunning,
+    setTimer,
+    setIsTimerRunning,
+    timerToMinutesSecondsMilliseconds,
+  } = useContext(TimerContext);
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_DB_URL,
+    process.env.NEXT_PUBLIC_DB_ANON_KEY
+  );
 
+  async function GetAllScoreValues() {
+    console.log("running update");
+    let { data, error } = await supabase.from("scoreboard").select("*");
 
-async function GetAllScoreValues() {
-  console.log("running update")
-  let { data, error } = await supabase
-    .from('scoreboard')
-    .select('*')
+    if (error) throw error;
 
-  if (error) throw error
+    setBlueProgress(data[0].blue);
+    setRedProgress(data[0].red);
+    setPurpleProgress(data[0].purple);
+    setGreenProgress(data[0].green);
+  }
 
-  setBlueProgress(data[0].blue);
-  setRedProgress(data[0].red);
-  setPurpleProgress(data[0].purple);
-  setGreenProgress(data[0].green);
-}
-
-useEffect(() => {
-  supabase
+  useEffect(() => {
+    supabase
       .channel("supabase")
       .on(
         "postgres_changes",
@@ -48,10 +54,20 @@ useEffect(() => {
           table: "scoreboard",
           filter: "id=eq.1",
         },
-        (payload) => {
-          console.log(payload)
+        async (payload) => {
+          console.log(payload);
+          // if we're resetting a new one then reset the timer to 5 minutes
+          if (payload.new.resetTriggered === true) {
+            console.log("resetting timer");
+            setTimer(300000);
+            await supabase
+              .from("scoreboard")
+              .update({ resetTriggered: false })
+              .eq("id", 1);
+          }
+          setIsTimerRunning(payload.new.isTimerRunning);
           // Adjusted for debugging inconsistent scoreboard updates
-          GetAllScoreValues()
+          GetAllScoreValues();
           // setGreenProgress(payload.new.green);
           // setRedProgress(payload.new.red);
           // setPurpleProgress(payload.new.purple);
@@ -59,9 +75,9 @@ useEffect(() => {
         }
       )
       .subscribe();
-}, [])  
+  }, []);
 
-useEffect(() => {
+  useEffect(() => {
     //subscribing to supabase events
     if (
       greenProgress >= 100 ||
@@ -97,7 +113,13 @@ useEffect(() => {
         setWinnerName("blue");
       }
     }
-  }, [greenProgress, redProgress, blueProgress, purpleProgress, isTimerRunning]);
+  }, [
+    greenProgress,
+    redProgress,
+    blueProgress,
+    purpleProgress,
+    isTimerRunning,
+  ]);
 
   return (
     <TimerContext.Provider
@@ -113,9 +135,10 @@ useEffect(() => {
           isExploding={isExploding}
           setIsExploding={setIsExploding}
         />
-        <StartModal 
-        isTimerRunning={isTimerRunning}
-        setIsTimerRunning={setIsTimerRunning}/>
+        <StartModal
+          isTimerRunning={isTimerRunning}
+          setIsTimerRunning={setIsTimerRunning}
+        />
         <div className="flex sticky top-10 place-items-center border border-zinc-500 mt-10 w-1/3 xl:w-1/6 bg-transparent justify-center rounded-xl">
           <div className="flex text-8xl sm:text-6xl font-bold text-white font-audimat mt-4">
             {timerToMinutesSecondsMilliseconds(timer)}
