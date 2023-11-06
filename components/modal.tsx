@@ -12,10 +12,9 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 
-export function Modal({ winnerName, setWinnerState, setResetScores, isExploding, setIsExploding}: any) {
+export function Modal({ winnerState, winnerName, setWinnerState, setResetScores, isExploding, setIsExploding}: any) {
 
-  let winnerState = true;
-  let winner = 'red';
+let winner = '';
 
 if (winnerName === 'Green Team') {
   winner = 'green'
