@@ -1,4 +1,5 @@
 //@ts-nocheck
+import { useEffect } from "react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -10,20 +11,10 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import ConfettiExplosion, {ConfettiProps} from 'react-confetti-explosion';
-import {motion} from 'framer-motion'
-
-const largeProps: ConfettiProps = {
-  force: 0.8,
-  duration: 4000,
-  particleCount: 300,
-  width: 1600,
-  colors: ['#041E43', '#1471BF', '#5BB4DC', '#FC027B', '#66D805'],
-};
 
 export function Modal({ winnerName, setWinnerState, setResetScores, isExploding, setIsExploding}: any) {
 
-  let winnerState = false;
+  let winnerState = true;
   let winner = 'red';
 
 if (winnerName === 'Green Team') {
@@ -38,6 +29,18 @@ if (winnerName === "Purple Team") {
 if (winnerName === "Blue Team") {
   winner = "blue";
 } 
+
+useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.key === "Enter") {
+        setAnimationStarted(true)
+      }
+    }
+    document.addEventListener("keydown", handleKeyDown)
+        return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+},[])
 
   return (
     <>

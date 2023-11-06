@@ -116,7 +116,7 @@ useEffect(() => {
         <StartModal 
         isTimerRunning={isTimerRunning}
         setIsTimerRunning={setIsTimerRunning}/>
-        <div className="flex sticky top-10 place-items-center border border-zinc-500 mt-10 w-1/3 xl:w-1/6 bg-gradient-to-b from-zinc-900 from-10% via-zinc-600 via-50% to-zinc-900 to-90% justify-center rounded-xl">
+        <div className="flex sticky top-10 place-items-center border border-zinc-500 mt-10 w-1/3 xl:w-1/6 bg-transparent justify-center rounded-xl">
           <div className="flex text-8xl sm:text-6xl font-bold text-white font-audimat mt-4">
             {timerToMinutesSecondsMilliseconds(timer)}
           </div>
