@@ -2,6 +2,7 @@
 import React from 'react';
 import MusicApp from '@/components/musicapp';
 import { asyncWithLDProvider } from 'launchdarkly-react-client-sdk';
+import { Room } from '@/components/room';
 
 let c;
 
@@ -32,7 +33,9 @@ if (typeof window !== "undefined") {
   c = () => {
     return (
         <LDProvider>
+          <Room>
           <MusicApp />
+          </Room>
         </LDProvider>
     );
   };

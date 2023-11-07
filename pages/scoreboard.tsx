@@ -22,6 +22,11 @@ export default function Scoreboard() {
   const [winnerName, setWinnerName] = useState("");
   const [isExploding, setIsExploding] = useState(false);
   const [greenProgress, setGreenProgress] = useState(0);
+  const [flagOne, setFlagOne] = useState(false);
+  const [flagTwo, setFlagTwo] = useState(false);
+  const [flagThree, setFlagThree] = useState(false);
+  const [flagFour, setFlagFour] = useState(false);
+  const [flagFive, setFlagFive] = useState(false);
   // const { data } = useSWR("/api/score-list", fetcher);
   const {
     timer,
@@ -179,6 +184,8 @@ export default function Scoreboard() {
 function EventListenerComponent({setGreenProgress, setRedProgress, setBlueProgress, setPurpleProgress}) {
   console.log("Event listener online")
   useEventListener(({ event, user, connectionId }) => {
+    console.log(user)
+    console.log(connectionId)
     // type: teamName, complete: "stepThreeComplete", value: 20
     console.log(event.value)
     function scoreRequest(event) {
