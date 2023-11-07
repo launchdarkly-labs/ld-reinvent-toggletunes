@@ -20,6 +20,7 @@ export default async function handler(
 ) {
 
 let ldClient: LDClient;
+let sdkKey;
 
 const getServerClient = async (sdkKey: string, options?: LDOptions) => {
     if (!ldClient) {
@@ -31,9 +32,12 @@ const getServerClient = async (sdkKey: string, options?: LDOptions) => {
 
   const connectionString = process.env.DATABASE_URL
   const team = req.query.team as string
-  const sdkKey = process.env[`LD_SDK_KEY_${team!.toUpperCase()}`]
-  // console.log(`Team: ${team}, SDK Key: ${sdkKey}`);
-
+  if (team === '') {
+    sdkKey = process.env.LD_SDK_KEY
+} else {
+    sdkKey = process.env[`LD_SDK_KEY_${team!.toUpperCase()}`]
+}
+  
   ldClient = await getServerClient(sdkKey || "");
   let newToggleDB;
   let jsonObject;
@@ -49,7 +53,6 @@ const getServerClient = async (sdkKey: string, options?: LDOptions) => {
   
   let lists;
   if (newToggleDB === 'complete') {
-    // await console.log(newToggleDB + "for team" + team)
     if (!connectionString) {
       throw new Error('DATABASE_URL is not set')
     }
