@@ -29,13 +29,12 @@ export default function Scoreboard() {
   } = useContext(TimerContext);
 
   async function configUser() {
-    await setCookie("team", "Scoreboard")
+    await setCookie("team", "Scoreboard");
   }
 
   useEffect(() => {
-    configUser()
+    configUser();
   }, []);
-
 
   useEffect(() => {
     if (
