@@ -163,12 +163,11 @@ export default function MusicApp({ teamName, socket }: any) {
 
   return (
     <div className="flex flex-col h-screen gap-2 font-sohne bg-black overflow-y-hidden scrollbar-hide">
-      <p>Total users {userCount}</p>
       {playlist ? (
         <div className="flex flex-row bg-black gap-2 mt-2">
           {sidebar && (
             <div
-              className="w-3/5 xl:w-1/5 min-h-screen"
+              className="w-3/5 xl:w-1/5 min-h-screen pl-2"
               style={{ maxHeight: "calc(100vh - 150px)" }}
             >
               <SideBar
@@ -381,11 +380,11 @@ export default function MusicApp({ teamName, socket }: any) {
               initial={{ x: 100 }}
               animate={{ x: 0 }}
               transition={{ duration: 1 }}
-              className="w-2/5 xl:w-1/5 items-between flex flex-col justify-between"
+              className="w-2/5 xl:w-1/5 items-between flex flex-col justify-between gap-y-2"
               style={{ maxHeight: "calc(100vh - 150px)" }}
             >
-              <img src="/images/Platinum.png" className="self-start" />
-              <img src="/images/Skipper.png" className="self-end" />
+              <img src="/images/djtoggle.png" className="self-start h-1/2 pr-2" />
+              <img src="/images/books.png" className="self-end h-1/2 pr-2" />
             </motion.div>
           )}
         </div>
