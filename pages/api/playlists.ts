@@ -32,7 +32,7 @@ const getServerClient = async (sdkKey: string, options?: LDOptions) => {
   const connectionString = process.env.DATABASE_URL
   const team = req.query.team as string
   const sdkKey = process.env[`LD_SDK_KEY_${team!.toUpperCase()}`]
-  console.log(`Team: ${team}, SDK Key: ${sdkKey}`);
+  // console.log(`Team: ${team}, SDK Key: ${sdkKey}`);
 
   ldClient = await getServerClient(sdkKey || "");
   let newToggleDB;
@@ -49,7 +49,7 @@ const getServerClient = async (sdkKey: string, options?: LDOptions) => {
   
   let lists;
   if (newToggleDB === 'complete') {
-    await console.log(newToggleDB + "for team" + team)
+    // await console.log(newToggleDB + "for team" + team)
     if (!connectionString) {
       throw new Error('DATABASE_URL is not set')
     }

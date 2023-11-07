@@ -8,6 +8,7 @@ import { createClient } from "@supabase/supabase-js";
 import KeyboardNavigation from "@/components/KeyboardNavigation";
 import { Room } from "@/components/room";
 import { useBroadcastEvent, useEventListener } from "@/liveblocks.config";
+import { setCookie } from "cookies-next";
 
 // import useSWR from "swr";
 // const fetcher = (url) => fetch(url).then((r) => r.json());
@@ -39,6 +40,14 @@ export default function Scoreboard() {
     process.env.NEXT_PUBLIC_DB_URL,
     process.env.NEXT_PUBLIC_DB_ANON_KEY
   );
+
+  async function configUser() {
+    await setCookie("team", "Scoreboard")
+  }
+
+  useEffect(() => {
+    configUser()
+  }, []);
 
   // Deprecated in favor of liveblocks
   async function GetAllScoreValues() {

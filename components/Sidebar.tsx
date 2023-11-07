@@ -17,7 +17,7 @@ const SideBar = ({ songsAPI, newToggleDB }: any) => {
       <div className="bg-ldbackground rounded-xl">
         <img src="/images/ToggleTunes.png" className="ml-5 mt-5 pb-4 w-2/3" />
         <ul>
-          <li>
+          <li key="1a">
             <Link
               href="/"
               className="flex gap-4 text-ldcomplicatedwhite py-3.5 px-5 font-semibold transition-all duration-300"
@@ -26,7 +26,7 @@ const SideBar = ({ songsAPI, newToggleDB }: any) => {
               Home
             </Link>
           </li>
-          <li>
+          <li key="2b">
             <Link
               href="/"
               className="flex gap-4 text-zinc-400 hover:text-ldcomplicatedwhite py-3.5 px-5 font-semibold transition-all duration-300"
@@ -40,7 +40,7 @@ const SideBar = ({ songsAPI, newToggleDB }: any) => {
 
       <div className="bg-ldbackground rounded-lg flex-1 min-h-0 overflow-auto scrollbar-hide pb-4">
         <ul>
-          <li>
+          <li key="3c">
             <Link
               href="/"
               className="flex gap-4 text-ldcomplicatedwhite py-3.5 px-5 font-semibold text-2xl items-center font-extra pb-8"

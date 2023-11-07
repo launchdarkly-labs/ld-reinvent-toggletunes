@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@liveblocks/client": "^1.7.0",
+    "@liveblocks/node": "^1.7.0",
     "@liveblocks/react": "^1.7.0",
     "@radix-ui/react-alert-dialog": "^1.0.5",
     "@radix-ui/react-progress": "^1.0.3",

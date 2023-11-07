@@ -41,13 +41,13 @@ const getServerClient = async (sdkKey: string, options?: LDOptions) => {
     } else {
         sdkKey = process.env[`LD_SDK_KEY_${team!.toUpperCase()}`]
     }
-    console.log(`Team: ${team}, SDK Key: ${sdkKey}`);
+    // console.log(`Team: ${team}, SDK Key: ${sdkKey}`);
 
     ldClient = await getServerClient(sdkKey || "");
     let newToggleDB;
     let jsonObject;
 
-    console.log(jsonObject)
+    // console.log(jsonObject)
 
     jsonObject = {
         key: "1",
