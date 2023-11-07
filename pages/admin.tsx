@@ -1,28 +1,27 @@
-import { useState } from "react";
-import { createClient } from "@supabase/supabase-js";
+import { Room } from "@/components/room";
+import { useBroadcastEvent } from "@/liveblocks.config";
 
-const SUPABASE_URL: string = process.env.NEXT_PUBLIC_DB_URL as string;
-const SUPABASE_ANON_KEY: string = process.env.NEXT_PUBLIC_DB_ANON_KEY as string;
+export default function AdminPage() {
+  return (
+    <Room>
+      <AdminUIComponent />
+    </Room>
+  );
+}
 
-const AdminPage = () => {
-  const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+function AdminUIComponent() {
+  const broadcast = useBroadcastEvent();
 
   const handleStart = async () => {
-    await supabase
-      .from("scoreboard")
-      .update({ isTimerRunning: true })
-      .eq("id", 1);
+    broadcast({ type: "startTimer" });
   };
 
   const handleStop = async () => {
-    await supabase
-      .from("scoreboard")
-      .update({ isTimerRunning: false })
-      .eq("id", 1);
+    broadcast({ type: "stopTimer" });
   };
 
   const handleReset = async () => {
-    fetch("/api/apiReset");
+    broadcast({ type: "resetTimer" });
   };
 
   return (
@@ -47,6 +46,4 @@ const AdminPage = () => {
       </button>
     </div>
   );
-};
-
-export default AdminPage;
+}

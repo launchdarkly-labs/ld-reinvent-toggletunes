@@ -12,7 +12,6 @@ import { useBroadcastEvent, useEventListener } from "@/liveblocks.config";
 // import useSWR from "swr";
 // const fetcher = (url) => fetch(url).then((r) => r.json());
 
-
 export default function Scoreboard() {
   const [redProgress, setRedProgress] = useState(0);
   const [purpleProgress, setPurpleProgress] = useState(0);
@@ -77,8 +76,8 @@ export default function Scoreboard() {
               .eq("id", 1);
           }
           setIsTimerRunning(payload.new.isTimerRunning);
-          
-          // Deprecated in favor of Liveblocks usage 
+
+          // Deprecated in favor of Liveblocks usage
 
           // GetAllScoreValues();
           // setGreenProgress(payload.new.green);
@@ -134,79 +133,101 @@ export default function Scoreboard() {
     isTimerRunning,
   ]);
 
-  
-
   return (
     <Room>
-    <EventListenerComponent setGreenProgress={setGreenProgress} 
-          setRedProgress={setRedProgress} 
-          setPurpleProgress={setPurpleProgress} 
-          setBlueProgress={setBlueProgress}   />
-    <TimerContext.Provider
-      value={{ timer, isTimerRunning, setIsTimerRunning, setTimer }}
-    >
-      <main className="container mx-auto flex min-h-screen flex-col items-center justify-center bg-black">
-        <KeyboardNavigation 
-          setGreenProgress={setGreenProgress} 
-          setRedProgress={setRedProgress} 
-          setPurpleProgress={setPurpleProgress} 
-          setBlueProgress={setBlueProgress} 
-        />
-        <Modal
-          winnerState={winnerState}
-          setWinnerState={setWinnerState}
-          setResetScores={setResetScores}
-          winnerName={winnerName}
-          isExploding={isExploding}
-          setIsExploding={setIsExploding}
-        />
-        <StartModal
-          isTimerRunning={isTimerRunning}
-          setIsTimerRunning={setIsTimerRunning}
-        />
-        <div className="flex sticky top-10 place-items-center border border-zinc-500 mt-10 w-1/3 xl:w-1/6 bg-transparent justify-center rounded-xl">
-          <div className="flex text-8xl sm:text-6xl font-bold text-white font-audimat mt-4">
-            {timerToMinutesSecondsMilliseconds(timer)}
+      <EventListenerComponent
+        setGreenProgress={setGreenProgress}
+        setRedProgress={setRedProgress}
+        setPurpleProgress={setPurpleProgress}
+        setBlueProgress={setBlueProgress}
+        setIsTimerRunning={setIsTimerRunning}
+        setTimer={setTimer}
+      />
+      <TimerContext.Provider
+        value={{ timer, isTimerRunning, setIsTimerRunning, setTimer }}
+      >
+        <main className="container mx-auto flex min-h-screen flex-col items-center justify-center bg-black">
+          <KeyboardNavigation
+            setGreenProgress={setGreenProgress}
+            setRedProgress={setRedProgress}
+            setPurpleProgress={setPurpleProgress}
+            setBlueProgress={setBlueProgress}
+          />
+          <Modal
+            winnerState={winnerState}
+            setWinnerState={setWinnerState}
+            setResetScores={setResetScores}
+            winnerName={winnerName}
+            isExploding={isExploding}
+            setIsExploding={setIsExploding}
+          />
+          <StartModal
+            isTimerRunning={isTimerRunning}
+            setIsTimerRunning={setIsTimerRunning}
+          />
+          <div className="flex sticky top-10 place-items-center border border-zinc-500 mt-10 w-1/3 xl:w-1/6 bg-transparent justify-center rounded-xl">
+            <div className="flex text-8xl sm:text-6xl font-bold text-white font-audimat mt-4">
+              {timerToMinutesSecondsMilliseconds(timer)}
+            </div>
           </div>
-        </div>
-        <ProgressStatus
-          greenProgress={greenProgress}
-          purpleProgress={purpleProgress}
-          redProgress={redProgress}
-          blueProgress={blueProgress}
-        />
-      </main>
-    </TimerContext.Provider>
+          <ProgressStatus
+            greenProgress={greenProgress}
+            purpleProgress={purpleProgress}
+            redProgress={redProgress}
+            blueProgress={blueProgress}
+          />
+        </main>
+      </TimerContext.Provider>
     </Room>
   );
 }
 
-function EventListenerComponent({setGreenProgress, setRedProgress, setBlueProgress, setPurpleProgress}) {
-  console.log("Event listener online")
+function EventListenerComponent({
+  setGreenProgress,
+  setRedProgress,
+  setBlueProgress,
+  setPurpleProgress,
+  setIsTimerRunning,
+  setTimer,
+}) {
+  console.log("Event listener online");
   useEventListener(({ event, user, connectionId }) => {
-    console.log(user)
-    console.log(connectionId)
+    console.log(user);
+    console.log(connectionId);
     // type: teamName, complete: "stepThreeComplete", value: 20
-    console.log(event.value)
+    console.log(event.value);
     function scoreRequest(event) {
-      switch(event.type) {
-        case 'green':
-          setGreenProgress(prevProgress => prevProgress + 20);
+      switch (event.type) {
+        case "green":
+          setGreenProgress((prevProgress) => prevProgress + 20);
           break;
-        case 'red':
-          setRedProgress(prevProgress => prevProgress + 20);
+        case "red":
+          setRedProgress((prevProgress) => prevProgress + 20);
           break;
-        case 'purple':
-          setPurpleProgress(prevProgress => prevProgress + 20);
+        case "purple":
+          setPurpleProgress((prevProgress) => prevProgress + 20);
           break;
-        case 'blue':
-          setBlueProgress(prevProgress => prevProgress + 20);
+        case "blue":
+          setBlueProgress((prevProgress) => prevProgress + 20);
+          break;
+        case "startTimer":
+          console.log("starting timer");
+          setIsTimerRunning(true);
+          break;
+        case "stopTimer":
+          console.log("stopping timer");
+          setIsTimerRunning(false);
+          break;
+        case "resetTimer":
+          console.log("resetting scoreboard");
+          setTimer(300000);
           break;
         default:
-          console.log('Invalid event type');
+          console.log(event.type);
+          console.log("Invalid event type");
       }
     }
-    scoreRequest(event)
+    scoreRequest(event);
   });
 
   // This component doesn't render anything
