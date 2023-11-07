@@ -4,10 +4,14 @@ import { useEffect, useState, useContext } from "react";
 import { Modal } from "@/components/modal";
 import { StartModal } from "@/components/start-modal";
 import TimerContext from "@/lib/contexts";
-import {createClient} from '@supabase/supabase-js'
+import { createClient } from "@supabase/supabase-js";
 import KeyboardNavigation from "@/components/KeyboardNavigation";
+import { Room } from "@/components/room";
+import { useBroadcastEvent, useEventListener } from "@/liveblocks.config";
+
 // import useSWR from "swr";
 // const fetcher = (url) => fetch(url).then((r) => r.json());
+
 
 export default function Scoreboard() {
   const [redProgress, setRedProgress] = useState(0);
@@ -19,49 +23,61 @@ export default function Scoreboard() {
   const [isExploding, setIsExploding] = useState(false);
   const [greenProgress, setGreenProgress] = useState(0);
   // const { data } = useSWR("/api/score-list", fetcher);
-  const { timer, isTimerRunning, setTimer, setIsTimerRunning, timerToMinutesSecondsMilliseconds } = useContext(TimerContext);
-  const supabase = createClient(process.env.NEXT_PUBLIC_DB_URL, process.env.NEXT_PUBLIC_DB_ANON_KEY);
+  const {
+    timer,
+    isTimerRunning,
+    setTimer,
+    setIsTimerRunning,
+    timerToMinutesSecondsMilliseconds,
+  } = useContext(TimerContext);
+  // const supabase = createClient(
+  //   process.env.NEXT_PUBLIC_DB_URL,
+  //   process.env.NEXT_PUBLIC_DB_ANON_KEY
+  // );
+  const [currentStatus, setCurrentStatus] = useState("blank");
+
+  // async function GetAllScoreValues() {
+  //   console.log("running update");
+  //   let { data, error } = await supabase.from("scoreboard").select("*");
+
+  //   if (error) throw error;
+
+  //   setBlueProgress(data[0].blue);
+  //   setRedProgress(data[0].red);
+  //   setPurpleProgress(data[0].purple);
+  //   setGreenProgress(data[0].green);
+  // }
 
 
-async function GetAllScoreValues() {
-  console.log("running update")
-  let { data, error } = await supabase
-    .from('scoreboard')
-    .select('*')
+  // useEffect(() => {
+  //   supabase
+  //     .channel("supabase")
+  //     .on(
+  //       "postgres_changes",
+  //       {
+  //         event: "*",
+  //         schema: "public",
+  //         table: "scoreboard",
+  //         filter: "id=eq.1",
+  //       },
+  //       (payload) => {
+  //         console.log(payload);
+  //         // Adjusted for debugging inconsistent scoreboard updates
+  //         GetAllScoreValues();
+  //         // setGreenProgress(payload.new.green);
+  //         // setRedProgress(payload.new.red);
+  //         // setPurpleProgress(payload.new.purple);
+  //         // setBlueProgress(payload.new.blue);
+  //       }
+  //     )
+  //     .subscribe();
+  // }, []);
 
-  if (error) throw error
-
-  setBlueProgress(data[0].blue);
-  setRedProgress(data[0].red);
-  setPurpleProgress(data[0].purple);
-  setGreenProgress(data[0].green);
-}
-
-useEffect(() => {
-  supabase
-      .channel("supabase")
-      .on(
-        "postgres_changes",
-        {
-          event: "*",
-          schema: "public",
-          table: "scoreboard",
-          filter: "id=eq.1",
-        },
-        (payload) => {
-          console.log(payload)
-          // Adjusted for debugging inconsistent scoreboard updates
-          GetAllScoreValues()
-          // setGreenProgress(payload.new.green);
-          // setRedProgress(payload.new.red);
-          // setPurpleProgress(payload.new.purple);
-          // setBlueProgress(payload.new.blue);
-        }
-      )
-      .subscribe();
-}, [])  
-
-useEffect(() => {
+  useEffect(() => {
+    console.log('Green progress:', greenProgress);
+    console.log('Red progress:', redProgress);
+    console.log('Purple progress:', purpleProgress);
+    console.log('Blue progress:', blueProgress);
     //subscribing to supabase events
     if (
       greenProgress >= 100 ||
@@ -97,14 +113,32 @@ useEffect(() => {
         setWinnerName("blue");
       }
     }
-  }, [greenProgress, redProgress, blueProgress, purpleProgress, isTimerRunning]);
+  }, [
+    greenProgress,
+    redProgress,
+    blueProgress,
+    purpleProgress,
+    isTimerRunning,
+  ]);
+
+  
 
   return (
+    <Room>
+    <EventListenerComponent setGreenProgress={setGreenProgress} 
+          setRedProgress={setRedProgress} 
+          setPurpleProgress={setPurpleProgress} 
+          setBlueProgress={setBlueProgress}   />
     <TimerContext.Provider
       value={{ timer, isTimerRunning, setIsTimerRunning, setTimer }}
     >
       <main className="container mx-auto flex min-h-screen flex-col items-center justify-center bg-black">
-        <KeyboardNavigation />
+        <KeyboardNavigation 
+          setGreenProgress={setGreenProgress} 
+          setRedProgress={setRedProgress} 
+          setPurpleProgress={setPurpleProgress} 
+          setBlueProgress={setBlueProgress} 
+        />
         <Modal
           winnerState={winnerState}
           setWinnerState={setWinnerState}
@@ -113,9 +147,10 @@ useEffect(() => {
           isExploding={isExploding}
           setIsExploding={setIsExploding}
         />
-        <StartModal 
-        isTimerRunning={isTimerRunning}
-        setIsTimerRunning={setIsTimerRunning}/>
+        <StartModal
+          isTimerRunning={isTimerRunning}
+          setIsTimerRunning={setIsTimerRunning}
+        />
         <div className="flex sticky top-10 place-items-center border border-zinc-500 mt-10 w-1/3 xl:w-1/6 bg-gradient-to-b from-zinc-900 from-10% via-zinc-600 via-50% to-zinc-900 to-90% justify-center rounded-xl">
           <div className="flex text-8xl sm:text-6xl font-bold text-white font-audimat mt-4">
             {timerToMinutesSecondsMilliseconds(timer)}
@@ -129,5 +164,36 @@ useEffect(() => {
         />
       </main>
     </TimerContext.Provider>
+    </Room>
   );
+}
+
+function EventListenerComponent({setGreenProgress, setRedProgress, setBlueProgress, setPurpleProgress}) {
+  console.log("Event listener online")
+  useEventListener(({ event, user, connectionId }) => {
+    // type: teamName, complete: "stepThreeComplete", value: 20
+    console.log(event.value)
+    function scoreRequest(event) {
+      switch(event.type) {
+        case 'green':
+          setGreenProgress(prevProgress => prevProgress + 20);
+          break;
+        case 'red':
+          setRedProgress(prevProgress => prevProgress + 20);
+          break;
+        case 'purple':
+          setPurpleProgress(prevProgress => prevProgress + 20);
+          break;
+        case 'blue':
+          setBlueProgress(prevProgress => prevProgress + 20);
+          break;
+        default:
+          console.log('Invalid event type');
+      }
+    }
+    scoreRequest(event)
+  });
+
+  // This component doesn't render anything
+  return null;
 }

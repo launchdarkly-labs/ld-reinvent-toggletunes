@@ -1,8 +1,7 @@
-
-import React, {useState} from 'react';
-import MusicApp from '@/components/musicapp';
-import { asyncWithLDProvider } from 'launchdarkly-react-client-sdk';
-
+import React, { useState } from "react";
+import MusicApp from "@/components/musicapp";
+import { asyncWithLDProvider } from "launchdarkly-react-client-sdk";
+import { Room } from "@/components/room";
 
 let Team2;
 
@@ -12,14 +11,14 @@ if (typeof window !== "undefined") {
   const LDProviderT2 = await asyncWithLDProvider({
     clientSideID: process.env.NEXT_PUBLIC_LD_CLIENT_KEY_TEAM2 || "",
     reactOptions: {
-      useCamelCaseFlagKeys: false
+      useCamelCaseFlagKeys: false,
     },
     context: {
       kind: "multi",
       user: {
-        key: uniqueKey, 
+        key: uniqueKey,
         name: "Team2",
-        appName: "ToggleTunes"
+        appName: "ToggleTunes",
       },
       device: {
         key: uniqueKey,
@@ -29,13 +28,14 @@ if (typeof window !== "undefined") {
     },
   });
 
-
   Team2 = () => {
     const [teamName, setTeamName] = useState("red");
     return (
-        <LDProviderT2>
-          <MusicApp teamName={teamName}/>
-        </LDProviderT2>
+      <LDProviderT2>
+        <Room>
+          <MusicApp teamName={teamName} />
+        </Room>
+      </LDProviderT2>
     );
   };
 } else {

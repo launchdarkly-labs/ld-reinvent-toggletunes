@@ -11,14 +11,11 @@ import { IoPlaySkipForwardSharp, IoPlaySkipBackSharp } from "react-icons/io5";
 import { IoMdVolumeHigh } from "react-icons/io";
 import { IoPlaySharp } from "react-icons/io5";
 import { IoIosMusicalNotes } from "react-icons/io";
+import { useOthers } from "../liveblocks.config";
+import { useBroadcastEvent } from "../liveblocks.config";
 
-export default function MusicApp({ teamName }: any) {
+export default function MusicApp({ teamName, socket }: any) {
   const { playlist, sidebar, userplaylist, adspace, newToggleDB } = useFlags();
-
-  const ldClient = useLDClient();
-
-  console.log(playlist);
-  console.log(sidebar);
   const [currentSongIndex, setCurrentSongIndex] = useState(0);
   const [stepOneComplete, setStepOneComplete] = useState(false);
   const [stepTwoComplete, setStepTwoComplete] = useState(false);
@@ -35,74 +32,87 @@ export default function MusicApp({ teamName }: any) {
   const [flagFour, setFlagFour] = useState(false);
   const [flagFive, setFlagFive] = useState(false);
 
-  
+  const others = useOthers();
+  const userCount = others.length;
+
+  const ldClient = useLDClient();
+
+  console.log(playlist);
+  console.log(sidebar);
+
   const apiURL = "/api/sb-score-add/";
+
+  const broadcast = useBroadcastEvent();
 
   useEffect(() => {
     const triggerSteps = async () => {
       try {
         if (playlist === true && flagOne === false) {
-          console.log("first step running");
-          await triggerStep("first step complete", "stepOneComplete");
+          broadcast({ type: teamName, complete: "stepOneComplete", value: 20 });
+          // console.log("first step running");
+          // await triggerStep("first step complete", "stepOneComplete");
           setFlagOne(true);
         } else {
           console.log("Step 1 not eligible for evaluation!");
         }
 
         if (sidebar === true && flagTwo === false) {
-          console.log("second step running");
-          await triggerStep("second step complete", "stepTwoComplete");
+          broadcast({ type: teamName, complete: "stepTwoComplete", value: 20 });
+          // console.log("second step running");
+          // await triggerStep("second step complete", "stepTwoComplete");
           setFlagTwo(true);
         } else {
           console.log("Step 2 not eligible for evaluation!");
         }
-  
+
         if (newToggleDB === "complete" && flagThree === false) {
-          console.log("third step running");
-          await triggerStep("third step complete", "stepThreeComplete");
+          broadcast({ type: teamName, complete: "stepThreeComplete", value: 20});
+          // console.log("third step running");
+          // await triggerStep("third step complete", "stepThreeComplete");
           setFlagThree(true);
         } else {
           console.log("Step 3 not eligible for evaluation!");
         }
-  
+
         if (userplaylist === true && flagFour === false) {
-          console.log("fourth step running");
-          await triggerStep("fourth step complete", "stepFourComplete");
+          broadcast({ type: teamName, complete: "stepFourComplete", value: 20 });
+          // console.log("fourth step running");
+          // await triggerStep("fourth step complete", "stepFourComplete");
           setFlagFour(true);
         } else {
           console.log("Step 4 not eligible for evaluation!");
         }
-  
+
         if (adspace === true && flagFive === false) {
-          console.log("fifth step running");
-          await triggerStep("fifth step complete", "stepFiveComplete");
+          broadcast({ type: teamName, complete: "stepFiveComplete", value: 20 });
+          // console.log("fifth step running");
+          // await triggerStep("fifth step complete", "stepFiveComplete");
           setFlagFive(true);
         } else {
           console.log("Step 5 not eligible for evaluation!");
         }
-
       } catch (err) {
         console.error(err);
       }
     };
-  
-    const triggerStep = async (event:any , stepCompleted: any) => {
-      const step = {
-        event,
-        team: {
-          name: `${teamName}`,
-          stepCompleted,
-        },
-      };
-      const response = await fetch(`${apiURL}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(step),
-      });
 
-      await console.log(response)
-    };
-  
+    // const triggerStep = async (event: any, stepCompleted: any) => {
+    //   const step = {
+    //     event,
+    //     team: {
+    //       name: `${teamName}`,
+    //       stepCompleted,
+    //     },
+    //   };
+    //   const response = await fetch(`${apiURL}`, {
+    //     method: "POST",
+    //     headers: { "Content-Type": "application/json" },
+    //     body: JSON.stringify(step),
+    //   });
+
+    //   await console.log(response);
+    // };
+
     triggerSteps();
   }, [playlist, sidebar, userplaylist, adspace, newToggleDB]);
 
@@ -149,8 +159,11 @@ export default function MusicApp({ teamName }: any) {
     setUpgradeAd(false);
   };
 
+  
+
   return (
     <div className="flex flex-col h-screen gap-2 font-sohne bg-black overflow-y-hidden scrollbar-hide">
+      <p>Total users {userCount}</p>
       {playlist ? (
         <div className="flex flex-row bg-black gap-2 mt-2">
           {sidebar && (
