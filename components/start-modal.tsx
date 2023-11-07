@@ -16,8 +16,9 @@ export function StartModal({
   setOpenStartModal,
 }) {
   function handleClick() {
-    console.log("clicked");
+    console.log(openStartModal);
     setOpenStartModal(false);
+    console.log(openStartModal);
     setIsTimerRunning(true);
   }
   return (
