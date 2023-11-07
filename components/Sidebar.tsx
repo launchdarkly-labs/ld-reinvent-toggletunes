@@ -5,8 +5,7 @@ import { FiSearch } from "react-icons/fi";
 import { RxCounterClockwiseClock } from "react-icons/rx";
 import { motion } from "framer-motion";
 
-const SideBar = ({ playlist, userplaylist, songsAPI, newToggleDB }: any) => {
-  console.log("New Toggle DB "+ newToggleDB)
+const SideBar = ({ songsAPI, newToggleDB }: any) => {
   return (
     <motion.div
       initial={{ x: -100 }}

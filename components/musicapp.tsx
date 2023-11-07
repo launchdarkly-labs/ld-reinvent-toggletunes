@@ -1,21 +1,18 @@
 import SideBar from "@/components/Sidebar";
-import PageHeader from "@/components/PageHeader";
-import { playlists } from "../lib/data";
 import ItemCard from "@/components/ItemCard";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
-import { Music2, Music2Icon, Sparkle } from "lucide-react";
+import { Music2Icon } from "lucide-react";
 import { songs } from "../lib/data";
 import { useFlags, useLDClient } from "launchdarkly-react-client-sdk";
 import { IoPlaySkipForwardSharp, IoPlaySkipBackSharp } from "react-icons/io5";
 import { IoMdVolumeHigh } from "react-icons/io";
 import { IoPlaySharp } from "react-icons/io5";
 import { IoIosMusicalNotes } from "react-icons/io";
-import { useOthers } from "../liveblocks.config";
 import { useBroadcastEvent } from "../liveblocks.config";
 
 export default function MusicApp({ teamName, socket }: any) {
-  const { playlist, sidebar, userplaylist, adspace, newToggleDB } = useFlags();
+  const { tracklist, recentTunes, userplaylist, platinumTier, newToggleDB } = useFlags();
   const [currentSongIndex, setCurrentSongIndex] = useState(0);
   const [stepOneComplete, setStepOneComplete] = useState(false);
   const [stepTwoComplete, setStepTwoComplete] = useState(false);
@@ -32,13 +29,7 @@ export default function MusicApp({ teamName, socket }: any) {
   const [flagFour, setFlagFour] = useState(false);
   const [flagFive, setFlagFive] = useState(false);
 
-  const others = useOthers();
-  const userCount = others.length;
-
   const ldClient = useLDClient();
-
-  console.log(playlist);
-  console.log(sidebar);
 
   const apiURL = "/api/sb-score-add/";
 
@@ -47,7 +38,7 @@ export default function MusicApp({ teamName, socket }: any) {
   useEffect(() => {
     const triggerSteps = async () => {
       try {
-        if (playlist === true && flagOne === false) {
+        if (tracklist === true && flagOne === false) {
           broadcast({ type: teamName, complete: "stepOneComplete", value: 20 });
           // console.log("first step running");
           // await triggerStep("first step complete", "stepOneComplete");
@@ -56,7 +47,7 @@ export default function MusicApp({ teamName, socket }: any) {
           console.log("Step 1 not eligible for evaluation!");
         }
 
-        if (sidebar === true && flagTwo === false) {
+        if (recentTunes === true && flagTwo === false) {
           broadcast({ type: teamName, complete: "stepTwoComplete", value: 20 });
           // console.log("second step running");
           // await triggerStep("second step complete", "stepTwoComplete");
@@ -83,7 +74,7 @@ export default function MusicApp({ teamName, socket }: any) {
           console.log("Step 4 not eligible for evaluation!");
         }
 
-        if (adspace === true && flagFive === false) {
+        if (platinumTier === true && flagFive === false) {
           broadcast({ type: teamName, complete: "stepFiveComplete", value: 20 });
           // console.log("fifth step running");
           // await triggerStep("fifth step complete", "stepFiveComplete");
@@ -114,7 +105,7 @@ export default function MusicApp({ teamName, socket }: any) {
     // };
 
     triggerSteps();
-  }, [playlist, sidebar, userplaylist, adspace, newToggleDB]);
+  }, [tracklist, recentTunes, userplaylist, platinumTier, newToggleDB]);
 
   useEffect(() => {
     setPlaylistAPI([]);
@@ -163,16 +154,14 @@ export default function MusicApp({ teamName, socket }: any) {
 
   return (
     <div className="flex flex-col h-screen gap-2 font-sohne bg-black overflow-y-hidden scrollbar-hide">
-      {playlist ? (
+      {tracklist ? (
         <div className="flex flex-row bg-black gap-2 mt-2">
-          {sidebar && (
+          {recentTunes && (
             <div
               className="w-3/5 xl:w-1/5 min-h-screen pl-2"
               style={{ maxHeight: "calc(100vh - 150px)" }}
             >
               <SideBar
-                playlist={playlist}
-                userplaylist={userplaylist}
                 songsAPI={songsAPI}
                 newToggleDB={newToggleDB}
               />
@@ -187,14 +176,14 @@ export default function MusicApp({ teamName, socket }: any) {
             }}
             style={{ maxHeight: "calc(100vh - 150px)" }}
             className={`mx-auto rounded-xl pt-2 bg-ldbackground h-screen overflow-y-auto scrollbar-hide ${
-              sidebar && adspace
+              recentTunes && platinumTier
                 ? "w-2/5 xl:w-3/5"
-                : sidebar
+                : recentTunes
                 ? "w-3/5 xl:w-4/5"
                 : "w-full"
             }`}
           >
-            {!sidebar && (
+            {!recentTunes && (
               <div className="">
                 <img src="/images/tunes.png" className="ml-auto mr-5" />
               </div>
@@ -324,7 +313,7 @@ export default function MusicApp({ teamName, socket }: any) {
 
           <div className="absolute bottom-0 h-32 w-full items-center px-4 bg-ldbackground shadow-xl justify-center grid grid-cols-3 ">
             <div className="flex items-center ml-5">
-              {playlist && !userplaylist ? (
+              {tracklist && !userplaylist ? (
                 <Music2Icon className="h-14 w-14 mr-4" />
               ) : (
                 <img
@@ -375,7 +364,7 @@ export default function MusicApp({ teamName, socket }: any) {
               )}
             </div>
           </div>
-          {adspace && (
+          {platinumTier && (
             <motion.div
               initial={{ x: 100 }}
               animate={{ x: 0 }}
