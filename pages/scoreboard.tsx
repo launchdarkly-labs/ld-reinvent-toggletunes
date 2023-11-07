@@ -4,13 +4,9 @@ import { useEffect, useState, useContext } from "react";
 import { Modal } from "@/components/modal";
 import { StartModal } from "@/components/start-modal";
 import TimerContext from "@/lib/contexts";
-import { createClient } from "@supabase/supabase-js";
 import KeyboardNavigation from "@/components/KeyboardNavigation";
 import { Room } from "@/components/room";
 import { useBroadcastEvent, useEventListener } from "@/liveblocks.config";
-
-// import useSWR from "swr";
-// const fetcher = (url) => fetch(url).then((r) => r.json());
 
 export default function Scoreboard() {
   const [redProgress, setRedProgress] = useState(0);
@@ -26,7 +22,8 @@ export default function Scoreboard() {
   const [flagThree, setFlagThree] = useState(false);
   const [flagFour, setFlagFour] = useState(false);
   const [flagFive, setFlagFive] = useState(false);
-  // const { data } = useSWR("/api/score-list", fetcher);
+  const [openStartModal, setOpenStartModal] = useState(true);
+
   const {
     timer,
     isTimerRunning,
@@ -35,62 +32,7 @@ export default function Scoreboard() {
     timerToMinutesSecondsMilliseconds,
   } = useContext(TimerContext);
 
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_DB_URL,
-    process.env.NEXT_PUBLIC_DB_ANON_KEY
-  );
-
-  // Deprecated in favor of liveblocks
-  async function GetAllScoreValues() {
-    console.log("running update");
-    let { data, error } = await supabase.from("scoreboard").select("*");
-
-    if (error) throw error;
-
-    setBlueProgress(data[0].blue);
-    setRedProgress(data[0].red);
-    setPurpleProgress(data[0].purple);
-    setGreenProgress(data[0].green);
-  }
-
   useEffect(() => {
-    supabase
-      .channel("supabase")
-      .on(
-        "postgres_changes",
-        {
-          event: "*",
-          schema: "public",
-          table: "scoreboard",
-          filter: "id=eq.1",
-        },
-        async (payload) => {
-          console.log(payload);
-          // if we're resetting a new one then reset the timer to 5 minutes
-          if (payload.new.resetTriggered === true) {
-            console.log("resetting timer");
-            setTimer(300000);
-            await supabase
-              .from("scoreboard")
-              .update({ resetTriggered: false })
-              .eq("id", 1);
-          }
-          setIsTimerRunning(payload.new.isTimerRunning);
-
-          // Deprecated in favor of Liveblocks usage
-
-          // GetAllScoreValues();
-          // setGreenProgress(payload.new.green);
-          // setRedProgress(payload.new.red);
-          // setPurpleProgress(payload.new.purple);
-          // setBlueProgress(payload.new.blue);
-        }
-      )
-      .subscribe();
-  }, []);
-
-  useEffect(() => {
-    //subscribing to supabase events
     if (
       greenProgress >= 100 ||
       redProgress >= 100 ||
@@ -142,6 +84,8 @@ export default function Scoreboard() {
         setBlueProgress={setBlueProgress}
         setIsTimerRunning={setIsTimerRunning}
         setTimer={setTimer}
+        openStartModal={openStartModal}
+        setOpenStartModal={setOpenStartModal}
       />
       <TimerContext.Provider
         value={{ timer, isTimerRunning, setIsTimerRunning, setTimer }}
@@ -158,12 +102,12 @@ export default function Scoreboard() {
             setWinnerState={setWinnerState}
             setResetScores={setResetScores}
             winnerName={winnerName}
-            isExploding={isExploding}
-            setIsExploding={setIsExploding}
           />
           <StartModal
             isTimerRunning={isTimerRunning}
             setIsTimerRunning={setIsTimerRunning}
+            openStartModal={openStartModal}
+            setOpenStartModal={setOpenStartModal}
           />
           <div className="flex sticky top-10 place-items-center border border-zinc-500 mt-10 w-1/3 xl:w-1/6 bg-transparent justify-center rounded-xl">
             <div className="flex text-8xl sm:text-6xl font-bold text-white font-audimat mt-4">
@@ -189,6 +133,8 @@ function EventListenerComponent({
   setPurpleProgress,
   setIsTimerRunning,
   setTimer,
+  openStartModal,
+  setOpenStartModal,
 }) {
   console.log("Event listener online");
   useEventListener(({ event, user, connectionId }) => {
@@ -196,7 +142,7 @@ function EventListenerComponent({
     console.log(connectionId);
     // type: teamName, complete: "stepThreeComplete", value: 20
     console.log(event.value);
-    function scoreRequest(event) {
+    async function scoreRequest(event) {
       switch (event.type) {
         case "green":
           setGreenProgress((prevProgress) => prevProgress + 20);
@@ -220,6 +166,9 @@ function EventListenerComponent({
           break;
         case "resetTimer":
           console.log("resetting scoreboard");
+          // await fetch("/api/apiReset");
+          console.log(openStartModal);
+          setOpenStartModal(true);
           setTimer(300000);
           break;
         default:

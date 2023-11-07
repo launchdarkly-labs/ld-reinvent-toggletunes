@@ -8,11 +8,13 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { useState } from "react";
 
-export function StartModal({isTimerRunning, setIsTimerRunning}) {
-const [openStartModal, setOpenStartModal] = useState(true);
-
+export function StartModal({
+  isTimerRunning,
+  setIsTimerRunning,
+  openStartModal,
+  setOpenStartModal,
+}) {
   return (
     <>
       <AlertDialog defaultOpen={true}>
