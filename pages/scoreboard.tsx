@@ -30,54 +30,62 @@ export default function Scoreboard() {
     setIsTimerRunning,
     timerToMinutesSecondsMilliseconds,
   } = useContext(TimerContext);
-  // const supabase = createClient(
-  //   process.env.NEXT_PUBLIC_DB_URL,
-  //   process.env.NEXT_PUBLIC_DB_ANON_KEY
-  // );
-  const [currentStatus, setCurrentStatus] = useState("blank");
 
-  // async function GetAllScoreValues() {
-  //   console.log("running update");
-  //   let { data, error } = await supabase.from("scoreboard").select("*");
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_DB_URL,
+    process.env.NEXT_PUBLIC_DB_ANON_KEY
+  );
 
-  //   if (error) throw error;
+  // Deprecated in favor of liveblocks
+  async function GetAllScoreValues() {
+    console.log("running update");
+    let { data, error } = await supabase.from("scoreboard").select("*");
 
-  //   setBlueProgress(data[0].blue);
-  //   setRedProgress(data[0].red);
-  //   setPurpleProgress(data[0].purple);
-  //   setGreenProgress(data[0].green);
-  // }
+    if (error) throw error;
 
-
-  // useEffect(() => {
-  //   supabase
-  //     .channel("supabase")
-  //     .on(
-  //       "postgres_changes",
-  //       {
-  //         event: "*",
-  //         schema: "public",
-  //         table: "scoreboard",
-  //         filter: "id=eq.1",
-  //       },
-  //       (payload) => {
-  //         console.log(payload);
-  //         // Adjusted for debugging inconsistent scoreboard updates
-  //         GetAllScoreValues();
-  //         // setGreenProgress(payload.new.green);
-  //         // setRedProgress(payload.new.red);
-  //         // setPurpleProgress(payload.new.purple);
-  //         // setBlueProgress(payload.new.blue);
-  //       }
-  //     )
-  //     .subscribe();
-  // }, []);
+    setBlueProgress(data[0].blue);
+    setRedProgress(data[0].red);
+    setPurpleProgress(data[0].purple);
+    setGreenProgress(data[0].green);
+  }
 
   useEffect(() => {
-    console.log('Green progress:', greenProgress);
-    console.log('Red progress:', redProgress);
-    console.log('Purple progress:', purpleProgress);
-    console.log('Blue progress:', blueProgress);
+    supabase
+      .channel("supabase")
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "scoreboard",
+          filter: "id=eq.1",
+        },
+        async (payload) => {
+          console.log(payload);
+          // if we're resetting a new one then reset the timer to 5 minutes
+          if (payload.new.resetTriggered === true) {
+            console.log("resetting timer");
+            setTimer(300000);
+            await supabase
+              .from("scoreboard")
+              .update({ resetTriggered: false })
+              .eq("id", 1);
+          }
+          setIsTimerRunning(payload.new.isTimerRunning);
+          
+          // Deprecated in favor of Liveblocks usage 
+
+          // GetAllScoreValues();
+          // setGreenProgress(payload.new.green);
+          // setRedProgress(payload.new.red);
+          // setPurpleProgress(payload.new.purple);
+          // setBlueProgress(payload.new.blue);
+        }
+      )
+      .subscribe();
+  }, []);
+
+  useEffect(() => {
     //subscribing to supabase events
     if (
       greenProgress >= 100 ||
@@ -151,7 +159,7 @@ export default function Scoreboard() {
           isTimerRunning={isTimerRunning}
           setIsTimerRunning={setIsTimerRunning}
         />
-        <div className="flex sticky top-10 place-items-center border border-zinc-500 mt-10 w-1/3 xl:w-1/6 bg-gradient-to-b from-zinc-900 from-10% via-zinc-600 via-50% to-zinc-900 to-90% justify-center rounded-xl">
+        <div className="flex sticky top-10 place-items-center border border-zinc-500 mt-10 w-1/3 xl:w-1/6 bg-transparent justify-center rounded-xl">
           <div className="flex text-8xl sm:text-6xl font-bold text-white font-audimat mt-4">
             {timerToMinutesSecondsMilliseconds(timer)}
           </div>

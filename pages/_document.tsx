@@ -9,12 +9,12 @@ export default function Document() {
     <Html lang="en">
       <Head />
       <body className="dark bg-black h-screen">
-          <main className="">
-            <div className="">
-              <Main />
-              <NextScript />
-            </div>
-          </main>
+        <main className="">
+          <div className="">
+            <Main />
+            <NextScript />
+          </div>
+        </main>
       </body>
     </Html>
   );

@@ -54,14 +54,13 @@ const AlertDialogContent = React.forwardRef(
       <AlertDialogOverlay />
       {variant != "start" ? (
         <motion.div
-          initial={{ opacity: 0 }}
+          initial={{scale: 0}}
           animate={{
-            opacity: 1,
-            scale: [0, 0.5, 1],
+            scale: [0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 0.95, 1],
           }}
           transition={{
-            duration: 1,
-            ease: "circIn",
+            duration: 1.5,
+            ease: "linear",
           }}
           ref={ref}
           className={cn(
@@ -75,12 +74,11 @@ const AlertDialogContent = React.forwardRef(
         <AlertDialogPrimitive.Content
           ref={ref}
           className={cn(
-            "fixed left-[50%] top-[50%] z-50 grid w-screen h-screen translate-x-[-50%] translate-y-[-50%] gap-4 bg-slate-700 font-sohne p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg md:w-full",
+            "fixed left-[50%] top-[50%] z-50 grid w-screen h-screen translate-x-[-50%] translate-y-[-50%] gap-4 bg-black text-white font-audimat p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg md:w-full",
             className
           )}
           {...props}
-          >
-        </AlertDialogPrimitive.Content>
+        ></AlertDialogPrimitive.Content>
       )}
     </AlertDialogPortal>
   );
@@ -148,7 +146,7 @@ const AlertDialogTitle = React.forwardRef(({ className, setOpenStartModal, setIs
     document.addEventListener("keydown", handleKeyDown)
 
     if (animationStarted && currentIndex < stringsArray.length) {
-      const timeout = setTimeout(onAnimationComplete, 1000)
+      const timeout = setTimeout(onAnimationComplete, 2000)
       return () => {
       clearTimeout(timeout);
       }
@@ -160,33 +158,34 @@ const AlertDialogTitle = React.forwardRef(({ className, setOpenStartModal, setIs
 
   return (
     <>
-    {animationStarted ? (
-    <motion.div
-      key={currentIndex}
-      initial={{ opacity: 0, scale: 5 }}
-      animate={{
-        opacity: 1,
-        scale: 1,
-      }}
-      transition={{
-        duration: 2,
-        ease: 'easeIn'
-      }}
-      exit={{opacity: 0}}
-      onAnimationComplete={onAnimationComplete}
-      ref={ref}
-      className={cn(
-        "pt-32 flex place-content-center text-amber-500 text-center text-9xl font-audimat",
-        className,
-        {
-          hidden: currentIndex >= stringsArray.length,
-        }
-      )}
-      {...props}
-    > 
-      {stringsArray[currentIndex]}
-    </motion.div>
-    ): null} 
+      {animationStarted ? (
+        <motion.div
+          key={currentIndex}
+          initial={{ opacity: 0, scale: 1 }}
+          animate={{
+            opacity: 1,
+            scale: [4,1]          
+          }}
+          transition={{
+            duration: 2,
+            ease: "easeIn",
+            delay: 0.2
+          }}
+          exit={{ opacity: 0 }}
+          onAnimationComplete={onAnimationComplete}
+          ref={ref}
+          className={cn(
+            "pt-32 flex place-content-center text-white text-center text-9xl font-audimat",
+            className,
+            {
+              hidden: currentIndex >= stringsArray.length,
+            }
+          )}
+          {...props}
+        >
+          {stringsArray[currentIndex]}
+        </motion.div>
+      ) : null}
     </>
   );
 });

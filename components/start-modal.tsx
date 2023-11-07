@@ -26,7 +26,7 @@ const [openStartModal, setOpenStartModal] = useState(true);
                 isTimerRunning={isTimerRunning}
                 setIsTimerRunning={setIsTimerRunning}
               />
-              <AlertDialogFooter className="flex place-content-center text-amber-500 text-center text-6xl pb-4 font-audimat">
+              <AlertDialogFooter className="flex place-content-center text-center text-6xl pb-4">
                 Get Ready for the Next Round!
               </AlertDialogFooter>
             </AlertDialogContent>
