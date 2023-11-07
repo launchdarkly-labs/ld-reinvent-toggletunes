@@ -18,11 +18,7 @@ export default function Scoreboard() {
   const [winnerName, setWinnerName] = useState("");
   const [isExploding, setIsExploding] = useState(false);
   const [greenProgress, setGreenProgress] = useState(0);
-  const [flagOne, setFlagOne] = useState(false);
-  const [flagTwo, setFlagTwo] = useState(false);
-  const [flagThree, setFlagThree] = useState(false);
-  const [flagFour, setFlagFour] = useState(false);
-  const [flagFive, setFlagFive] = useState(false);
+
   const [openStartModal, setOpenStartModal] = useState(true);
 
   const {
