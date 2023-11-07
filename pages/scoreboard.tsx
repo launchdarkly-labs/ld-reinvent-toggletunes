@@ -84,7 +84,6 @@ export default function Scoreboard() {
         setBlueProgress={setBlueProgress}
         setIsTimerRunning={setIsTimerRunning}
         setTimer={setTimer}
-        openStartModal={openStartModal}
         setOpenStartModal={setOpenStartModal}
       />
       <TimerContext.Provider
@@ -133,7 +132,6 @@ function EventListenerComponent({
   setPurpleProgress,
   setIsTimerRunning,
   setTimer,
-  openStartModal,
   setOpenStartModal,
 }) {
   console.log("Event listener online");
@@ -167,7 +165,6 @@ function EventListenerComponent({
         case "resetTimer":
           console.log("resetting scoreboard");
           // await fetch("/api/apiReset");
-          console.log(openStartModal);
           setOpenStartModal(true);
           setTimer(300000);
           break;

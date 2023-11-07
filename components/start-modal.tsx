@@ -15,10 +15,15 @@ export function StartModal({
   openStartModal,
   setOpenStartModal,
 }) {
+  function handleClick() {
+    console.log("clicked");
+    setOpenStartModal(false);
+    setIsTimerRunning(true);
+  }
   return (
     <>
       <AlertDialog defaultOpen={true}>
-        <AlertDialogTrigger asChild>
+        <AlertDialogTrigger asChild onClick={handleClick}>
           {openStartModal && (
             <AlertDialogContent variant="start">
               <AlertDialogHeader />
