@@ -1,6 +1,6 @@
 //@ts-nocheck
 import { ProgressStatus } from "@/components/progress-screen";
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState, useContext, memo } from "react";
 import { Modal } from "@/components/modal";
 import { StartModal } from "@/components/start-modal";
 import TimerContext from "@/lib/contexts";
@@ -125,7 +125,7 @@ export default function Scoreboard() {
   );
 }
 
-function EventListenerComponent({
+const EventListenerComponent = memo(function EventListenerComponent({
   setGreenProgress,
   setRedProgress,
   setBlueProgress,
@@ -178,4 +178,4 @@ function EventListenerComponent({
 
   // This component doesn't render anything
   return null;
-}
+});
