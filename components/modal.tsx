@@ -17,8 +17,6 @@ export function Modal({
   winnerName,
   setWinnerState,
   setResetScores,
-  isExploding,
-  setIsExploding,
 }: any) {
   let winner = "";
 
@@ -60,9 +58,7 @@ export function Modal({
               <AlertDialogFooter>
                 <AlertDialogAction
                   onClick={() => {
-                    setWinnerState(false),
-                      setResetScores(true),
-                      setIsExploding(false);
+                    setWinnerState(false), setResetScores(true);
                   }}
                 >
                   Continue
