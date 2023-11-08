@@ -47,7 +47,7 @@ export function Modal({
 
   return (
     <>
-      <AlertDialog defaultOpen={true}>
+      <AlertDialog defaultOpopen={true}>
         <AlertDialogTrigger asChild={winnerState}>
           {winnerState && (
             <AlertDialogContent variant={winner}>

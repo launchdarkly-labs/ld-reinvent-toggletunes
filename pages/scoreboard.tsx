@@ -14,7 +14,6 @@ export default function Scoreboard() {
   const [purpleProgress, setPurpleProgress] = useState(0);
   const [blueProgress, setBlueProgress] = useState(0);
   const [winnerState, setWinnerState] = useState(false);
-  const [resetScores, setResetScores] = useState(false);
   const [winnerName, setWinnerName] = useState("");
   const [greenProgress, setGreenProgress] = useState(0);
   const [isTimerRunning, setIsTimerRunning] = useState(false);
@@ -91,11 +90,6 @@ export default function Scoreboard() {
     } else {
       setWinnerState(false);
     }
-    if (resetScores === true) {
-      setResetScores(false);
-      setIsTimerRunning(false);
-      setTimer(3000);
-    }
   }, [
     greenProgress,
     redProgress,
@@ -113,7 +107,6 @@ export default function Scoreboard() {
         setBlueProgress={setBlueProgress}
         setIsTimerRunning={setIsTimerRunning}
         setTimer={setTimer}
-        setResetScores={setResetScores}
         setOpenStartModal={setOpenStartModal}
       />
       <main className="container mx-auto flex min-h-screen flex-col items-center justify-center bg-black">
@@ -126,11 +119,9 @@ export default function Scoreboard() {
         <Modal
           winnerState={winnerState}
           setWinnerState={setWinnerState}
-          setResetScores={setResetScores}
           winnerName={winnerName}
         />
         <StartModal
-          isTimerRunning={isTimerRunning}
           setIsTimerRunning={setIsTimerRunning}
           openStartModal={openStartModal}
           setOpenStartModal={setOpenStartModal}
@@ -158,7 +149,6 @@ const EventListenerComponent = memo(function EventListenerComponent({
   setPurpleProgress,
   setIsTimerRunning,
   setTimer,
-  setResetScores,
   setOpenStartModal,
 }) {
   console.log("Event listener online");
@@ -183,6 +173,7 @@ const EventListenerComponent = memo(function EventListenerComponent({
           break;
         case "startTimer":
           console.log("starting timer");
+          setOpenStartModal(false);
           setIsTimerRunning(true);
           break;
         case "stopTimer":
@@ -194,7 +185,6 @@ const EventListenerComponent = memo(function EventListenerComponent({
           // await fetch("/api/apiReset");
           setIsTimerRunning(false);
           setOpenStartModal(true);
-          setResetScores(true);
           setTimer(300000);
           break;
         default:

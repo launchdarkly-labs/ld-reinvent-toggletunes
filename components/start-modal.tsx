@@ -10,33 +10,28 @@ import {
 } from "@/components/ui/alert-dialog";
 
 export function StartModal({
-  isTimerRunning,
-  setIsTimerRunning,
   openStartModal,
   setOpenStartModal,
+  setIsTimerRunning,
 }) {
   function handleClick() {
-    console.log(openStartModal);
     setOpenStartModal(false);
-    console.log(openStartModal);
     setIsTimerRunning(true);
   }
   return (
     <>
       <AlertDialog open={openStartModal}>
         <AlertDialogTrigger asChild onClick={handleClick}>
-            <AlertDialogContent variant="start">
-              <AlertDialogHeader />
-              <AlertDialogTitle
-                openStartModal={openStartModal}
-                setOpenStartModal={setOpenStartModal}
-                isTimerRunning={isTimerRunning}
-                setIsTimerRunning={setIsTimerRunning}
-              />
-              <AlertDialogFooter className="flex place-content-center text-center text-6xl pb-4">
-                Get Ready for the Next Round!
-              </AlertDialogFooter>
-            </AlertDialogContent>
+          <AlertDialogContent variant="start">
+            <AlertDialogHeader />
+            <AlertDialogTitle
+              openStartModal={openStartModal}
+              setOpenStartModal={setOpenStartModal}
+            />
+            <AlertDialogFooter className="flex place-content-center text-center text-6xl pb-4">
+              Get Ready for the Next Round!
+            </AlertDialogFooter>
+          </AlertDialogContent>
         </AlertDialogTrigger>
       </AlertDialog>
     </>
