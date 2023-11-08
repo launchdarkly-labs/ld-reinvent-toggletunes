@@ -116,11 +116,9 @@ AlertDialogFooter.displayName = "AlertDialogFooter";
 
 const stringsArray = ["3", "2", "1", "GO!"];
 
-const AlertDialogTitle = React.forwardRef(({ className, setOpenStartModal, setIsTimerRunning, ...props }, ref) => {
+const AlertDialogTitle = React.forwardRef(({ className, animationStarted, setAnimationStarted, setOpenStartModal, setIsTimerRunning, ...props }, ref) => {
   const [currentIndex, setCurrentIndex] = React.useState(0);
-  const [animationStarted, setAnimationStarted] = React.useState(false);
   const lastIndex = stringsArray.length - 1;
-
   //animation settings 
 
  const onAnimationComplete = () => {
@@ -134,6 +132,7 @@ const AlertDialogTitle = React.forwardRef(({ className, setOpenStartModal, setIs
    if (stringsArray[currentIndex] === "GO!") {
      setOpenStartModal(false); 
      setIsTimerRunning(true);
+     setAnimationStarted(false);
    }
  };
 
@@ -212,7 +211,6 @@ const AlertDialogAction = React.forwardRef<
     ref={ref}
     className={cn(buttonVariants({ variant: "outline" }), className)}
     {...props}
-    data-disabled
   />
 ));
 AlertDialogAction.displayName = AlertDialogPrimitive.Action.displayName;

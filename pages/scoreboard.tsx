@@ -1,36 +1,82 @@
 //@ts-nocheck
 import { ProgressStatus } from "@/components/progress-screen";
-import { useEffect, useState, useContext, memo } from "react";
+import { useEffect, useState, memo } from "react";
 import { Modal } from "@/components/modal";
 import { StartModal } from "@/components/start-modal";
-import TimerContext from "@/lib/contexts";
 import KeyboardNavigation from "@/components/KeyboardNavigation";
 import { Room } from "@/components/room";
 import { useBroadcastEvent, useEventListener } from "@/liveblocks.config";
 import { setCookie } from "cookies-next";
+import { time } from "console";
 
 export default function Scoreboard() {
   const [redProgress, setRedProgress] = useState(0);
   const [purpleProgress, setPurpleProgress] = useState(0);
   const [blueProgress, setBlueProgress] = useState(0);
   const [winnerState, setWinnerState] = useState(false);
-  const [resetScores, setResetScores] = useState(false);
   const [winnerName, setWinnerName] = useState("");
-  const [isExploding, setIsExploding] = useState(false);
   const [greenProgress, setGreenProgress] = useState(0);
+  const [isTimerRunning, setIsTimerRunning] = useState(false);
+  const [timer, setTimer] = useState(300000);
   const [openStartModal, setOpenStartModal] = useState(true);
+  const [animationStarted, setAnimationStarted] = useState(false);
+  console.log(animationStarted)
 
-  const {
-    timer,
-    isTimerRunning,
-    setTimer,
-    setIsTimerRunning,
-    timerToMinutesSecondsMilliseconds,
-  } = useContext(TimerContext);
+
+  const decreaseMainTimer = () => {
+    if (isTimerRunning) {
+      setTimer((timer) => timer - 100);
+    }
+  };
+
+  useEffect(() => {
+    const timerInterval = setInterval(decreaseMainTimer, 100);
+    return () => {
+      clearInterval(timerInterval);
+    };
+  }, [isTimerRunning]);
+
+  const timerToMinutesSecondsMilliseconds = (timer) => {
+    if (timer <= 0 && isTimerRunning) {
+      setTimer(0);
+      setIsTimerRunning(false);
+      endGame();
+    }
+    const minutes = Math.floor(timer / 60000);
+    const seconds = Math.floor((timer % 60000) / 1000);
+    return `${minutes.toString().padStart(2, "0")}:${seconds
+      .toString()
+      .padStart(2, "0")}`;
+  };
 
   async function configUser() {
     await setCookie("team", "Scoreboard");
   }
+
+  const endGame = () => {
+    const maxProgress = Math.max(
+      greenProgress,
+      redProgress,
+      purpleProgress,
+      blueProgress
+    );
+    let winners = [];
+    if (maxProgress === greenProgress) {
+      winners.push("green");
+    }
+    if (maxProgress === redProgress) {
+      winners.push("red");
+    }
+    if (maxProgress === purpleProgress) {
+      winners.push("purple");
+    }
+    if (maxProgress === blueProgress) {
+      winners.push("blue");
+    }
+    console.log(winners.join(" & "));
+    setWinnerName(winners.join(" & "));
+    setWinnerState(true);
+  };
 
   useEffect(() => {
     configUser();
@@ -43,33 +89,9 @@ export default function Scoreboard() {
       purpleProgress >= 100 ||
       blueProgress >= 100
     ) {
-      setWinnerState(true);
-      setIsExploding(true);
+      endGame();
     } else {
       setWinnerState(false);
-    }
-    if (resetScores === true) {
-      setGreenProgress(0);
-      setResetScores(false);
-      setIsTimerRunning(false);
-      setTimer(300000);
-    }
-    if (timer === 0) {
-      const maxProgress = Math.max(
-        greenProgress,
-        redProgress,
-        purpleProgress,
-        blueProgress
-      );
-      if (maxProgress === greenProgress) {
-        setWinnerName("green");
-      } else if (maxProgress === redProgress) {
-        setWinnerName("red");
-      } else if (maxProgress === purpleProgress) {
-        setWinnerName("purple");
-      } else if (maxProgress === blueProgress) {
-        setWinnerName("blue");
-      }
     }
   }, [
     greenProgress,
@@ -89,43 +111,40 @@ export default function Scoreboard() {
         setIsTimerRunning={setIsTimerRunning}
         setTimer={setTimer}
         setOpenStartModal={setOpenStartModal}
+        setAnimationStarted={setAnimationStarted}
       />
-      <TimerContext.Provider
-        value={{ timer, isTimerRunning, setIsTimerRunning, setTimer }}
-      >
-        <main className="container mx-auto flex min-h-screen flex-col items-center justify-center bg-black">
-          <img src='/images/AWS_Winner_blue_v2.gif' alt="winner" />
-          <KeyboardNavigation
-            setGreenProgress={setGreenProgress}
-            setRedProgress={setRedProgress}
-            setPurpleProgress={setPurpleProgress}
-            setBlueProgress={setBlueProgress}
-          />
-          <Modal
-            winnerState={winnerState}
-            setWinnerState={setWinnerState}
-            setResetScores={setResetScores}
-            winnerName={winnerName}
-          />
-          <StartModal
-            isTimerRunning={isTimerRunning}
-            setIsTimerRunning={setIsTimerRunning}
-            openStartModal={openStartModal}
-            setOpenStartModal={setOpenStartModal}
-          />
-          <div className="flex sticky top-10 place-items-center border border-zinc-500 mt-10 w-1/3 xl:w-1/6 bg-transparent justify-center rounded-xl">
-            <div className="flex text-8xl sm:text-6xl font-bold text-white font-audimat mt-4">
-              {timerToMinutesSecondsMilliseconds(timer)}
-            </div>
+      <main className="container mx-auto flex min-h-screen flex-col items-center justify-center bg-black">
+      <img src='/images/AWS_Winner_blue_v2.gif' alt="winner" />
+        <KeyboardNavigation
+          setGreenProgress={setGreenProgress}
+          setRedProgress={setRedProgress}
+          setPurpleProgress={setPurpleProgress}
+          setBlueProgress={setBlueProgress}
+        />
+        <Modal
+          winnerState={winnerState}
+          setWinnerState={setWinnerState}
+          winnerName={winnerName}
+        />
+        <StartModal
+          setIsTimerRunning={setIsTimerRunning}
+          openStartModal={openStartModal}
+          setOpenStartModal={setOpenStartModal}
+          animationStarted={animationStarted}
+          setAnimationStarted={setAnimationStarted}
+        />
+        <div className="flex sticky top-10 place-items-center border border-zinc-500 mt-10 w-1/3 xl:w-1/6 bg-transparent justify-center rounded-xl">
+          <div className="flex text-8xl sm:text-6xl font-bold text-white font-audimat mt-4">
+            {timerToMinutesSecondsMilliseconds(timer)}
           </div>
-          <ProgressStatus
-            greenProgress={greenProgress}
-            purpleProgress={purpleProgress}
-            redProgress={redProgress}
-            blueProgress={blueProgress}
-          />
-        </main>
-      </TimerContext.Provider>
+        </div>
+        <ProgressStatus
+          greenProgress={greenProgress}
+          purpleProgress={purpleProgress}
+          redProgress={redProgress}
+          blueProgress={blueProgress}
+        />
+      </main>
     </Room>
   );
 }
@@ -138,6 +157,7 @@ const EventListenerComponent = memo(function EventListenerComponent({
   setIsTimerRunning,
   setTimer,
   setOpenStartModal,
+  setAnimationStarted
 }) {
   console.log("Event listener online");
   useEventListener(({ event, user, connectionId }) => {
@@ -161,6 +181,7 @@ const EventListenerComponent = memo(function EventListenerComponent({
           break;
         case "startTimer":
           console.log("starting timer");
+          setAnimationStarted(true);
           setIsTimerRunning(true);
           break;
         case "stopTimer":
@@ -170,6 +191,7 @@ const EventListenerComponent = memo(function EventListenerComponent({
         case "resetTimer":
           console.log("resetting scoreboard");
           // await fetch("/api/apiReset");
+          setIsTimerRunning(false);
           setOpenStartModal(true);
           setTimer(300000);
           break;
