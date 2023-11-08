@@ -13,6 +13,8 @@ export function StartModal({
   openStartModal,
   setOpenStartModal,
   setIsTimerRunning,
+  animationStarted,
+  setAnimationStarted
 }) {
   function handleClick() {
     setOpenStartModal(false);
@@ -27,6 +29,10 @@ export function StartModal({
             <AlertDialogTitle
               openStartModal={openStartModal}
               setOpenStartModal={setOpenStartModal}
+              animationStarted={setAnimationStarted}
+              setAnimationStarted={setAnimationStarted}
+              setIsTimerRunning={setIsTimerRunning}
+              animationStarted={animationStarted}
             />
             <AlertDialogFooter className="flex place-content-center text-center text-6xl pb-4">
               Get Ready for the Next Round!

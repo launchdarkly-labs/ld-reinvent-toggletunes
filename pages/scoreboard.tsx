@@ -19,6 +19,9 @@ export default function Scoreboard() {
   const [isTimerRunning, setIsTimerRunning] = useState(false);
   const [timer, setTimer] = useState(300000);
   const [openStartModal, setOpenStartModal] = useState(true);
+  const [animationStarted, setAnimationStarted] = useState(false);
+  console.log(animationStarted)
+
 
   const decreaseMainTimer = () => {
     if (isTimerRunning) {
@@ -108,6 +111,7 @@ export default function Scoreboard() {
         setIsTimerRunning={setIsTimerRunning}
         setTimer={setTimer}
         setOpenStartModal={setOpenStartModal}
+        setAnimationStarted={setAnimationStarted}
       />
       <main className="container mx-auto flex min-h-screen flex-col items-center justify-center bg-black">
         <KeyboardNavigation
@@ -125,6 +129,8 @@ export default function Scoreboard() {
           setIsTimerRunning={setIsTimerRunning}
           openStartModal={openStartModal}
           setOpenStartModal={setOpenStartModal}
+          animationStarted={animationStarted}
+          setAnimationStarted={setAnimationStarted}
         />
         <div className="flex sticky top-10 place-items-center border border-zinc-500 mt-10 w-1/3 xl:w-1/6 bg-transparent justify-center rounded-xl">
           <div className="flex text-8xl sm:text-6xl font-bold text-white font-audimat mt-4">
@@ -150,6 +156,7 @@ const EventListenerComponent = memo(function EventListenerComponent({
   setIsTimerRunning,
   setTimer,
   setOpenStartModal,
+  setAnimationStarted
 }) {
   console.log("Event listener online");
   useEventListener(({ event, user, connectionId }) => {
@@ -173,7 +180,7 @@ const EventListenerComponent = memo(function EventListenerComponent({
           break;
         case "startTimer":
           console.log("starting timer");
-          setOpenStartModal(false);
+          setAnimationStarted(true);
           setIsTimerRunning(true);
           break;
         case "stopTimer":
