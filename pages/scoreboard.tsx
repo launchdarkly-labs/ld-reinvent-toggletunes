@@ -3,6 +3,15 @@ import { ProgressStatus } from "@/components/progress-screen";
 import { useEffect, useState, useContext, memo } from "react";
 import { Modal } from "@/components/modal";
 import { StartModal } from "@/components/start-modal";
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import TimerContext from "@/lib/contexts";
 import KeyboardNavigation from "@/components/KeyboardNavigation";
 import { Room } from "@/components/room";
@@ -18,7 +27,6 @@ export default function Scoreboard() {
   const [winnerName, setWinnerName] = useState("");
   const [isExploding, setIsExploding] = useState(false);
   const [greenProgress, setGreenProgress] = useState(0);
-  const [openStartModal, setOpenStartModal] = useState(true);
 
   const {
     timer,
@@ -26,6 +34,8 @@ export default function Scoreboard() {
     setTimer,
     setIsTimerRunning,
     timerToMinutesSecondsMilliseconds,
+    openStartModal,
+    setOpenStartModal
   } = useContext(TimerContext);
 
   async function configUser() {
@@ -91,7 +101,7 @@ export default function Scoreboard() {
         setOpenStartModal={setOpenStartModal}
       />
       <TimerContext.Provider
-        value={{ timer, isTimerRunning, setIsTimerRunning, setTimer }}
+        value={{ timer, isTimerRunning, setIsTimerRunning, setTimer, openStartModal, setOpenStartModal }}
       >
         <main className="container mx-auto flex min-h-screen flex-col items-center justify-center bg-black">
           <KeyboardNavigation

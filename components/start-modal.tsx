@@ -23,9 +23,8 @@ export function StartModal({
   }
   return (
     <>
-      <AlertDialog defaultOpen={true}>
+      <AlertDialog open={openStartModal}>
         <AlertDialogTrigger asChild onClick={handleClick}>
-          {openStartModal && (
             <AlertDialogContent variant="start">
               <AlertDialogHeader />
               <AlertDialogTitle
@@ -38,7 +37,6 @@ export function StartModal({
                 Get Ready for the Next Round!
               </AlertDialogFooter>
             </AlertDialogContent>
-          )}
         </AlertDialogTrigger>
       </AlertDialog>
     </>
