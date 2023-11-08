@@ -1,8 +1,9 @@
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import MusicApp from '@/components/musicapp';
 import { asyncWithLDProvider } from 'launchdarkly-react-client-sdk';
 import { Room } from '@/components/room';
+import { setCookie } from 'cookies-next';
 
 let c;
 
@@ -31,12 +32,24 @@ if (typeof window !== "undefined") {
 
 
   c = () => {
+    const [isConfigured, setIsConfigured] = useState(false);
+
+    async function configUser() {
+      await setCookie("team", "Root");
+      setIsConfigured(true);
+    }
+
+    useEffect(() => {
+      configUser();
+    }, []);
     return (
-        <LDProvider>
+      <LDProvider>
+        {isConfigured && (
           <Room>
-          <MusicApp />
+            <MusicApp />
           </Room>
-        </LDProvider>
+        )}
+      </LDProvider>
     );
   };
 } else {

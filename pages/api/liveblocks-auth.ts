@@ -21,7 +21,7 @@ export default async function handler(request: NextApiRequest, response: NextApi
     // Implement your own security, and give the user access to the room
 
     function __shouldUserHaveAccess__(user: any, room: string) {
-        if (team === "Team1" || team === "Team2" || team === "Team3" || team === "Team4" || team === "Scoreboard") {
+        if (team === "Root" || team === "Team1" || team === "Team2" || team === "Team3" || team === "Team4" || team === "Scoreboard") {
             return true
         }
     }
