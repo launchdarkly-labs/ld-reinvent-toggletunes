@@ -50,7 +50,7 @@ const AlertDialogContent = React.forwardRef(
         backgroundClass = "bg-ldgray text-white";
         break;
       default:
-        backgroundClass = "bg-[url('/images/blue-winner.png')] text-white";
+        backgroundClass = "bg-transparent text-white";
         break;
     }
   return (

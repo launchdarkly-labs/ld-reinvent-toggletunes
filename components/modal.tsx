@@ -13,14 +13,13 @@ import {
 } from "@/components/ui/alert-dialog";
 
 export function Modal({
-  // winnerState,
+  winnerState,
   winnerName,
   setWinnerName,
   setWinnerState,
   setResetScores,
 }: any) {
   // let winner = "green";
-  let winnerState = true; 
   // if (winnerName === "Green Team") {
   //   winner = "green";
   // }
@@ -48,6 +47,10 @@ export function Modal({
       if (event.key === "p") {
         setWinnerName("purple");
       }
+      if (event.key === "Enter") {
+        setWinnerName("")
+        setWinnerState(false)
+      }
     };
     document.addEventListener("keydown", handleKeyDown);
     return () => {
@@ -62,13 +65,6 @@ export function Modal({
             <AlertDialogContent variant={winnerName}>
               <AlertDialogHeader />
               <AlertDialogFooter>
-                <AlertDialogAction
-                  onClick={() => {
-                    setWinnerState(false), setResetScores(true);
-                  }}
-                >
-                  Continue
-                </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
         </AlertDialogTrigger>
