@@ -20,6 +20,7 @@ if (typeof window !== "undefined") {
         key: uniqueKey,
         name: "Team4",
         appName: "ToggleTunes",
+        tier: "Platinum"
       },
       device: {
         key: uniqueKey,

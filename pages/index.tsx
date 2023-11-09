@@ -21,6 +21,7 @@ if (typeof window !== "undefined") {
         key: uniqueKey, 
         name: "anonymous",
         appName: "ToggleTunes",
+        tier: "Platinum"
       },
       device: {
         key: uniqueKey,
