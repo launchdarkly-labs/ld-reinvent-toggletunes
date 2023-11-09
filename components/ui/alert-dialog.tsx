@@ -31,22 +31,26 @@ const AlertDialogContent = React.forwardRef(
     let backgroundClass = "";
     switch(variant) {
           case "blue":
-        backgroundClass = "bg-[url('/images/blue-winner.png')] text-white";
+        backgroundClass =
+          "bg-[url('https://uploadthing.com/f/fb4283d2-da2d-4deb-8fc6-a0faab3ec8e0-qu8v5p.gif')] text-white";
         break;
       case "purple":
-        backgroundClass = "bg-[url('/images/purple-winner.png')] text-white";
+        backgroundClass =
+          "bg-[url('https://uploadthing.com/f/bc280636-adae-40ea-a95e-173639b38b3a-66sra9.gif')] text-white";
         break;
       case "red":
-        backgroundClass = "bg-[url('/images/red-winner.png')] text-white";
+        backgroundClass =
+          "bg-[url('https://uploadthing.com/f/7547833a-4406-4c1f-a59a-28fd5b742bee-ti9u5k.gif')] text-white";
         break;
       case "green":
-        backgroundClass = "bg-[url('/images/yellow-winner.png')] text-black";
+        backgroundClass =
+          "bg-[url('https://uploadthing.com/f/9ece43b7-0efc-442a-917c-d766ec1b2f8e-wkjqfr.gif')] text-black";
         break;
       case "start":
         backgroundClass = "bg-ldgray text-white";
         break;
       default:
-        backgroundClass = "bg-[url('/images/blue-winner.png')] text-white";
+        backgroundClass = "bg-transparent text-white";
         break;
     }
   return (
@@ -54,13 +58,12 @@ const AlertDialogContent = React.forwardRef(
       <AlertDialogOverlay />
       {variant != "start" ? (
         <motion.div
-          initial={{scale: 0}}
+          initial={{scale: 1, opacity: 0}}
           animate={{
-            scale: [0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 0.95, 1],
+            opacity: [0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 0.95, 1],
           }}
           transition={{
-            duration: 1.5,
-            ease: "linear",
+            duration: 1,
           }}
           ref={ref}
           className={cn(

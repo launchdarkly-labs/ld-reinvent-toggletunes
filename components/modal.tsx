@@ -15,57 +15,58 @@ import {
 export function Modal({
   winnerState,
   winnerName,
+  setWinnerName,
   setWinnerState,
   setResetScores,
 }: any) {
-  let winner = "";
+  // let winner = "green";
+  // if (winnerName === "Green Team") {
+  //   winner = "green";
+  // }
+  // if (winnerName === "Red Team") {
+  //   winner = "red";
+  // }
+  // if (winnerName === "Purple Team") {
+  //   winner = "purple";
+  // }
+  // if (winnerName === "Blue Team") {
+  //   winner = "blue";
+  // }
 
-  if (winnerName === "Green Team") {
-    winner = "green";
-  }
-  if (winnerName === "Red Team") {
-    winner = "red";
-  }
-  if (winnerName === "Purple Team") {
-    winner = "purple";
-  }
-  if (winnerName === "Blue Team") {
-    winner = "blue";
-  }
-
-  // useEffect(() => {
-  //   const handleKeyDown = (event) => {
-  //     if (event.key === "Enter") {
-  //       setAnimationStarted(true);
-  //     }
-  //   };
-  //   document.addEventListener("keydown", handleKeyDown);
-  //   return () => {
-  //     document.removeEventListener("keydown", handleKeyDown);
-  //   };
-  // }, []);
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.key === "r") {
+        setWinnerName("red")
+      }
+      if (event.key === "b") {
+        setWinnerName("blue");
+      }
+      if (event.key === "g") {
+        setWinnerName("green");
+      }
+      if (event.key === "p") {
+        setWinnerName("purple");
+      }
+      if (event.key === "Enter") {
+        setWinnerName("")
+        setWinnerState(false)
+      }
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [winnerName]);
 
   return (
     <>
-      <AlertDialog defaultOpopen={true}>
-        <AlertDialogTrigger asChild={winnerState}>
-          {winnerState && (
-            <AlertDialogContent variant={winner}>
+      <AlertDialog open={winnerState}>
+        <AlertDialogTrigger>
+            <AlertDialogContent variant={winnerName}>
               <AlertDialogHeader />
-              <AlertDialogDescription className="flex place-content-center text-8xl pb-4 text-center font-audimat">
-                WINNER!
-              </AlertDialogDescription>
               <AlertDialogFooter>
-                <AlertDialogAction
-                  onClick={() => {
-                    setWinnerState(false), setResetScores(true);
-                  }}
-                >
-                  Continue
-                </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
-          )}
         </AlertDialogTrigger>
       </AlertDialog>
     </>

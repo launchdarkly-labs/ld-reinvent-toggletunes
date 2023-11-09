@@ -7,7 +7,6 @@ import KeyboardNavigation from "@/components/KeyboardNavigation";
 import { Room } from "@/components/room";
 import { useBroadcastEvent, useEventListener } from "@/liveblocks.config";
 import { setCookie } from "cookies-next";
-import { time } from "console";
 
 export default function Scoreboard() {
   const [redProgress, setRedProgress] = useState(0);
@@ -20,8 +19,6 @@ export default function Scoreboard() {
   const [timer, setTimer] = useState(300000);
   const [openStartModal, setOpenStartModal] = useState(true);
   const [animationStarted, setAnimationStarted] = useState(false);
-  console.log(animationStarted)
-
 
   const decreaseMainTimer = () => {
     if (isTimerRunning) {
@@ -31,6 +28,7 @@ export default function Scoreboard() {
 
   useEffect(() => {
     const timerInterval = setInterval(decreaseMainTimer, 100);
+    console.log('testing')
     return () => {
       clearInterval(timerInterval);
     };
@@ -60,21 +58,21 @@ export default function Scoreboard() {
       purpleProgress,
       blueProgress
     );
-    let winners = [];
+    let winners = "";
     if (maxProgress === greenProgress) {
-      winners.push("green");
+      winners ="green";
     }
     if (maxProgress === redProgress) {
-      winners.push("red");
+      winners = "red";
     }
     if (maxProgress === purpleProgress) {
-      winners.push("purple");
+      winners = "purple";
     }
     if (maxProgress === blueProgress) {
-      winners.push("blue");
+      winners = "blue";
     }
-    console.log(winners.join(" & "));
-    setWinnerName(winners.join(" & "));
+    // console.log(winners.join(" & "));
+    setWinnerName(winners);
     setWinnerState(true);
   };
 
@@ -112,6 +110,8 @@ export default function Scoreboard() {
         setTimer={setTimer}
         setOpenStartModal={setOpenStartModal}
         setAnimationStarted={setAnimationStarted}
+        setWinnerState={setWinnerState}
+        setWinnerName={setWinnerName}
       />
       <main className="container mx-auto flex min-h-screen flex-col items-center justify-center bg-black">
         <KeyboardNavigation
@@ -124,6 +124,7 @@ export default function Scoreboard() {
           winnerState={winnerState}
           setWinnerState={setWinnerState}
           winnerName={winnerName}
+          setWinnerName={setWinnerName}
         />
         <StartModal
           setIsTimerRunning={setIsTimerRunning}
@@ -156,7 +157,9 @@ const EventListenerComponent = memo(function EventListenerComponent({
   setIsTimerRunning,
   setTimer,
   setOpenStartModal,
-  setAnimationStarted
+  setAnimationStarted,
+  setWinnerState,
+  setWinnerName
 }) {
   console.log("Event listener online");
   useEventListener(({ event, user, connectionId }) => {
@@ -181,7 +184,6 @@ const EventListenerComponent = memo(function EventListenerComponent({
         case "startTimer":
           console.log("starting timer");
           setAnimationStarted(true);
-          setIsTimerRunning(true);
           break;
         case "stopTimer":
           console.log("stopping timer");
@@ -193,6 +195,12 @@ const EventListenerComponent = memo(function EventListenerComponent({
           setIsTimerRunning(false);
           setOpenStartModal(true);
           setTimer(300000);
+          setWinnerState(false);
+          setWinnerName("");
+          setGreenProgress(0);
+          setRedProgress(0);
+          setBlueProgress(0);
+          setPurpleProgress(0);
           break;
         default:
           console.log(event.type);

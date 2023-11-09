@@ -1,8 +1,7 @@
 "use client";
 import * as React from "react";
-import ScoreTable from "./table";
 
-export function ProgressStatus({greenProgress, purpleProgress, redProgress, blueProgress, teamName}: any) {
+export function ProgressStatus({greenProgress, purpleProgress, redProgress, blueProgress}: any) {
   return (
     <>
       <div className="grid grid-rows-5 bg-[url('/images/scoreboard-background-no-bg.png')] bg-cover grid-cols-4 h-full w-3/4 font-sohne border-zinc-500 m-10 place-items-stretch gap-10">
