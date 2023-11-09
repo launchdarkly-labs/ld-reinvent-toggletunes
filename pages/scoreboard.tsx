@@ -1,12 +1,12 @@
 //@ts-nocheck
-import { ProgressStatus } from "@/components/progress-screen";
-import { useEffect, useState, memo } from "react";
-import { Modal } from "@/components/modal";
-import { StartModal } from "@/components/start-modal";
 import KeyboardNavigation from "@/components/KeyboardNavigation";
+import { Modal } from "@/components/modal";
+import { ProgressStatus } from "@/components/progress-screen";
 import { Room } from "@/components/room";
-import { useBroadcastEvent, useEventListener } from "@/liveblocks.config";
+import { StartModal } from "@/components/start-modal";
+import { useEventListener } from "@/liveblocks.config";
 import { setCookie } from "cookies-next";
+import { memo, useEffect, useState } from "react";
 
 export default function Scoreboard() {
   const [redProgress, setRedProgress] = useState(0);
@@ -191,6 +191,7 @@ const EventListenerComponent = memo(function EventListenerComponent({
           break;
         case "startTimer":
           console.log("starting timer");
+          setIsTimerRunning(true);
           setAnimationStarted(true);
           break;
         case "stopTimer":

@@ -8,34 +8,36 @@ let greenStepsArray = [];
 let redStepsArray = [];
 let purpleStepsArray = [];
 let blueStepsArray = [];
-const supabase = createClient(process.env.NEXT_PUBLIC_DB_URL, process.env.NEXT_PUBLIC_DB_ANON_KEY);
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_DB_URL,
+  process.env.NEXT_PUBLIC_DB_ANON_KEY
+);
 
 export default async function databaseConnection(req, res) {
-
   if (req.method === "POST") {
     const { event } = req.body;
 
-    console.log(event)
+    console.log(event);
 
     switch (event) {
       case "first step complete":
-        console.log("Running update from step 1")
+        console.log("Running update from step 1");
         updateEventData(req.body.team.name, req.body.team.stepCompleted);
         break;
       case "second step complete":
-        console.log("Running update from step 2")
+        console.log("Running update from step 2");
         updateEventData(req.body.team.name, req.body.team.stepCompleted);
         break;
       case "third step complete":
-        console.log("Running update from step 3")
+        console.log("Running update from step 3");
         updateEventData(req.body.team.name, req.body.team.stepCompleted);
         break;
       case "fourth step complete":
-        console.log("Running update from step 4")
+        console.log("Running update from step 4");
         updateEventData(req.body.team.name, req.body.team.stepCompleted);
         break;
       case "fifth step complete":
-        console.log("Running update from step 5")
+        console.log("Running update from step 5");
         updateEventData(req.body.team.name, req.body.team.stepCompleted);
         break;
       case "Reset":
@@ -49,7 +51,7 @@ export default async function databaseConnection(req, res) {
         let purpleStepsArray = [];
         let blueStepsArray = [];
         console.log(greenStepsArray);
-        res.status(200).json('values reset')
+        res.status(200).json("values reset");
         break;
     }
     res.status(200).send();
@@ -64,7 +66,7 @@ async function updateEventData(team, stepCompleted) {
         eventDataGreen = greenStepsArray.length * 20;
         const { data, error } = await supabase
           .from("scoreboard")
-          .update({green: eventDataGreen })
+          .update({ green: eventDataGreen })
           .eq("id", 1);
         console.log(eventDataGreen);
 

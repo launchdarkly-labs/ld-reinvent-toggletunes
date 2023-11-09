@@ -1,23 +1,46 @@
 //@ts-nocheck
-import {Reorder, motion} from 'framer-motion'
-import { useState, useEffect, useContext } from 'react';
+import { Reorder, motion } from "framer-motion";
+import { useState, useEffect } from "react";
 
-export default function ScoreTable({greenProgress, redProgress, purpleProgress, blueProgress, teamName}: any) {
-const [tableData, setTableData] = useState<any>([])
+export default function ScoreTable({
+  greenProgress,
+  redProgress,
+  purpleProgress,
+  blueProgress,
+  teamName,
+}: any) {
+  const [tableData, setTableData] = useState<any>([]);
 
-useEffect(() => {
-  setTableData([
-    { teamName: 'Green Team', currentScore: `${greenProgress}`, stepsCompleted: 5 },
-    { teamName: "Red Team", currentScore: `${redProgress}`, stepsCompleted: 2 },
-    { teamName: "Purple Team", currentScore: `${purpleProgress}`, stepsCompleted: 3 },
-    { teamName: "Blue Team", currentScore: `${blueProgress}`, stepsCompleted: 4 },
-  ]);
-},[greenProgress, redProgress, purpleProgress, blueProgress])
-
+  useEffect(() => {
+    setTableData([
+      {
+        teamName: "Green Team",
+        currentScore: `${greenProgress}`,
+        stepsCompleted: 5,
+      },
+      {
+        teamName: "Red Team",
+        currentScore: `${redProgress}`,
+        stepsCompleted: 2,
+      },
+      {
+        teamName: "Purple Team",
+        currentScore: `${purpleProgress}`,
+        stepsCompleted: 3,
+      },
+      {
+        teamName: "Blue Team",
+        currentScore: `${blueProgress}`,
+        stepsCompleted: 4,
+      },
+    ]);
+  }, [greenProgress, redProgress, purpleProgress, blueProgress]);
 
   // Sort the table data based on the current score in descending order
 
-const sortedTableData = tableData.sort((a, b) => Number(b.currentScore) - Number(a.currentScore));
+  const sortedTableData = tableData.sort(
+    (a, b) => Number(b.currentScore) - Number(a.currentScore)
+  );
 
   return (
     <>
@@ -47,24 +70,27 @@ const sortedTableData = tableData.sort((a, b) => Number(b.currentScore) - Number
                     restDelta: 0.001,
                   }}
                   layout
-                  initial={{opacity: 0}}
-                  animate={{opacity: 1}}
-                  exit={{opacity: 0}}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
                   className="border-b px-6 py-4 hover:bg-sky-200 dark:border-neutral-500 dark:hover:bg-neutral-600"
                 >
                   <Reorder.Item
-                  as='td'
-                  className="whitespace-nowrap px-6 py-4 text-4xl sm:text-lg">
+                    as="td"
+                    className="whitespace-nowrap px-6 py-4 text-4xl sm:text-lg"
+                  >
                     {row.teamName}
                   </Reorder.Item>
                   <Reorder.Item
-                  as='td' 
-                  className="whitespace-nowrap px-6 py-4 text-4xl sm:text-lg">
+                    as="td"
+                    className="whitespace-nowrap px-6 py-4 text-4xl sm:text-lg"
+                  >
                     {row.currentScore}
                   </Reorder.Item>
-                  <Reorder.Item 
-                  as='td'
-                  className="whitespace-nowrap px-6 py-4 text-4xl sm:text-lg">
+                  <Reorder.Item
+                    as="td"
+                    className="whitespace-nowrap px-6 py-4 text-4xl sm:text-lg"
+                  >
                     {row.stepsCompleted}
                   </Reorder.Item>
                 </motion.tr>

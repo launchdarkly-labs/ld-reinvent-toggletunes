@@ -1,20 +1,19 @@
-import { useRouter } from 'next/router';
-import { useEffect, useCallback } from 'react';
+import { useCallback, useEffect } from "react";
 
-export default function KeyboardNavigation({ 
-  setGreenProgress, 
-  setRedProgress, 
-  setPurpleProgress, 
-  setBlueProgress 
+export default function KeyboardNavigation({
+  setGreenProgress,
+  setRedProgress,
+  setPurpleProgress,
+  setBlueProgress,
 }: {
-  setGreenProgress: any,
-  setRedProgress: any,
-  setPurpleProgress: any,
-  setBlueProgress: any
+  setGreenProgress: any;
+  setRedProgress: any;
+  setPurpleProgress: any;
+  setBlueProgress: any;
 }) {
   // const location = useRouter();
 
-  const handleKeyPress = useCallback((event:any) => {
+  const handleKeyPress = useCallback((event: any) => {
     switch (event.key) {
       case "r":
         setGreenProgress(0);

@@ -1,8 +1,4 @@
-import KeyboardNavigation from "@/components/KeyboardNavigation";
-import PageHeader from "@/components/PageHeader";
-import SideBar from "@/components/Sidebar";
-import { useFlags } from "launchdarkly-react-client-sdk";
-import { Html, Head, Main, NextScript } from "next/document";
+import { Head, Html, Main, NextScript } from "next/document";
 
 export default function Document() {
   return (

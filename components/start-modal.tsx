@@ -2,7 +2,6 @@
 import {
   AlertDialog,
   AlertDialogContent,
-  AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
@@ -14,7 +13,7 @@ export function StartModal({
   setOpenStartModal,
   setIsTimerRunning,
   animationStarted,
-  setAnimationStarted
+  setAnimationStarted,
 }) {
   function handleClick() {
     setOpenStartModal(false);
