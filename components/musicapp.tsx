@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { useFlags, useLDClient } from "launchdarkly-react-client-sdk";
 import { Music2Icon } from "lucide-react";
 import { memo, useEffect, useState } from "react";
+import { useRouter } from "next/router";
 import { IoIosMusicalNotes, IoMdVolumeHigh } from "react-icons/io";
 import {
   IoPlaySharp,
@@ -34,6 +35,12 @@ export default function MusicApp({ teamName, socket }: any) {
   const apiURL = "/api/sb-score-add/";
 
   const broadcast = useBroadcastEvent();
+
+  const router = useRouter();
+
+  const reloadPage = async () => {
+    await router.reload();
+  };
 
   useEffect(() => {
     const triggerSteps = async () => {
@@ -164,13 +171,7 @@ export default function MusicApp({ teamName, socket }: any) {
 
   return (
     <Room>
-      <EventListenerComponent
-        setFlagOne={setFlagOne}
-        setFlagTwo={setFlagTwo}
-        setFlagThree={setFlagThree}
-        setFlagFour={setFlagFour}
-        setFlagFive={setFlagFive}
-      />
+      <EventListenerComponent reloadPage={reloadPage} />
       <div className="flex flex-col h-screen gap-2 font-sohne bg-black overflow-y-hidden scrollbar-hide">
         {tracklist ? (
           <div className="flex flex-row bg-black gap-2 mt-2">
@@ -480,11 +481,7 @@ export default function MusicApp({ teamName, socket }: any) {
 }
 
 const EventListenerComponent = memo(function EventListenerComponent({
-  setFlagOne,
-  setFlagTwo,
-  setFlagThree,
-  setFlagFour,
-  setFlagFive,
+  reloadPage,
 }) {
   console.log("Event listener online");
   useEventListener(({ event, user, connectionId }) => {
@@ -492,12 +489,7 @@ const EventListenerComponent = memo(function EventListenerComponent({
       console.log(event);
       switch (event.type) {
         case "resetTimer":
-          setFlagOne(false);
-          setFlagTwo(false);
-          setFlagThree(false);
-          setFlagFour(false);
-          setFlagFive(false);
-          console.log("all flags reset");
+          await reloadPage(); // Call reloadPage when event type is "resetTimer"
           break;
         default:
           console.log("invalid event type");
