@@ -114,7 +114,7 @@ export default function Scoreboard() {
         setAnimationStarted={setAnimationStarted}
       />
       <main className="container mx-auto flex min-h-screen flex-col items-center justify-center bg-black">
-      <img src='/images/AWS_Winner_blue_v2.gif' alt="winner" />
+      {/* <img src='/images/AWS_Winner_blue_v2.gif' alt="winner" /> */}
         <KeyboardNavigation
           setGreenProgress={setGreenProgress}
           setRedProgress={setRedProgress}
@@ -125,6 +125,7 @@ export default function Scoreboard() {
           winnerState={winnerState}
           setWinnerState={setWinnerState}
           winnerName={winnerName}
+          setWinnerName={setWinnerName}
         />
         <StartModal
           setIsTimerRunning={setIsTimerRunning}
