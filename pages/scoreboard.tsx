@@ -28,7 +28,6 @@ export default function Scoreboard() {
 
   useEffect(() => {
     const timerInterval = setInterval(decreaseMainTimer, 100);
-    console.log('testing')
     return () => {
       clearInterval(timerInterval);
     };
@@ -36,7 +35,6 @@ export default function Scoreboard() {
 
   const timerToMinutesSecondsMilliseconds = (timer) => {
     if (timer <= 0 && isTimerRunning) {
-      setTimer(0);
       setIsTimerRunning(false);
       endGame();
     }
@@ -58,21 +56,28 @@ export default function Scoreboard() {
       purpleProgress,
       blueProgress
     );
-    let winners = "";
+    let winners = [];
+    let winnerName = "";
     if (maxProgress === greenProgress) {
-      winners ="green";
+      winners.push("green");
     }
     if (maxProgress === redProgress) {
-      winners = "red";
+      winners.push("red");
     }
     if (maxProgress === purpleProgress) {
-      winners = "purple";
+      winners.push("purple");
     }
     if (maxProgress === blueProgress) {
-      winners = "blue";
+      winners.push("blue");
     }
-    // console.log(winners.join(" & "));
-    setWinnerName(winners);
+    // TODO: Nothing happens on tie currently
+    if (winners.length > 1) {
+      winnerName = "";
+    } else {
+      winnerName = winners[0];
+    }
+    setIsTimerRunning(false);
+    setWinnerName(winnerName);
     setWinnerState(true);
   };
 
@@ -88,8 +93,6 @@ export default function Scoreboard() {
       blueProgress >= 100
     ) {
       endGame();
-    } else {
-      setWinnerState(false);
     }
   }, [
     greenProgress,
@@ -97,6 +100,7 @@ export default function Scoreboard() {
     blueProgress,
     purpleProgress,
     isTimerRunning,
+    winnerName,
   ]);
 
   return (
@@ -159,7 +163,7 @@ const EventListenerComponent = memo(function EventListenerComponent({
   setOpenStartModal,
   setAnimationStarted,
   setWinnerState,
-  setWinnerName
+  setWinnerName,
 }) {
   console.log("Event listener online");
   useEventListener(({ event, user, connectionId }) => {
@@ -170,15 +174,19 @@ const EventListenerComponent = memo(function EventListenerComponent({
     async function scoreRequest(event) {
       switch (event.type) {
         case "green":
+          console.log("green score");
           setGreenProgress((prevProgress) => prevProgress + 20);
           break;
         case "red":
+          console.log("red score");
           setRedProgress((prevProgress) => prevProgress + 20);
           break;
         case "purple":
+          console.log("purple score");
           setPurpleProgress((prevProgress) => prevProgress + 20);
           break;
         case "blue":
+          console.log("blue score");
           setBlueProgress((prevProgress) => prevProgress + 20);
           break;
         case "startTimer":

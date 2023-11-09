@@ -19,24 +19,11 @@ export function Modal({
   setWinnerState,
   setResetScores,
 }: any) {
-  // let winner = "green";
-  // if (winnerName === "Green Team") {
-  //   winner = "green";
-  // }
-  // if (winnerName === "Red Team") {
-  //   winner = "red";
-  // }
-  // if (winnerName === "Purple Team") {
-  //   winner = "purple";
-  // }
-  // if (winnerName === "Blue Team") {
-  //   winner = "blue";
-  // }
-
   useEffect(() => {
+    console.log(winnerState);
     const handleKeyDown = (event) => {
       if (event.key === "r") {
-        setWinnerName("red")
+        setWinnerName("red");
       }
       if (event.key === "b") {
         setWinnerName("blue");
@@ -48,25 +35,24 @@ export function Modal({
         setWinnerName("purple");
       }
       if (event.key === "Enter") {
-        setWinnerName("")
-        setWinnerState(false)
+        setWinnerName("");
+        setWinnerState(false);
       }
     };
     document.addEventListener("keydown", handleKeyDown);
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
     };
-  }, [winnerName]);
+  }, [winnerName, winnerState]);
 
   return (
     <>
       <AlertDialog open={winnerState}>
         <AlertDialogTrigger>
-            <AlertDialogContent variant={winnerName}>
-              <AlertDialogHeader />
-              <AlertDialogFooter>
-              </AlertDialogFooter>
-            </AlertDialogContent>
+          <AlertDialogContent variant={winnerName}>
+            <AlertDialogHeader />
+            <AlertDialogFooter></AlertDialogFooter>
+          </AlertDialogContent>
         </AlertDialogTrigger>
       </AlertDialog>
     </>
