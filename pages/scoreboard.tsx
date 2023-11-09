@@ -200,7 +200,7 @@ const EventListenerComponent = memo(function EventListenerComponent({
           break;
         case "resetTimer":
           console.log("resetting scoreboard");
-          // await fetch("/api/apiReset");
+          await fetch("/api/apiReset");
           setIsTimerRunning(false);
           setOpenStartModal(true);
           setTimer(300000);
