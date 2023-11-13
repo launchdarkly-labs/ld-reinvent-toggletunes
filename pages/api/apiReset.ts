@@ -1,4 +1,3 @@
-import { createClient } from "@supabase/supabase-js";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 // we need to list the project keys for each of the projects that we want to clean up
@@ -11,46 +10,32 @@ const projectKeys: Array<string> = [
   "toggle-tunes-team-4",
 ];
 const API_KEY: string = process.env.LD_API_KEY as string;
-const SUPABASE_URL: string = process.env.NEXT_PUBLIC_DB_URL as string;
-const SUPABASE_ANON_KEY: string = process.env.NEXT_PUBLIC_DB_ANON_KEY as string;
+const delay = 1000;
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<any>
 ) {
-  const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
+  console.log("Reset starting");
   for (const projectKey of projectKeys) {
     // get the flags then delete them
     const flags = await getFlags(projectKey);
-    console.log(flags);
     for (const flag of flags.items) {
       await deleteFlag(projectKey, flag.key);
+      await sleep(delay);
     }
     // get environments which we need for deleting segments
     const environments = await getEnvironments(projectKey);
-    console.log("environments " + environments);
     // get the segments for each environment and delete them
     for (const environment of environments.items) {
       const segments = await getSegments(projectKey, environment.key);
-      console.log("segments " + segments);
       for (const segment of segments.items) {
         await deleteSegment(projectKey, environment.key, segment.key);
+        await sleep(delay);
       }
     }
   }
-  await supabase
-    .from("scoreboard")
-    .update({
-      red: 0,
-      blue: 0,
-      green: 0,
-      purple: 0,
-      isTimeRunning: false,
-      resetTriggered: true,
-    })
-    .eq("id", 1);
-  res.status(200).json({ message: "success" });
+  console.log("Reset complete");
 }
 
 async function getEnvironments(projectKey: string) {
@@ -203,4 +188,8 @@ async function deleteSegment(
       `Cannot delete segment ${segmentKey}: ${data ?? "unknown"}`
     );
   }
+}
+
+function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
