@@ -41,7 +41,7 @@ export default async function handler(
   // console.log(`Team: ${team}, SDK Key: ${sdkKey}`);
 
   ldClient = await getServerClient(sdkKey || "");
-  let newToggleDB;
+  let newtoggledb;
   let jsonObject;
 
   // console.log(jsonObject)
@@ -53,11 +53,11 @@ export default async function handler(
     tier: "Platinum",
   };
 
-  newToggleDB = await ldClient.variation("newToggleDB", jsonObject, "off");
+  newtoggledb = await ldClient.variation("newtoggledb", jsonObject, "off");
 
   let songList;
-  if (newToggleDB === "complete") {
-    await console.log(newToggleDB + "for team" + team);
+  if (newtoggledb === "complete") {
+    await console.log(newtoggledb + "for team" + team);
     // console.log("sdk key is " + sdkKey)
     if (!connectionString) {
       throw new Error("DATABASE_URL is not set");
@@ -68,7 +68,7 @@ export default async function handler(
     });
 
     const db = await drizzle(pool);
-    // console.log(newToggleDB)
+    // console.log(newtoggledb)
     songList = await db
       .select()
       .from(songs)

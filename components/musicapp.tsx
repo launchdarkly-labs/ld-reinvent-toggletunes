@@ -17,7 +17,7 @@ import { useBroadcastEvent, useEventListener } from "../liveblocks.config";
 import { Room } from "./room";
 
 export default function MusicApp({ teamName, socket }: any) {
-  const { tracklist, recentTunes, userplaylist, platinumTier, newToggleDB } =
+  const { tracklist, recenttunes, userplaylist, platinumtier, newtoggledb } =
     useFlags();
   const [currentSongIndex, setCurrentSongIndex] = useState(0);
   const [volumeVisibility, setVolumeVisibility] = useState(true);
@@ -54,7 +54,7 @@ export default function MusicApp({ teamName, socket }: any) {
           console.log("Step 1 not eligible for evaluation!");
         }
 
-        if (recentTunes === true && flagTwo === false) {
+        if (recenttunes === true && flagTwo === false) {
           broadcast({ type: teamName, complete: "stepTwoComplete", value: 20 });
           // console.log("second step running");
           // await triggerStep("second step complete", "stepTwoComplete");
@@ -63,7 +63,7 @@ export default function MusicApp({ teamName, socket }: any) {
           console.log("Step 2 not eligible for evaluation!");
         }
 
-        if (newToggleDB === "complete" && flagThree === false) {
+        if (newtoggledb === "complete" && flagThree === false) {
           broadcast({
             type: teamName,
             complete: "stepThreeComplete",
@@ -89,7 +89,7 @@ export default function MusicApp({ teamName, socket }: any) {
           console.log("Step 4 not eligible for evaluation!");
         }
 
-        if (platinumTier === true && flagFive === false) {
+        if (platinumtier === true && flagFive === false) {
           broadcast({
             type: teamName,
             complete: "stepFiveComplete",
@@ -124,7 +124,7 @@ export default function MusicApp({ teamName, socket }: any) {
     // };
 
     triggerSteps();
-  }, [tracklist, recentTunes, userplaylist, platinumTier, newToggleDB]);
+  }, [tracklist, recenttunes, userplaylist, platinumtier, newtoggledb]);
 
   useEffect(() => {
     setPlaylistAPI([]);
@@ -150,7 +150,7 @@ export default function MusicApp({ teamName, socket }: any) {
     };
     fetchPlaylists();
     fetchSongs();
-  }, [newToggleDB]);
+  }, [newtoggledb]);
 
   const handleNextSong = () => {
     setCurrentSongIndex((prevIndex) => (prevIndex + 1) % songs.length);
@@ -175,12 +175,12 @@ export default function MusicApp({ teamName, socket }: any) {
       <div className="flex flex-col h-screen gap-2 font-sohne bg-black overflow-y-hidden scrollbar-hide">
         {tracklist ? (
           <div className="flex flex-row bg-black gap-2 mt-2">
-            {recentTunes && (
+            {recenttunes && (
               <div
                 className="w-3/5 xl:w-1/5 min-h-screen pl-2"
                 style={{ maxHeight: "calc(100vh - 150px)" }}
               >
-                <SideBar songsAPI={songsAPI} newToggleDB={newToggleDB} />
+                <SideBar songsAPI={songsAPI} newtoggledb={newtoggledb} />
               </div>
             )}
             <motion.div
@@ -192,14 +192,14 @@ export default function MusicApp({ teamName, socket }: any) {
               }}
               style={{ maxHeight: "calc(100vh - 150px)" }}
               className={`mx-auto rounded-xl pt-2 bg-ldbackground h-screen overflow-y-auto scrollbar-hide ${
-                recentTunes && platinumTier
+                recenttunes && platinumtier
                   ? "w-2/5 xl:w-3/5"
-                  : recentTunes
+                  : recenttunes
                   ? "w-3/5 xl:w-4/5"
                   : "w-full"
               }`}
             >
-              {!recentTunes && (
+              {!recenttunes && (
                 <div className="">
                   <img src="/images/tunes.png" className="ml-auto mr-5" />
                 </div>
@@ -301,7 +301,7 @@ export default function MusicApp({ teamName, socket }: any) {
                           className="grid grid-cols-5 tracklist  w-full text-xl border-b-2 border-b-gray-600/40 py-4 hover:bg-gray-500/20"
                         >
                           <div className="">
-                            {newToggleDB !== "complete" ? (
+                            {newtoggledb !== "complete" ? (
                               <Music2Icon className="h-10 w-10 ml-8" />
                             ) : (
                               <img
@@ -383,7 +383,7 @@ export default function MusicApp({ teamName, socket }: any) {
                 )}
               </div>
             </div>
-            {platinumTier && (
+            {platinumtier && (
               <motion.div
                 initial={{ x: 100 }}
                 animate={{ x: 0 }}

@@ -37,7 +37,7 @@ export default async function handler(
   }
 
   ldClient = await getServerClient(sdkKey || "");
-  let newToggleDB;
+  let newtoggledb;
   let jsonObject;
 
   jsonObject = {
@@ -47,10 +47,10 @@ export default async function handler(
     tier: "Platinum",
   };
 
-  newToggleDB = await ldClient.variation("newToggleDB", jsonObject, "off");
+  newtoggledb = await ldClient.variation("newtoggledb", jsonObject, "off");
 
   let lists;
-  if (newToggleDB === "complete") {
+  if (newtoggledb === "complete") {
     if (!connectionString) {
       throw new Error("DATABASE_URL is not set");
     }

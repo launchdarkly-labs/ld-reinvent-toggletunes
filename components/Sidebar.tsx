@@ -1,11 +1,11 @@
-import {  Music2Icon } from "lucide-react";
+import { Music2Icon } from "lucide-react";
 import Link from "next/link";
 import { MdHome } from "react-icons/md";
 import { FiSearch } from "react-icons/fi";
 import { RxCounterClockwiseClock } from "react-icons/rx";
 import { motion } from "framer-motion";
 
-const SideBar = ({ songsAPI, newToggleDB }: any) => {
+const SideBar = ({ songsAPI, newtoggledb }: any) => {
   return (
     <motion.div
       initial={{ x: -100 }}
@@ -54,7 +54,7 @@ const SideBar = ({ songsAPI, newToggleDB }: any) => {
           <ul>
             {songsAPI.map((song: any, index: any) => (
               <li key={index} className="flex items-center gap-2 py-2">
-                {newToggleDB !== 'complete' ? (
+                {newtoggledb !== "complete" ? (
                   <Music2Icon className="h-10 w-10 mr-5" />
                 ) : (
                   <img src={song.image} alt={song.title} className="h-8 w-8" />
