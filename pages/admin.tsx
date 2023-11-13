@@ -24,6 +24,10 @@ function AdminUIComponent() {
     broadcast({ type: "resetTimer" });
   };
 
+  const handleReload = async () => {
+    broadcast({ type: "reload" });
+  };
+
   return (
     <div>
       <button
@@ -40,9 +44,15 @@ function AdminUIComponent() {
       </button>
       <button
         onClick={handleReset}
-        className="bg-blue-500 hover:bg-blue-700 text-white font-bold text-4xl py-2 px-4 rounded w-screen"
+        className="bg-blue-500 hover:bg-blue-700 text-white font-bold text-4xl py-2 px-4 rounded w-screen mb-5"
       >
         Reset
+      </button>
+      <button
+        onClick={handleReload}
+        className="bg-gray-500 hover:bg-gray-700 text-white font-bold text-4xl py-2 px-4 rounded w-screen"
+      >
+        Reload
       </button>
     </div>
   );

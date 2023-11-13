@@ -491,6 +491,9 @@ const EventListenerComponent = memo(function EventListenerComponent({
         case "resetTimer":
           await reloadPage(); // Call reloadPage when event type is "resetTimer"
           break;
+        case "reload":
+          await reloadPage();
+          break;
         default:
           console.log("invalid event type");
       }
