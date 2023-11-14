@@ -17,25 +17,30 @@ export default async function handler(
   res: NextApiResponse<any>
 ) {
   console.log("Reset starting");
-  for (const projectKey of projectKeys) {
-    // get the flags then delete them
-    const flags = await getFlags(projectKey);
-    for (const flag of flags.items) {
-      await deleteFlag(projectKey, flag.key);
-      await sleep(delay);
-    }
-    // get environments which we need for deleting segments
-    const environments = await getEnvironments(projectKey);
-    // get the segments for each environment and delete them
-    for (const environment of environments.items) {
-      const segments = await getSegments(projectKey, environment.key);
-      for (const segment of segments.items) {
-        await deleteSegment(projectKey, environment.key, segment.key);
+  try {
+    for (const projectKey of projectKeys) {
+      // get the flags then delete them
+      const flags = await getFlags(projectKey);
+      for (const flag of flags.items) {
+        await deleteFlag(projectKey, flag.key);
         await sleep(delay);
       }
+      // get environments which we need for deleting segments
+      const environments = await getEnvironments(projectKey);
+      // get the segments for each environment and delete them
+      for (const environment of environments.items) {
+        const segments = await getSegments(projectKey, environment.key);
+        for (const segment of segments.items) {
+          await deleteSegment(projectKey, environment.key, segment.key);
+          await sleep(delay);
+        }
+      }
     }
+  } catch (e: any) {
+    return res.status(500).json({ error: e.message });
   }
   console.log("Reset complete");
+  return res.status(200).json({ success: true });
 }
 
 async function getEnvironments(projectKey: string) {

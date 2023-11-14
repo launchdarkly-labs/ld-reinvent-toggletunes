@@ -1,5 +1,6 @@
 import { Room } from "@/components/room";
 import { useBroadcastEvent } from "@/liveblocks.config";
+import { useState } from "react";
 
 export default function AdminPage() {
   return (
@@ -11,6 +12,7 @@ export default function AdminPage() {
 
 function AdminUIComponent() {
   const broadcast = useBroadcastEvent();
+  const [displayMessage, setDisplayMessage] = useState(false);
 
   const handleStart = async () => {
     broadcast({ type: "startTimer" });
@@ -20,8 +22,21 @@ function AdminUIComponent() {
     broadcast({ type: "stopTimer" });
   };
 
-  const handleReset = async () => {
+  const handleReset = async (e: any) => {
+    e.target.disabled = true;
+    e.target.innerText = "Resetting...";
     broadcast({ type: "resetTimer" });
+    const resp = await fetch("/api/apiReset");
+    if (resp.ok) {
+      console.log("Reset successful");
+      setDisplayMessage(false);
+      handleReload();
+    } else {
+      console.log("Reset failed");
+      setDisplayMessage(true);
+    }
+    e.target.innerText = "Reset";
+    e.target.disabled = false;
   };
 
   const handleReload = async () => {
@@ -30,6 +45,15 @@ function AdminUIComponent() {
 
   return (
     <div>
+      {displayMessage && (
+        <div
+          className="p-4 mb-4 text-sm text-yellow-800 rounded-lg bg-yellow-50 dark:bg-gray-800 dark:text-yellow-300"
+          role="alert"
+        >
+          <span className="font-bold">Reset failed</span> Please try running it
+          again.
+        </div>
+      )}
       <button
         onClick={handleStart}
         className="bg-green-500 hover:bg-green-700 text-white font-bold text-4xl py-2 px-4 rounded w-screen mb-5"
