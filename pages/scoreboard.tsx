@@ -16,7 +16,7 @@ export default function Scoreboard() {
   const [winnerName, setWinnerName] = useState("");
   const [greenProgress, setGreenProgress] = useState(0);
   const [isTimerRunning, setIsTimerRunning] = useState(false);
-  const [timer, setTimer] = useState(300000);
+  const [timer, setTimer] = useState(600000);
   const [openStartModal, setOpenStartModal] = useState(true);
   const [animationStarted, setAnimationStarted] = useState(false);
 
@@ -202,7 +202,7 @@ const EventListenerComponent = memo(function EventListenerComponent({
           console.log("resetting scoreboard");
           setIsTimerRunning(false);
           setOpenStartModal(true);
-          setTimer(300000);
+          setTimer(600000);
           setWinnerState(false);
           setWinnerName("");
           setGreenProgress(0);
