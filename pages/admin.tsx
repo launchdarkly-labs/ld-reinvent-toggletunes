@@ -13,8 +13,11 @@ export default function AdminPage() {
 function AdminUIComponent() {
   const broadcast = useBroadcastEvent();
   const [displayMessage, setDisplayMessage] = useState(false);
+  const [archivedMessage, setArchivedMessage] = useState("");
 
   const handleStart = async () => {
+    setArchivedMessage("");
+    setDisplayMessage(false);
     broadcast({ type: "startTimer" });
   };
 
@@ -23,13 +26,14 @@ function AdminUIComponent() {
   };
 
   const handleReset = async (e: any) => {
+    setArchivedMessage("");
+    setDisplayMessage(false);
     e.target.disabled = true;
     e.target.innerText = "Resetting...";
     broadcast({ type: "resetTimer" });
     const resp = await fetch("/api/apiReset");
     if (resp.ok) {
       console.log("Reset successful");
-      setDisplayMessage(false);
       handleReload();
     } else {
       console.log("Reset failed");
@@ -43,6 +47,15 @@ function AdminUIComponent() {
     broadcast({ type: "reload" });
   };
 
+  const handleArchived = async () => {
+    setArchivedMessage("");
+    const resp = await fetch("/api/archived");
+    if (resp.ok) {
+      const data = await resp.json();
+      setArchivedMessage(data.message);
+    }
+  };
+
   return (
     <div>
       {displayMessage && (
@@ -52,6 +65,14 @@ function AdminUIComponent() {
         >
           <span className="font-bold">Reset failed</span> Please try running it
           again.
+        </div>
+      )}
+      {archivedMessage !== "" && (
+        <div
+          className="p-4 mb-4 text-sm text-yellow-800 rounded-lg bg-yellow-50 dark:bg-gray-800 dark:text-yellow-300"
+          role="alert"
+        >
+          {archivedMessage}
         </div>
       )}
       <button
@@ -74,9 +95,15 @@ function AdminUIComponent() {
       </button>
       <button
         onClick={handleReload}
-        className="bg-gray-500 hover:bg-gray-700 text-white font-bold text-4xl py-2 px-4 rounded w-screen"
+        className="bg-gray-500 hover:bg-gray-700 text-white font-bold text-4xl py-2 px-4 rounded w-screen mb-5"
       >
         Reload
+      </button>
+      <button
+        onClick={handleArchived}
+        className="bg-gray-600 hover:bg-gray-800 text-white font-bold text-4xl py-2 px-4 rounded w-screen"
+      >
+        Check for Archived Flags
       </button>
     </div>
   );
