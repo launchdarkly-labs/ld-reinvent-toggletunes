@@ -1,4 +1,3 @@
-//@ts-nocheck
 import ItemCard from "@/components/ItemCard";
 import SideBar from "@/components/Sidebar";
 import { motion } from "framer-motion";
@@ -7,18 +6,13 @@ import { Music2Icon } from "lucide-react";
 import { memo, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { IoIosMusicalNotes, IoMdVolumeHigh } from "react-icons/io";
-import {
-  IoPlaySharp,
-  IoPlaySkipBackSharp,
-  IoPlaySkipForwardSharp,
-} from "react-icons/io5";
+import { IoPlaySharp, IoPlaySkipBackSharp, IoPlaySkipForwardSharp } from "react-icons/io5";
 import { songs } from "@/lib/data";
 import { useBroadcastEvent, useEventListener } from "../liveblocks.config";
 import { Room } from "./room";
 
-export default function MusicApp({ teamName, socket }: any) {
-  const { tracklist, recenttunes, userplaylist, platinumtier, newtoggledb } =
-    useFlags();
+export default function MusicApp({ teamName }: { teamName: string }) {
+  const { tracklist, recenttunes, userplaylist, platinumtier, newtoggledb } = useFlags();
   const [currentSongIndex, setCurrentSongIndex] = useState(0);
   const [volumeVisibility, setVolumeVisibility] = useState(true);
   const [playlistAPI, setPlaylistAPI] = useState([]);
@@ -29,10 +23,10 @@ export default function MusicApp({ teamName, socket }: any) {
   const [flagThree, setFlagThree] = useState(false);
   const [flagFour, setFlagFour] = useState(false);
   const [flagFive, setFlagFive] = useState(false);
+  console.log(teamName);
+  // const ldClient = useLDClient();
 
-  const ldClient = useLDClient();
-
-  const apiURL = "/api/sb-score-add/";
+  // const apiURL = "/api/sb-score-add/";
 
   const broadcast = useBroadcastEvent();
 
@@ -152,22 +146,20 @@ export default function MusicApp({ teamName, socket }: any) {
     fetchSongs();
   }, [newtoggledb]);
 
-  const handleNextSong = () => {
+  const handleNextSong = (): void => {
     setCurrentSongIndex((prevIndex) => (prevIndex + 1) % songs.length);
   };
 
-  const handlePreviousSong = () => {
-    setCurrentSongIndex(
-      (prevIndex) => (prevIndex - 1 + songs.length) % songs.length
-    );
+  const handlePreviousSong = (): void => {
+    setCurrentSongIndex((prevIndex) => (prevIndex - 1 + songs.length) % songs.length);
   };
 
-  const handleSubscriptionClick = async () => {
-    const context: any = ldClient?.getContext();
-    context.user.tier = "Platinum";
-    ldClient?.identify(context);
-    setUpgradeAd(false);
-  };
+  // const handleSubscriptionClick = async () => {
+  //   const context: any = ldClient?.getContext();
+  //   context.user.tier = "Platinum";
+  //   ldClient?.identify(context);
+  //   setUpgradeAd(false);
+  // };
 
   return (
     <Room>
@@ -274,9 +266,7 @@ export default function MusicApp({ teamName, socket }: any) {
                             alt="astronaut"
                             src={song.image}
                           />
-                          <p className="text-lg px-4 text-center font-sohne pb-4">
-                            {song.title}
-                          </p>
+                          <p className="text-lg px-4 text-center font-sohne pb-4">{song.title}</p>
                           <p className="text-xs text-gray-500 px-4 text-center font-sohne font-thin">
                             {song.duration}
                           </p>
@@ -304,10 +294,7 @@ export default function MusicApp({ teamName, socket }: any) {
                             {newtoggledb !== "complete" ? (
                               <Music2Icon className="h-10 w-10 ml-8" />
                             ) : (
-                              <img
-                                src={song.image}
-                                className="h-10 w-10 ml-8"
-                              />
+                              <img src={song.image} className="h-10 w-10 ml-8" />
                             )}
                           </div>
                           <div className="titletext">
@@ -335,16 +322,11 @@ export default function MusicApp({ teamName, socket }: any) {
                 {tracklist && !userplaylist ? (
                   <Music2Icon className="h-14 w-14 mr-4" />
                 ) : (
-                  <img
-                    src={songs[currentSongIndex].image}
-                    className="h-28 mr-4"
-                  />
+                  <img src={songs[currentSongIndex].image} className="h-28 mr-4" />
                 )}
                 <div>
                   <p className="text-2xl">{songs[currentSongIndex].title}</p>
-                  <p className="text-xl text-gray-500">
-                    {songs[currentSongIndex].artists}
-                  </p>
+                  <p className="text-xl text-gray-500">{songs[currentSongIndex].artists}</p>
                 </div>
               </div>
               <div className="flex flex-col items-center">
@@ -374,12 +356,7 @@ export default function MusicApp({ teamName, socket }: any) {
                   onClick={() => setVolumeVisibility(!volumeVisibility)}
                 />
                 {volumeVisibility && (
-                  <input
-                    type="range"
-                    min={0}
-                    max={100}
-                    className="accent-white  w-14 md:w-28"
-                  />
+                  <input type="range" min={0} max={100} className="accent-white  w-14 md:w-28" />
                 )}
               </div>
             </div>
@@ -391,10 +368,7 @@ export default function MusicApp({ teamName, socket }: any) {
                 className="w-2/5 xl:w-1/5 items-between flex flex-col justify-between gap-y-2"
                 style={{ maxHeight: "calc(100vh - 150px)" }}
               >
-                <img
-                  src="/images/djtoggle.png"
-                  className="self-start h-1/2 pr-2"
-                />
+                <img src="/images/djtoggle.png" className="self-start h-1/2 pr-2" />
                 <img src="/images/books.png" className="self-end h-1/2 pr-2" />
               </motion.div>
             )}
@@ -411,10 +385,7 @@ export default function MusicApp({ teamName, socket }: any) {
             style={{ maxHeight: "calc(100vh - 150px)" }}
           >
             <div>
-              <img
-                src="/images/ToggleTunes.png"
-                className="h-16 my-10 mx-auto"
-              />
+              <img src="/images/ToggleTunes.png" className="h-16 my-10 mx-auto" />
             </div>
             <motion.div
               key={songs[currentSongIndex].id}
@@ -464,12 +435,7 @@ export default function MusicApp({ teamName, socket }: any) {
                   onClick={() => setVolumeVisibility(!volumeVisibility)}
                 />
                 {volumeVisibility && (
-                  <input
-                    type="range"
-                    min={0}
-                    max={100}
-                    className="accent-white  w-14 md:w-28"
-                  />
+                  <input type="range" min={0} max={100} className="accent-white  w-14 md:w-28" />
                 )}
               </div>
             </div>
@@ -480,9 +446,7 @@ export default function MusicApp({ teamName, socket }: any) {
   );
 }
 
-const EventListenerComponent = memo(function EventListenerComponent({
-  reloadPage,
-}) {
+const EventListenerComponent = memo(function EventListenerComponent({ reloadPage }) {
   console.log("Event listener online");
   useEventListener(({ event, user, connectionId }) => {
     async function resetFlagSteps(event) {
