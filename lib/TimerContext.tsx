@@ -3,8 +3,8 @@ import { createContext, useState, useEffect } from "react";
 const TimerContext = createContext();
 
 export default TimerContext;
-
-export const TimerProvider = ({ children }) => {
+//THIS WAS NOT USED
+export const TimerProvider = ({ children }: { children: any }) => {
   const [isTimerRunning, setIsTimerRunning] = useState(false);
   const [timer, setTimer] = useState(300000);
   const [openStartModal, setOpenStartModal] = useState(true);
@@ -23,16 +23,14 @@ export const TimerProvider = ({ children }) => {
     };
   }, [isTimerRunning]);
 
-  const timerToMinutesSecondsMilliseconds = (timer) => {
+  const timerToMinutesSecondsMilliseconds = (timer:number):string => {
     if (timer <= 0) {
       setTimer(0);
       setIsTimerRunning(false);
     }
     const minutes = Math.floor(timer / 60000);
     const seconds = Math.floor((timer % 60000) / 1000);
-    return `${minutes.toString().padStart(2, "0")}:${seconds
-      .toString()
-      .padStart(2, "0")}`;
+    return `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
   };
 
   return (

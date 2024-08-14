@@ -1,16 +1,13 @@
-//@ts-nocheck
 import Redis from "ioredis";
-let eventDataGreen = 0;
-let eventDataRed = 0;
-let eventDataPurple = 0;
-let eventDataBlue = 0;
+import type { NextApiRequest, NextApiResponse } from "next";
 let greenStepsArray = [];
 let redStepsArray = [];
 let purpleStepsArray = [];
 let blueStepsArray = [];
-const redis = new Redis(process.env.NEXT_PUBLIC_REDIS_URL);
+const redis = new Redis(process.env.NEXT_PUBLIC_REDIS_URL || "");
 
-export default async function handler(req, res) {
+//I GUESS THIS IS NOT USED TOO
+export default async function handler(req: NextApiRequest, res: NextApiResponse<any[]>) {
   if (req.method === "POST") {
     const { event } = req.body;
 
@@ -44,7 +41,7 @@ async function updateEventData(team, stepCompleted) {
     case "green":
       if (!greenStepsArray.includes(stepCompleted)) {
         greenStepsArray.push(stepCompleted);
-        eventDataGreen = greenStepsArray.length * 20;
+        const eventDataGreen = greenStepsArray.length * 20;
         await redis.zadd("green", eventDataGreen, team);
         break;
       }
@@ -52,7 +49,7 @@ async function updateEventData(team, stepCompleted) {
     case "red":
       if (!redStepsArray.includes(stepCompleted)) {
         redStepsArray.push(stepCompleted);
-        eventDataRed = redStepsArray.length * 20;
+        const eventDataRed = redStepsArray.length * 20;
         await redis.zadd("red", eventDataRed, team);
         break;
       }
@@ -60,7 +57,7 @@ async function updateEventData(team, stepCompleted) {
     case "purple":
       if (!purpleStepsArray.includes(stepCompleted)) {
         purpleStepsArray.push(stepCompleted);
-        eventDataPurple = purpleStepsArray.length * 20;
+        const eventDataPurple = purpleStepsArray.length * 20;
         await redis.zadd("purple", eventDataPurple, team);
         break;
       }
@@ -68,7 +65,7 @@ async function updateEventData(team, stepCompleted) {
     case "blue":
       if (!blueStepsArray.includes(stepCompleted)) {
         blueStepsArray.push(stepCompleted);
-        eventDataBlue = blueStepsArray.length * 20;
+        const eventDataBlue = blueStepsArray.length * 20;
         await redis.zadd("blue", eventDataBlue, team);
         break;
       }

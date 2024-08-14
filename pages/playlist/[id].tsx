@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useCallback, useEffect } from "react";
 import PlaylistArtists from "@/components/PlaylistArtists";
 import { playlists } from "@/lib/data";
+import MusicTable from "@/components/MusicTable";
 
 const Item = () => {
   const router = useRouter();

@@ -33,7 +33,7 @@ export default function Scoreboard() {
     };
   }, [isTimerRunning]);
 
-  const timerToMinutesSecondsMilliseconds = (timer) => {
+  const timerToMinutesSecondsMilliseconds = (timer:number):string => {
     if (timer <= 0 && isTimerRunning) {
       setIsTimerRunning(false);
       endGame();
