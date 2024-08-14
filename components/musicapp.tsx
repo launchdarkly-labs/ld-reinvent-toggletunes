@@ -12,7 +12,7 @@ import {
   IoPlaySkipBackSharp,
   IoPlaySkipForwardSharp,
 } from "react-icons/io5";
-import { songs } from "../lib/data";
+import { songs } from "@/lib/data";
 import { useBroadcastEvent, useEventListener } from "../liveblocks.config";
 import { Room } from "./room";
 

@@ -1,14 +1,29 @@
 import PageHeader from "@/components/PageHeader";
-import { allPlaylists } from "@/lib/utils";
 import { useRouter } from "next/router";
 import { motion, AnimatePresence } from "framer-motion";
 import { useCallback, useEffect } from "react";
 import PlaylistArtists from "@/components/PlaylistArtists";
-import MusicTable from "@/components/MusicTable";
+import { playlists } from "@/lib/data";
 
 const Item = () => {
   const router = useRouter();
   const { id } = router.query;
+
+  const morePlaylists = [
+    ...playlists.map((item) => ({
+      ...item,
+      id: item.id + "a",
+    })),
+  ];
+
+  const sidebarPlaylists = [
+    ...playlists.map((item) => ({
+      ...item,
+      id: item.id + "_side",
+    })),
+  ];
+
+  const allPlaylists = [...playlists, ...morePlaylists, ...sidebarPlaylists];
 
   const playlist = allPlaylists.find((playlist) => playlist.id === id);
 
@@ -56,21 +71,21 @@ const Item = () => {
           </div>
         </div>
         <div className="bg-zinc-900/30 mt-6 flex-1 p-6 blur-100 z-10">
-            <div className="flex gap-1 items-center">
-              {/* <PlayButton size="lg" /> */}
-              <div className="ml-4"></div>
-              {/* <LikeButton />
+          <div className="flex gap-1 items-center">
+            {/* <PlayButton size="lg" /> */}
+            <div className="ml-4"></div>
+            {/* <LikeButton />
         <DotsButton /> */}
-            </div>
-            <div className="px-6 pt-4">
-              <MusicTable />
-            </div>
           </div>
+          <div className="px-6 pt-4">
+            <MusicTable />
+          </div>
+        </div>
         <motion.div
           initial={{ opacity: 0.5, scale: 0.2 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{
-            duration: .25,
+            duration: 0.25,
             ease: [0, 0.71, 0.2, 1.01],
           }}
           className="absolute h-screen inset-0 z-0 bg-gradient-to-b from-context"
