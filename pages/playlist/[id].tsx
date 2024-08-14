@@ -1,5 +1,5 @@
 import PageHeader from "@/components/PageHeader";
-import { allPlaylists } from "../../lib/data";
+import { allPlaylists } from "@/lib/utils";
 import { useRouter } from "next/router";
 import { motion, AnimatePresence } from "framer-motion";
 import { useCallback, useEffect } from "react";

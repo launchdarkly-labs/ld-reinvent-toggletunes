@@ -35,26 +35,6 @@ export const playlists: Playlist[] = [
   },
 ];
 
-export const morePlaylists = [
-  ...playlists.map((item) => ({
-    ...item,
-    id: item.id + "a",
-  })),
-];
-
-export const sidebarPlaylists = [
-  ...playlists.map((item) => ({
-    ...item,
-    id: item.id + "_side",
-  })),
-];
-
-export const allPlaylists = [
-  ...playlists,
-  ...morePlaylists,
-  ...sidebarPlaylists,
-];
-
 interface Song {
   id: number;
   title: string;
