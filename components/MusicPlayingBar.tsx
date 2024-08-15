@@ -9,7 +9,7 @@ import { motion } from "framer-motion";
 
 const MusicPlayingBar = () => {
   const {
-    tracklist = false,
+    tracklist = true,
     userplaylist = false,
   }: {
     tracklist: boolean;
@@ -41,7 +41,6 @@ const MusicPlayingBar = () => {
         ) : tracklist == true && userplaylist == false ? (
           <Music2Icon className="h-14 w-14 mr-4 hidden sm:block" />
         ) : null}
-        {/* flex flex-row sm:flex-col items-center sm:items-start gap-x-4 sm:gap-x-0 justify-center w-full */}
         <div className=" relative flex overflow-x-hidden w-full">
           <div className="animate-marquee sm:animate-none whitespace-nowrap flex items-center flex-row sm:flex-col sm:items-start sm:justify-center">
             <p className="text-2xl">{songs[currentSongIndex].title}</p>

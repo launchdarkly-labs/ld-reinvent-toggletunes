@@ -6,7 +6,6 @@ import { Music2Icon } from "lucide-react";
 import { memo, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { IoIosMusicalNotes,  } from "react-icons/io";
-import { songs } from "@/lib/data";
 import { useBroadcastEvent, useEventListener } from "../liveblocks.config";
 import { Room } from "./room";
 import SimplePlayerScreen from "./SimplePlayerScreen";
@@ -15,7 +14,7 @@ import MusicPlayingBar from "./MusicPlayingBar";
 //TODO: when you go into playlist 1 /2 or whatever, it should be specific per team1/ team 2 etc
 export default function MusicApp({ teamName }: { teamName: string }) {
   const {
-    tracklist =false,
+    tracklist =true,
     recenttunes = false,
     userplaylist = false,
     platinumtier = false,
@@ -36,7 +35,7 @@ export default function MusicApp({ teamName }: { teamName: string }) {
   const [flagThree, setFlagThree] = useState(false);
   const [flagFour, setFlagFour] = useState(false);
   const [flagFive, setFlagFive] = useState(false);
-  console.log(teamName);
+
   // const ldClient = useLDClient();
 
   // const apiURL = "/api/sb-score-add/";
@@ -159,14 +158,6 @@ export default function MusicApp({ teamName }: { teamName: string }) {
     fetchSongs();
   }, [newtoggledb]);
 
-  const handleNextSong = (): void => {
-    setCurrentSongIndex((prevIndex) => (prevIndex + 1) % songs.length);
-  };
-
-  const handlePreviousSong = (): void => {
-    setCurrentSongIndex((prevIndex) => (prevIndex - 1 + songs.length) % songs.length);
-  };
-
   // const handleSubscriptionClick = async () => {
   //   const context: any = ldClient?.getContext();
   //   context.user.tier = "Platinum";
@@ -177,9 +168,10 @@ export default function MusicApp({ teamName }: { teamName: string }) {
   return (
     <Room>
       <EventListenerComponent reloadPage={reloadPage} />
-      <div className="flex flex-col h-screen gap-2 font-sohne bg-black overflow-y-hidden scrollbar-hide">
+      <main className="flex flex-col h-screen gap-2 font-sohne bg-black overflow-y-hidden scrollbar-hide">
         {tracklist ? (
           <div className="flex flex-row bg-black gap-2 mt-2">
+            
             {recenttunes && (
               <div
                 className="w-3/5 xl:w-1/5 min-h-screen pl-2"
@@ -188,6 +180,7 @@ export default function MusicApp({ teamName }: { teamName: string }) {
                 <SideBar songsAPI={songsAPI} newtoggledb={newtoggledb} />
               </div>
             )}
+
             <motion.div
               initial={{ opacity: 0, scale: 0.25 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -205,9 +198,9 @@ export default function MusicApp({ teamName }: { teamName: string }) {
               }`}
             >
               {!recenttunes && (
-                <div className="">
+                <header className="">
                   <img src="/images/tunes.png" className="ml-auto mr-5" />
-                </div>
+                </header>
               )}
 
               <div>
@@ -350,7 +343,7 @@ export default function MusicApp({ teamName }: { teamName: string }) {
             <MusicPlayingBar />
           </>
         )}
-      </div>
+      </main>
     </Room>
   );
 }
