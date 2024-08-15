@@ -6,6 +6,7 @@ import { Room } from "@/components/room";
 
 let Team1: () => JSX.Element | null;
 
+//TODO: make reuseable page 
 if (typeof window !== "undefined") {
   const uniqueKey = 1;
 
@@ -34,13 +35,13 @@ if (typeof window !== "undefined") {
     // const [teamName, setTeamName] = useState("green");
     const [isConfigured, setIsConfigured] = useState(false);
 
-    async function configUser() {
-      // await setCookie("team", "Team1");
-      setIsConfigured(true);
-    }
+    // async function configUser() {
+    //   // await setCookie("team", "Team1");
+    //   setIsConfigured(true);
+    // }
 
     useEffect(() => {
-      configUser();
+      setIsConfigured(true);
     }, []);
 
     return (
