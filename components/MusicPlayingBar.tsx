@@ -1,14 +1,16 @@
 import React, { useState } from "react";
 import { IoIosMusicalNotes, IoMdVolumeHigh } from "react-icons/io";
+import { GoDotFill } from "react-icons/go";
 import { IoPlaySharp, IoPlaySkipBackSharp, IoPlaySkipForwardSharp } from "react-icons/io5";
 import { songs } from "@/lib/data";
 import { useFlags } from "launchdarkly-react-client-sdk";
 import { Music2Icon } from "lucide-react";
+import { motion } from "framer-motion";
 
 const MusicPlayingBar = () => {
   const {
-    tracklist ,
-    userplaylist ,
+    tracklist = true,
+    userplaylist = true,
   }: {
     tracklist: boolean;
     userplaylist: boolean;
@@ -24,20 +26,39 @@ const MusicPlayingBar = () => {
     setCurrentSongIndex((prevIndex: number) => (prevIndex - 1 + songs.length) % songs.length);
   };
   return (
-    <section className="absolute bottom-0 h-36 w-full items-center px-4 bg-ldbackground shadow-xl justify-center grid grid-cols-3 ">
-      <div className="flex items-center ml-5">
+    <motion.section
+      initial={{ opacity: 0, scale: 0.25 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{
+        duration: 0.5,
+        ease: [0, 0.71, 0.2, 1.01],
+      }}
+      className="absolute bottom-0 h-[33vh] sm:h-36 w-full items-center py-8 sm:py-0  px-8 bg-ldbackground shadow-xl justify-between flex flex-col sm:flex-row  "
+    >
+      <div className="flex justify-center sm:justify-normal w-full sm:w-[33%]">
         {tracklist == true && userplaylist == true ? (
-          <img src={songs[currentSongIndex].image} className="h-28 mr-4" />
+          <img src={songs[currentSongIndex].image} className="h-28 mr-4 hidden sm:block" />
         ) : tracklist == true && userplaylist == false ? (
-          <Music2Icon className="h-14 w-14 mr-4" />
+          <Music2Icon className="h-14 w-14 mr-4 hidden sm:block" />
         ) : null}
-        <div>
-          <p className="text-2xl">{songs[currentSongIndex].title}</p>
-          <p className="text-xl text-gray-500">{songs[currentSongIndex].artists}</p>
+        {/* flex flex-row sm:flex-col items-center sm:items-start gap-x-4 sm:gap-x-0 justify-center w-full */}
+        <div className=" relative flex overflow-x-hidden w-full">
+          <div className="animate-marquee sm:animate-none whitespace-nowrap flex items-center flex-row sm:flex-col sm:items-start sm:justify-center">
+            <p className="text-2xl">{songs[currentSongIndex].title}</p>
+            <GoDotFill className="block sm:hidden mx-2" />
+            <p className="text-2xl sm:text-xl text-gray-500  ">{songs[currentSongIndex].artists}</p>
+            <GoDotFill className="block sm:hidden mx-2" />
+          </div>
+          <div className="absolute top-0 animate-marquee2 whitespace-nowrap flex items-center  sm:hidden">
+            <p className="text-2xl ">{songs[currentSongIndex].title}</p>
+            <GoDotFill className="block sm:hidden mx-2" />
+            <p className="text-2xl sm:text-xl text-gray-500 ">{songs[currentSongIndex].artists}</p>
+            <GoDotFill className="block sm:hidden mx-2" />
+          </div>
         </div>
       </div>
-      <div className="flex flex-col items-center">
-        <div className="flex justify-center space-x-12 items-center">
+      <div className="flex flex-col items-center w-full sm:w-[33%]">
+        <div className="flex justify-center gap-x-12 items-center">
           <IoPlaySkipBackSharp
             className="w-7 h-7 text-ldskipbuttons"
             onClick={handlePreviousSong}
@@ -50,17 +71,16 @@ const MusicPlayingBar = () => {
         </div>
       </div>
 
-      <div className="absolute right-5 flex space-x-2 items-center justify-center">
-        {/* <SpeakerIcon className="w-8 h-8 text-ldcomplicatedwhite" /> */}
+      <div className=" flex gap-x-2 items-center justify-center sm:justify-end w-full sm:w-[33%] ">
         <IoMdVolumeHigh
           className="w-8 h-8 text-ldcomplicatedwhite"
           onClick={() => setVolumeVisibility(!volumeVisibility)}
         />
         {volumeVisibility && (
-          <input type="range" min={0} max={100} className="accent-white  w-14 md:w-28" />
+          <input type="range" min={0} max={100} className="accent-white  w-full sm:w-14 md:w-28" />
         )}
       </div>
-    </section>
+    </motion.section>
   );
 };
 
