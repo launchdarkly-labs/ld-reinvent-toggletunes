@@ -1,69 +1,30 @@
 import { colors } from "./color";
-
-export interface Playlist {
-  id: number;
-  title: string;
-  color: (typeof colors)[keyof typeof colors];
-  cover: string;
-  artists: string;
-}
+import { Playlist, Song } from "./typesInterface";
 
 export const playlists: Playlist[] = [
   {
     id: 1,
     title: "Liked Songs",
     color: colors.teal,
-    cover:
-      "/images/heart.png",
+    cover: "/images/heart.png",
     artists: "",
   },
   {
     id: 2,
     title: "Shipper Beats",
     color: colors.green,
-    cover:
-      "/images/Shipper beats cover.png",
+    cover: "/images/Shipper beats cover.png",
     artists: "Killswitches",
   },
   {
     id: 3,
     title: "Rollbackin",
     color: colors.rose,
-    cover:
-      "./images/Rollback Mix cover.png",
+    cover: "./images/Rollback Mix cover.png",
     artists: "Last Pipelines",
   },
 ];
 
-export const morePlaylists = [
-  ...playlists.map((item) => ({
-    ...item,
-    id: item.id + "a",
-  })),
-];
-
-export const sidebarPlaylists = [
-  ...playlists.map((item) => ({
-    ...item,
-    id: item.id + "_side",
-  })),
-];
-
-export const allPlaylists = [
-  ...playlists,
-  ...morePlaylists,
-  ...sidebarPlaylists,
-];
-
-interface Song {
-  id: number;
-  title: string;
-  image: string;
-  artists: string;
-  album: string;
-  duration: string;
-}
-const songScale = "w_40,h_40,c_scale";
 export const songs: Song[] = [
   {
     id: 1,

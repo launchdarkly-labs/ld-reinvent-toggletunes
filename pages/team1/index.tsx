@@ -2,10 +2,11 @@ import React, { useEffect, useState } from "react";
 import MusicApp from "@/components/musicapp";
 import { asyncWithLDProvider } from "launchdarkly-react-client-sdk";
 import { Room } from "@/components/room";
-import { setCookie } from "cookies-next";
+// import { setCookie } from "cookies-next";
 
-let Team1;
+let Team1: () => JSX.Element | null;
 
+//TODO: make reuseable page 
 if (typeof window !== "undefined") {
   const uniqueKey = 1;
 
@@ -20,7 +21,7 @@ if (typeof window !== "undefined") {
         key: uniqueKey,
         name: "Team1",
         appName: "ToggleTunes",
-        tier: "Platinum"
+        tier: "Platinum",
       },
       device: {
         key: uniqueKey,
@@ -30,24 +31,24 @@ if (typeof window !== "undefined") {
     },
   });
 
-  Team1 = () => {
-    const [teamName, setTeamName] = useState("green");
+  Team1 = (): JSX.Element => {
+    // const [teamName, setTeamName] = useState("green");
     const [isConfigured, setIsConfigured] = useState(false);
 
-    async function configUser() {
-      await setCookie("team", "Team1");
-      setIsConfigured(true);
-    }
+    // async function configUser() {
+    //   // await setCookie("team", "Team1");
+    //   setIsConfigured(true);
+    // }
 
     useEffect(() => {
-      configUser();
+      setIsConfigured(true);
     }, []);
 
     return (
       <LDProviderT1>
         {isConfigured && (
           <Room>
-            <MusicApp teamName={teamName} />
+            <MusicApp teamName={"green"} />
           </Room>
         )}
       </LDProviderT1>

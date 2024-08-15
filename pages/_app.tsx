@@ -1,7 +1,7 @@
 import "@/styles/globals.css";
 import type { AppProps } from "next/app";
 import NoSSRWrapper from "@/components/nossr";
-import { TimerProvider } from "@/lib/contexts";
+import { TimerProvider } from "@/lib/TimerContext";
 
 let c;
 

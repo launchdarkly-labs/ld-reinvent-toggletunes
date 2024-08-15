@@ -17,6 +17,6 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "components/team-name-handler.js", "pages/api/score-add.js", "pages/api/socket.js"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "components/team-name-handler.js", "pages/api/score-add.ts", "pages/api/socket.js"],
   "exclude": ["node_modules"]
 }

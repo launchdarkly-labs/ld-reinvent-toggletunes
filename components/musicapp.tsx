@@ -1,4 +1,3 @@
-//@ts-nocheck
 import ItemCard from "@/components/ItemCard";
 import SideBar from "@/components/Sidebar";
 import { motion } from "framer-motion";
@@ -6,33 +5,41 @@ import { useFlags, useLDClient } from "launchdarkly-react-client-sdk";
 import { Music2Icon } from "lucide-react";
 import { memo, useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import { IoIosMusicalNotes, IoMdVolumeHigh } from "react-icons/io";
-import {
-  IoPlaySharp,
-  IoPlaySkipBackSharp,
-  IoPlaySkipForwardSharp,
-} from "react-icons/io5";
-import { songs } from "../lib/data";
+import { IoIosMusicalNotes,  } from "react-icons/io";
+import { songs } from "@/lib/data";
 import { useBroadcastEvent, useEventListener } from "../liveblocks.config";
 import { Room } from "./room";
+import SimplePlayerScreen from "./SimplePlayerScreen";
+import MusicPlayingBar from "./MusicPlayingBar";
 
-export default function MusicApp({ teamName, socket }: any) {
-  const { tracklist, recenttunes, userplaylist, platinumtier, newtoggledb } =
-    useFlags();
-  const [currentSongIndex, setCurrentSongIndex] = useState(0);
-  const [volumeVisibility, setVolumeVisibility] = useState(true);
+//TODO: when you go into playlist 1 /2 or whatever, it should be specific per team1/ team 2 etc
+export default function MusicApp({ teamName }: { teamName: string }) {
+  const {
+    tracklist =false,
+    recenttunes = false,
+    userplaylist = false,
+    platinumtier = false,
+    newtoggledb = "off",
+  }: {
+    tracklist: boolean;
+    recenttunes: boolean;
+    userplaylist: boolean;
+    platinumtier: boolean;
+    newtoggledb: string;
+  } = useFlags();
+
   const [playlistAPI, setPlaylistAPI] = useState([]);
   const [songsAPI, setSongsAPI] = useState([]);
-  const [setUpgradeAd] = useState(true);
+  // const [setUpgradeAd] = useState(true);
   const [flagOne, setFlagOne] = useState(false);
   const [flagTwo, setFlagTwo] = useState(false);
   const [flagThree, setFlagThree] = useState(false);
   const [flagFour, setFlagFour] = useState(false);
   const [flagFive, setFlagFive] = useState(false);
+  console.log(teamName);
+  // const ldClient = useLDClient();
 
-  const ldClient = useLDClient();
-
-  const apiURL = "/api/sb-score-add/";
+  // const apiURL = "/api/sb-score-add/";
 
   const broadcast = useBroadcastEvent();
 
@@ -152,22 +159,20 @@ export default function MusicApp({ teamName, socket }: any) {
     fetchSongs();
   }, [newtoggledb]);
 
-  const handleNextSong = () => {
+  const handleNextSong = (): void => {
     setCurrentSongIndex((prevIndex) => (prevIndex + 1) % songs.length);
   };
 
-  const handlePreviousSong = () => {
-    setCurrentSongIndex(
-      (prevIndex) => (prevIndex - 1 + songs.length) % songs.length
-    );
+  const handlePreviousSong = (): void => {
+    setCurrentSongIndex((prevIndex) => (prevIndex - 1 + songs.length) % songs.length);
   };
 
-  const handleSubscriptionClick = async () => {
-    const context: any = ldClient?.getContext();
-    context.user.tier = "Platinum";
-    ldClient?.identify(context);
-    setUpgradeAd(false);
-  };
+  // const handleSubscriptionClick = async () => {
+  //   const context: any = ldClient?.getContext();
+  //   context.user.tier = "Platinum";
+  //   ldClient?.identify(context);
+  //   setUpgradeAd(false);
+  // };
 
   return (
     <Room>
@@ -274,9 +279,7 @@ export default function MusicApp({ teamName, socket }: any) {
                             alt="astronaut"
                             src={song.image}
                           />
-                          <p className="text-lg px-4 text-center font-sohne pb-4">
-                            {song.title}
-                          </p>
+                          <p className="text-lg px-4 text-center font-sohne pb-4">{song.title}</p>
                           <p className="text-xs text-gray-500 px-4 text-center font-sohne font-thin">
                             {song.duration}
                           </p>
@@ -304,10 +307,7 @@ export default function MusicApp({ teamName, socket }: any) {
                             {newtoggledb !== "complete" ? (
                               <Music2Icon className="h-10 w-10 ml-8" />
                             ) : (
-                              <img
-                                src={song.image}
-                                className="h-10 w-10 ml-8"
-                              />
+                              <img src={song.image} className="h-10 w-10 ml-8" />
                             )}
                           </div>
                           <div className="titletext">
@@ -330,59 +330,7 @@ export default function MusicApp({ teamName, socket }: any) {
               </div>
             </motion.div>
 
-            <div className="absolute bottom-0 h-32 w-full items-center px-4 bg-ldbackground shadow-xl justify-center grid grid-cols-3 ">
-              <div className="flex items-center ml-5">
-                {tracklist && !userplaylist ? (
-                  <Music2Icon className="h-14 w-14 mr-4" />
-                ) : (
-                  <img
-                    src={songs[currentSongIndex].image}
-                    className="h-28 mr-4"
-                  />
-                )}
-                <div>
-                  <p className="text-2xl">{songs[currentSongIndex].title}</p>
-                  <p className="text-xl text-gray-500">
-                    {songs[currentSongIndex].artists}
-                  </p>
-                </div>
-              </div>
-              <div className="flex flex-col items-center">
-                <div className="flex justify-center space-x-12 items-center">
-                  <IoPlaySkipBackSharp
-                    className="w-7 h-7 text-ldskipbuttons"
-                    onClick={handlePreviousSong}
-                  />
-                  <IoPlaySharp className="w-10 h-10 text-ldcomplicatedwhite" />
-                  <IoPlaySkipForwardSharp
-                    className="w-7 h-7 text-ldskipbuttons"
-                    onClick={handleNextSong}
-                  />
-                </div>
-                <div className="w-full h-2 bg-lddarkstatus rounded-full mt-6">
-                  <div
-                    className="h-full text-center  bg-white rounded-full"
-                    style={{ width: "10%" }}
-                  ></div>
-                </div>
-              </div>
-
-              <div className="absolute right-5 flex space-x-2 items-center justify-center">
-                {/* <SpeakerIcon className="w-8 h-8 text-ldcomplicatedwhite" /> */}
-                <IoMdVolumeHigh
-                  className="w-8 h-8 text-ldcomplicatedwhite"
-                  onClick={() => setVolumeVisibility(!volumeVisibility)}
-                />
-                {volumeVisibility && (
-                  <input
-                    type="range"
-                    min={0}
-                    max={100}
-                    className="accent-white  w-14 md:w-28"
-                  />
-                )}
-              </div>
-            </div>
+            <MusicPlayingBar />
             {platinumtier && (
               <motion.div
                 initial={{ x: 100 }}
@@ -391,98 +339,23 @@ export default function MusicApp({ teamName, socket }: any) {
                 className="w-2/5 xl:w-1/5 items-between flex flex-col justify-between gap-y-2"
                 style={{ maxHeight: "calc(100vh - 150px)" }}
               >
-                <img
-                  src="/images/djtoggle.png"
-                  className="self-start h-1/2 pr-2"
-                />
+                <img src="/images/djtoggle.png" className="self-start h-1/2 pr-2" />
                 <img src="/images/books.png" className="self-end h-1/2 pr-2" />
               </motion.div>
             )}
           </div>
         ) : (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.25 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{
-              duration: 0.5,
-              ease: [0, 0.71, 0.2, 1.01],
-            }}
-            className="h-screen mx-auto w-full"
-            style={{ maxHeight: "calc(100vh - 150px)" }}
-          >
-            <div>
-              <img
-                src="/images/ToggleTunes.png"
-                className="h-16 my-10 mx-auto"
-              />
-            </div>
-            <motion.div
-              key={songs[currentSongIndex].id}
-              initial={{ opacity: 0, scale: 0.25 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{
-                duration: 0.5,
-                ease: [0, 0.71, 0.2, 1.01],
-              }}
-              className="flex items-center justify-center cardgradient h-2/3 w-1/3 mx-auto rounded-xl"
-              // Force the div to be a square by setting equal viewport width values to width and height
-            >
-              <IoIosMusicalNotes className="h-96 w-96 mx-auto" />
-            </motion.div>
-
-            <div className="absolute bottom-0 h-36 w-full items-center px-4 bg-ldbackground shadow-xl justify-center grid grid-cols-3 ">
-              <div className="flex items-center ml-8">
-                <div>
-                  <p className="subtext">{songs[currentSongIndex].title}</p>
-                  <p className="titletext">{songs[currentSongIndex].artists}</p>
-                </div>
-              </div>
-              <div className="flex flex-col items-center">
-                <div className="flex justify-center space-x-12 items-center">
-                  <IoPlaySkipBackSharp
-                    className="w-7 h-7 text-ldskipbuttons"
-                    onClick={handlePreviousSong}
-                  />
-                  <IoPlaySharp className="w-10 h-10 text-ldcomplicatedwhite" />
-                  <IoPlaySkipForwardSharp
-                    className="w-7 h-7 text-ldskipbuttons"
-                    onClick={handleNextSong}
-                  />
-                </div>
-                <div className="w-full h-2 bg-lddarkstatus rounded-full mt-6">
-                  <div
-                    className="h-full text-center  bg-white rounded-full"
-                    style={{ width: "10%" }}
-                  ></div>
-                </div>
-              </div>
-
-              <div className="absolute right-5 flex space-x-2 items-center justify-center">
-                {/* <SpeakerIcon className="w-8 h-8 text-ldcomplicatedwhite" /> */}
-                <IoMdVolumeHigh
-                  className="w-8 h-8 text-ldcomplicatedwhite"
-                  onClick={() => setVolumeVisibility(!volumeVisibility)}
-                />
-                {volumeVisibility && (
-                  <input
-                    type="range"
-                    min={0}
-                    max={100}
-                    className="accent-white  w-14 md:w-28"
-                  />
-                )}
-              </div>
-            </div>
-          </motion.div>
+          <>
+            <SimplePlayerScreen />
+            <MusicPlayingBar />
+          </>
         )}
       </div>
     </Room>
   );
 }
 
-const EventListenerComponent = memo(function EventListenerComponent({
-  reloadPage,
-}) {
+const EventListenerComponent = memo(function EventListenerComponent({ reloadPage }) {
   console.log("Event listener online");
   useEventListener(({ event, user, connectionId }) => {
     async function resetFlagSteps(event) {

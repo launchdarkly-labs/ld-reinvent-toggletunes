@@ -1,5 +1,5 @@
 import { TimerIcon } from "lucide-react";
-import { songs } from "../lib/data";
+import { songs } from "@/lib/data";
 import PlaylistArtists from "./PlaylistArtists";
 
 const MusicTable = () => {
