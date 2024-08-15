@@ -15,7 +15,7 @@ import MusicPlayingBar from "./MusicPlayingBar";
 export default function MusicApp({ teamName }: { teamName: string }) {
   const {
     tracklist = true,
-    recenttunes = false,
+    recenttunes = true,
     userplaylist = false,
     platinumtier = false,
     newtoggledb = "off",
@@ -172,15 +172,15 @@ export default function MusicApp({ teamName }: { teamName: string }) {
         {tracklist ? (
           <div className="flex flex-row bg-black gap-2 mt-2">
             {recenttunes && (
-              <div
+              <section
                 className="w-3/5 xl:w-1/5 min-h-screen pl-2"
                 style={{ maxHeight: "calc(100vh - 150px)" }}
               >
                 <SideBar songsAPI={songsAPI} newtoggledb={newtoggledb} />
-              </div>
+              </section>
             )}
 
-            <motion.div
+            <motion.section
               initial={{ opacity: 0, scale: 0.25 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{
@@ -241,7 +241,7 @@ export default function MusicApp({ teamName }: { teamName: string }) {
                   </div>
                 </div>
               )}
-              
+
               <section className="relative flex  ml-5 font-bold items-center">
                 {userplaylist ? (
                   <p className="text-2xl py-5">Trending Hits</p>
@@ -320,7 +320,7 @@ export default function MusicApp({ teamName }: { teamName: string }) {
                   </div>
                 )}
               </section>
-            </motion.div>
+            </motion.section>
 
             <MusicPlayingBar />
             {platinumtier && (

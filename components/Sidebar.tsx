@@ -7,14 +7,14 @@ import { motion } from "framer-motion";
 
 const SideBar = ({ songsAPI, newtoggledb }: any) => {
   return (
-    <motion.div
+    <motion.nav
       initial={{ x: -100 }}
       animate={{ x: 0 }}
       transition={{ duration: 1 }}
       className="flex flex-col h-screen gap-2"
       style={{ maxHeight: "calc(100vh - 150px)" }}
     >
-      <div className="bg-ldbackground rounded-xl">
+      <section className="bg-ldbackground rounded-xl">
         <img src="/images/ToggleTunes.png" className="ml-5 mt-5 pb-4 w-2/3" />
         <ul>
           <li key="1a">
@@ -36,9 +36,9 @@ const SideBar = ({ songsAPI, newtoggledb }: any) => {
             </Link>
           </li>
         </ul>
-      </div>
+      </section>
 
-      <div className="bg-ldbackground rounded-lg flex-1 min-h-0 overflow-auto scrollbar-hide pb-4">
+      <section className="bg-ldbackground rounded-lg flex-1 min-h-0 overflow-auto scrollbar-hide pb-4">
         <ul>
           <li key="3c">
             <Link
@@ -65,8 +65,8 @@ const SideBar = ({ songsAPI, newtoggledb }: any) => {
             ))}
           </ul>
         </div>
-      </div>
-    </motion.div>
+      </section>
+    </motion.nav>
   );
 };
 
