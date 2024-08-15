@@ -9,8 +9,8 @@ import { motion } from "framer-motion";
 
 const MusicPlayingBar = () => {
   const {
-    tracklist = true,
-    userplaylist = true,
+    tracklist = false,
+    userplaylist = false,
   }: {
     tracklist: boolean;
     userplaylist: boolean;
@@ -33,7 +33,7 @@ const MusicPlayingBar = () => {
         duration: 0.5,
         ease: [0, 0.71, 0.2, 1.01],
       }}
-      className="absolute bottom-0 h-[33vh] sm:h-36 w-full items-center py-8 sm:py-0  px-8 bg-ldbackground shadow-xl justify-between flex flex-col sm:flex-row  "
+      className="absolute bottom-0 h-[18rem] sm:h-36 w-full items-center py-8 sm:py-0  px-8 bg-ldbackground shadow-xl justify-between flex flex-col sm:flex-row  "
     >
       <div className="flex justify-center sm:justify-normal w-full sm:w-[33%]">
         {tracklist == true && userplaylist == true ? (

@@ -15,11 +15,11 @@ import MusicPlayingBar from "./MusicPlayingBar";
 //TODO: when you go into playlist 1 /2 or whatever, it should be specific per team1/ team 2 etc
 export default function MusicApp({ teamName }: { teamName: string }) {
   const {
-    tracklist,
-    recenttunes,
-    userplaylist,
-    platinumtier,
-    newtoggledb,
+    tracklist =false,
+    recenttunes = false,
+    userplaylist = false,
+    platinumtier = false,
+    newtoggledb = "off",
   }: {
     tracklist: boolean;
     recenttunes: boolean;

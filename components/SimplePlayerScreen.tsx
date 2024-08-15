@@ -11,16 +11,17 @@ const SimplePlayerScreen = () => {
         duration: 0.5,
         ease: [0, 0.71, 0.2, 1.01],
       }}
-      className="h-screen mx-auto w-full"
+      className="h-screen w-full sm:max-w-7xl mx-auto flex flex-col justify-between"
     >
-      <img src="/images/ToggleTunes.png" className="h-16 my-10 mx-auto" />
+      <img src="/images/ToggleTunes.png" className=" h-[4rem] mx-4 sm:mx-auto mt-6 sm:mt-[2rem] " />
 
-      <section
-        className="flex items-center justify-center cardgradient h-2/3 w-1/3 mx-auto rounded-xl"
-        // Force the div to be a square by setting equal viewport width values to width and height
-      >
-        <IoIosMusicalNotes className="h-96 w-96 mx-auto" />
+      <section className="w-full sm:h-full mx-auto flex justify-center items-center my-4">
+        <div className="flex items-center justify-center  cardgradient w-[80%] sm:w-[50%]  rounded-xl aspect-square">
+          <IoIosMusicalNotes className="h-40 w-40 sm:h-96 sm:w-96 mx-auto" />
+        </div>
       </section>
+      <div className="h-[18rem] sm:h-36 w-full block">
+      </div>
     </motion.main>
   );
 };
