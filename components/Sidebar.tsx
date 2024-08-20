@@ -5,7 +5,7 @@ import { FiSearch } from "react-icons/fi";
 import { RxCounterClockwiseClock } from "react-icons/rx";
 import { motion } from "framer-motion";
 
-const SideBar = ({ songsAPI, newtoggledb }: any) => {
+const SideBar = ({ songsAPI, newtoggledb="complete" }: any) => {
   return (
     <motion.nav
       initial={{ x: -100 }}
