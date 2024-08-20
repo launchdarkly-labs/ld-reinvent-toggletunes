@@ -177,7 +177,7 @@ export default function MusicApp({ teamName }: { teamName: string }) {
               <section className="flex gap-2 m-2 h-full" id = "music-app-main-cards-wrapper">
                 {recenttunes && (
                   <section className="w-1/5">
-                    <SideBar songsAPI={songsAPI} newtoggledb={newtoggledb} />
+                    <SideBar songsAPI={songsAPI}/>
                   </section>
                 )}
 
@@ -188,7 +188,7 @@ export default function MusicApp({ teamName }: { teamName: string }) {
                     duration: 0.5,
                     ease: [0, 0.71, 0.2, 1.01],
                   }}
-                  className={` rounded-md pt-2 bg-ldbackground h-screen overflow-y-auto scrollbar-hide ${
+                  className={` rounded-md pt-2 bg-ldbackground overflow-y-auto scrollbar-hide ${
                     recenttunes && platinumtier
                       ? "w-3/5"
                       : recenttunes
@@ -332,18 +332,18 @@ export default function MusicApp({ teamName }: { teamName: string }) {
                     initial={{ x: 100 }}
                     animate={{ x: 0 }}
                     transition={{ duration: 1 }}
-                    className="w-1/5 items-between flex flex-col justify-between gap-y-2"
+                    className="w-1/5 flex flex-col gap-y-4 bg-ldbackground rounded-md p-4"
                   >
                     <img
                       src="/images/djtoggle.png"
-                      className="self-start h-1/2 object-cover rounded-md"
+                      className="object-cover rounded-md"
                     />
-                    <img src="/images/books.png" className="self-end h-1/2 object-cover rounded-md" />
+                    <img src="/images/books.png" className=" object-cover rounded-md" />
                   </motion.section>
                 )}
               </section>
 
-              <BlankSpaceMusicBar />
+              <BlankSpaceMusicBar height={"h-[18rem] sm:h-[13rem]"}/>
             </section>
             <MusicPlayingBar />
           </>

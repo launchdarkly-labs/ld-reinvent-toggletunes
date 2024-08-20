@@ -1,8 +1,8 @@
 import React from 'react'
 
-const BlankSpaceMusicBar = () => {
+const BlankSpaceMusicBar = ({height}:{height:string}) => {
   return (
-    <div className="h-[18rem] sm:h-[13rem] w-full block"></div>
+    <div className={`${height} w-full block`}></div>
   )
 }
 

@@ -25,7 +25,7 @@ const SimplePlayerScreen = () => {
           <IoIosMusicalNotes className="h-40 w-40 sm:h-96 sm:w-96 mx-auto" />
         </div>
       </section>
-      <BlankSpaceMusicBar/>
+      <BlankSpaceMusicBar height={"h-[18rem] sm:h-[13rem]"}/>
     </motion.div>
   );
 };
