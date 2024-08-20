@@ -137,7 +137,7 @@ export default function Scoreboard() {
           animationStarted={animationStarted}
           setAnimationStarted={setAnimationStarted}
         />
-        <div className="flex sticky top-10 place-items-center border border-zinc-500 mt-10 w-1/3 xl:w-1/6 bg-transparent justify-center rounded-xl">
+        <div className="flex sticky top-10 place-items-center border border-zinc-500 mt-10 w-1/3 xl:w-1/6 bg-transparent justify-center rounded-md">
           <div className="flex text-8xl sm:text-6xl font-bold text-white font-audimat mt-4">
             {timerToMinutesSecondsMilliseconds(timer)}
           </div>

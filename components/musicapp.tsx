@@ -173,10 +173,10 @@ export default function MusicApp({ teamName }: { teamName: string }) {
       <main className="flex flex-col h-screen gap-2 font-sohne bg-black overflow-y-hidden scrollbar-hide">
         {tracklist ? (
           <>
-            <section className="h-screen w-full flex flex-col">
-              <section className="flex gap-2 m-2">
+            <section className=" w-full flex flex-col">
+              <section className="flex gap-2 m-2 h-full" id = "music-app-main-cards-wrapper">
                 {recenttunes && (
-                  <section className="w-3/5 xl:w-1/5">
+                  <section className="w-1/5">
                     <SideBar songsAPI={songsAPI} newtoggledb={newtoggledb} />
                   </section>
                 )}
@@ -188,11 +188,11 @@ export default function MusicApp({ teamName }: { teamName: string }) {
                     duration: 0.5,
                     ease: [0, 0.71, 0.2, 1.01],
                   }}
-                  className={`mx-auto rounded-xl pt-2 bg-ldbackground h-screen overflow-y-auto scrollbar-hide ${
+                  className={` rounded-md pt-2 bg-ldbackground h-screen overflow-y-auto scrollbar-hide ${
                     recenttunes && platinumtier
-                      ? "w-2/5 xl:w-3/5"
+                      ? "w-3/5"
                       : recenttunes
-                      ? "w-3/5 xl:w-4/5"
+                      ? "w-4/5"
                       : "w-full"
                   }`}
                 >
@@ -332,7 +332,7 @@ export default function MusicApp({ teamName }: { teamName: string }) {
                     initial={{ x: 100 }}
                     animate={{ x: 0 }}
                     transition={{ duration: 1 }}
-                    className="w-2/5 xl:w-1/5 items-between flex flex-col justify-between gap-y-2"
+                    className="w-1/5 items-between flex flex-col justify-between gap-y-2"
                   >
                     <img
                       src="/images/djtoggle.png"
