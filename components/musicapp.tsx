@@ -173,7 +173,7 @@ export default function MusicApp({ teamName }: { teamName: string }) {
       <main className="flex flex-col h-screen gap-2 font-sohne bg-black overflow-y-hidden scrollbar-hide">
         {tracklist ? (
           <>
-            <section className=" w-full flex flex-col">
+            <section className="w-full flex flex-col h-screen">
               <section className="flex gap-2 m-2 h-full" id = "music-app-main-cards-wrapper">
                 {recenttunes && (
                   <section className="w-1/5">
@@ -343,7 +343,7 @@ export default function MusicApp({ teamName }: { teamName: string }) {
                 )}
               </section>
 
-              <BlankSpaceMusicBar height={"h-[18rem] sm:h-[13rem]"}/>
+              <BlankSpaceMusicBar height={"h-[18rem] sm:h-[11rem]"}/>
             </section>
             <MusicPlayingBar />
           </>

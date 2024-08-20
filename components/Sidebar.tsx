@@ -17,7 +17,7 @@ const SideBar = ({ songsAPI }: any) => {
       initial={{ x: -100 }}
       animate={{ x: 0 }}
       transition={{ duration: 1 }}
-      className="flex flex-col  gap-2"
+      className="flex flex-col  gap-2 h-full"
     >
       <section className="bg-ldbackground rounded-md p-4">
         <img src="/images/ToggleTunes.png" className="w-2/3 mb-6" />
@@ -39,13 +39,13 @@ const SideBar = ({ songsAPI }: any) => {
         </ul>
       </section>
 
-      <section className="bg-ldbackground rounded-md flex-1 overflow-auto scrollbar-hide p-4">
+      <section className="bg-ldbackground rounded-md flex-1 p-4 h-full">
         <h2 className="flex gap-4 text-ldcomplicatedwhite font-semibold text-2xl items-center font-extra mb-6 ">
           <RxCounterClockwiseClock className="h-6 w-6" />
           Recently Played
         </h2>
-        <section className=" overflow-y-auto scrollbar-hide">
-          <ul className="flex flex-col gap-y-4">
+        <section className=" h-full">
+          <ul className="flex flex-col gap-y-4  overflow-y-auto h-[10rem]">
             {songsAPI.map((song: any, index: number) => (
               <li key={index} className="flex items-center gap-2 cursor-default">
                 {newtoggledb?.includes("off") ? (
