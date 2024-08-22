@@ -44,8 +44,19 @@ const SideBar = ({ songsAPI }: any) => {
           <RxCounterClockwiseClock className="h-6 w-6" />
           Recently Played
         </h2>
-        <section className=" h-full">
-          <ul className="flex flex-col gap-y-4  overflow-y-auto h-[10rem]">
+        <div className="">
+          <ul className="flex flex-col gap-y-4  overflow-y-auto  h-[10rem]" >
+            {songsAPI.map((song: any, index: number) => (
+              <li key={index} className="flex items-center gap-2 cursor-default">
+                {newtoggledb?.includes("off") ? (
+                  <Music2Icon className="h-8 w-8" />
+                ) : (
+                  <img src={song.image} alt={song.title} className="h-8 w-8 rounded-sm" />
+                )}
+                <span className="flex-grow">{song.title}</span>
+                {/* <span>{song.duration}</span> */}
+              </li>
+            ))}
             {songsAPI.map((song: any, index: number) => (
               <li key={index} className="flex items-center gap-2 cursor-default">
                 {newtoggledb?.includes("off") ? (
@@ -58,7 +69,7 @@ const SideBar = ({ songsAPI }: any) => {
               </li>
             ))}
           </ul>
-        </section>
+        </div>
       </section>
     </motion.nav>
   );

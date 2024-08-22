@@ -33,7 +33,8 @@ const MusicPlayingBar = () => {
         duration: 0.5,
         ease: [0, 0.71, 0.2, 1.01],
       }}
-      className="absolute bottom-0 h-[18rem] sm:h-36 w-full items-center py-8 sm:py-0  px-8 bg-ldbackground shadow-xl justify-between flex flex-col sm:flex-row  "
+      className=" h-[18rem] sm:h-36 w-full items-center py-8 sm:py-8  px-8 bg-ldbackground shadow-xl 
+      justify-between flex flex-col sm:flex-row"
     >
       <div className="flex justify-center sm:justify-normal w-full sm:w-[33%]">
         {tracklist == true && userplaylist == true ? (
@@ -66,7 +67,7 @@ const MusicPlayingBar = () => {
           <IoPlaySkipForwardSharp className="w-7 h-7 text-ldskipbuttons" onClick={handleNextSong} />
         </div>
         <div className="w-full h-2 bg-lddarkstatus rounded-full mt-6">
-          <div className="h-full text-center  bg-white rounded-full" style={{ width: "10%" }}></div>
+          <div className="h-full text-center  bg-white rounded-full w-[10%]"></div>
         </div>
       </div>
 
@@ -76,7 +77,7 @@ const MusicPlayingBar = () => {
           onClick={() => setVolumeVisibility(!volumeVisibility)}
         />
         {volumeVisibility && (
-          <input type="range" min={0} max={100} className="accent-white  w-full sm:w-14 md:w-28" />
+          <input type="range" min={0} max={100} className="accent-white  w-full sm:w-14 md:w-28"  defaultValue={100}/>
         )}
       </div>
     </motion.section>

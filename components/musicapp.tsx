@@ -10,7 +10,6 @@ import { useBroadcastEvent, useEventListener } from "../liveblocks.config";
 import { Room } from "./room";
 import SimplePlayerScreen from "./SimplePlayerScreen";
 import MusicPlayingBar from "./MusicPlayingBar";
-import BlankSpaceMusicBar from "./BlankSpaceMusicBar";
 
 //TODO: when you go into playlist 1 /2 or whatever, it should be specific per team1/ team 2 etc
 //TODO: i think release should be a really ugly version of spotify from 2012 and then release a new version
@@ -173,11 +172,14 @@ export default function MusicApp({ teamName }: { teamName: string }) {
       <main className="flex flex-col h-screen gap-2 font-sohne bg-black overflow-y-hidden scrollbar-hide">
         {tracklist ? (
           <>
-            <section className="w-full flex flex-col h-screen">
-              <section className="flex gap-2 m-2 h-full" id = "music-app-main-cards-wrapper">
+            <section className="w-full flex flex-col h-screen gap-y-2">
+              <section
+                className="flex flex-col sm:flex-row gap-2 mt-2 h-full relative"
+                id="music-app-main-cards-wrapper"
+              >
                 {recenttunes && (
-                  <section className="w-1/5">
-                    <SideBar songsAPI={songsAPI}/>
+                  <section className="w-1/5 hidden sm:block">
+                    <SideBar songsAPI={songsAPI} />
                   </section>
                 )}
 
@@ -188,12 +190,8 @@ export default function MusicApp({ teamName }: { teamName: string }) {
                     duration: 0.5,
                     ease: [0, 0.71, 0.2, 1.01],
                   }}
-                  className={` rounded-md pt-2 bg-ldbackground overflow-y-auto scrollbar-hide ${
-                    recenttunes && platinumtier
-                      ? "w-3/5"
-                      : recenttunes
-                      ? "w-4/5"
-                      : "w-full"
+                  className={`rounded-md p-4 bg-ldbackground overflow-y-auto scrollbar-hide w-full flex flex-col gap-4 ${
+                    recenttunes && platinumtier ? "sm:w-3/5" : recenttunes ? "sm:w-4/5" : "w-full"
                   }`}
                 >
                   {!recenttunes && (
@@ -203,7 +201,7 @@ export default function MusicApp({ teamName }: { teamName: string }) {
                   )}
 
                   {userplaylist && (
-                    <section>
+                    <section className="flex flex-col gap-y-2">
                       <div className="hidden items-center justify-center pb-4 ">
                         {/* {upgradeAd && (
                     <motion.button
@@ -219,11 +217,9 @@ export default function MusicApp({ teamName }: { teamName: string }) {
                      )} */}
                       </div>
 
-                      <h2 className="text-2xl  ml-5 font-bold items-center z-10">
-                        Recommended Playlist
-                      </h2>
+                      <h2 className="text-2xl font-bold items-center">Recommended Playlist</h2>
 
-                      <div className="relative grid gap-y-4 gap-x-6 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 mt-6 mx-8 z-10">
+                      <div className="relative grid gap-y-4 gap-x-6 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3">
                         {playlistAPI.map((playlist, index) => (
                           <motion.div
                             initial={{ opacity: 0, scale: 0.25 }}
@@ -242,18 +238,15 @@ export default function MusicApp({ teamName }: { teamName: string }) {
                     </section>
                   )}
 
-                  <section className="relative flex  ml-5 font-bold items-center">
+                  <section className="flex flex-col gap-y-2">
                     {userplaylist ? (
-                      <h2 className="text-2xl py-5">Trending Hits</h2>
+                      <h2 className="text-2xl  font-bold">Trending Hits</h2>
                     ) : (
-                      <div className="flex items-center space-x-4">
+                      <h2 className="flex items-center space-x-4">
                         <IoIosMusicalNotes className="w-10 h-10 text-ldcomplicatedwhite" />
-                        <p className="text-2xl py-5">Track List</p>
-                      </div>
+                        <p className="text-2xl font-bold">Track List</p>
+                      </h2>
                     )}
-                  </section>
-
-                  <section className="ml-8 pb-8">
                     {userplaylist ? (
                       <div
                         className="relative flex-row space-x-6 overflow-x-auto whitespace-nowrap scrollbar-hide"
@@ -332,25 +325,22 @@ export default function MusicApp({ teamName }: { teamName: string }) {
                     initial={{ x: 100 }}
                     animate={{ x: 0 }}
                     transition={{ duration: 1 }}
-                    className="w-1/5 flex flex-col gap-y-4 bg-ldbackground rounded-md p-4"
+                    className=" w-full sm:w-1/5 flex flex-row sm:flex-col gap-x-4 sm:gap-y-4 bg-ldbackground rounded-md p-4 overflow-x-auto sm:overflow-y-scroll"
                   >
-                    <img
-                      src="/images/djtoggle.png"
-                      className="object-cover rounded-md"
-                    />
+                    <img src="/images/djtoggle.png" className="object-cover rounded-md" />
                     <img src="/images/books.png" className=" object-cover rounded-md" />
                   </motion.section>
                 )}
               </section>
 
-              <BlankSpaceMusicBar height={"h-[18rem] sm:h-[11rem]"}/>
+              {/* <BlankSpaceMusicBar height={"h-[18rem] sm:h-[11rem]"} /> */}
+              <MusicPlayingBar />
             </section>
-            <MusicPlayingBar />
+            {/* <MusicPlayingBar /> */}
           </>
         ) : (
           <>
             <SimplePlayerScreen />
-            <MusicPlayingBar />
           </>
         )}
       </main>
