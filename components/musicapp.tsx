@@ -1,7 +1,7 @@
 import ItemCard from "@/components/ItemCard";
 import SideBar from "@/components/Sidebar";
 import { motion } from "framer-motion";
-import { useFlags, useLDClient } from "launchdarkly-react-client-sdk";
+import { useFlags } from "launchdarkly-react-client-sdk";
 import { Music2Icon } from "lucide-react";
 import { memo, useEffect, useState } from "react";
 import { useRouter } from "next/router";
@@ -17,8 +17,8 @@ export default function MusicApp({ teamName }: { teamName: string }) {
   const {
     tracklist = true,
     recenttunes = true,
-    userplaylist = true,
-    platinumtier = true,
+    userplaylist = false,
+    platinumtier = false,
     newtoggledb = "complete",
   }: {
     tracklist: boolean;
@@ -172,9 +172,9 @@ export default function MusicApp({ teamName }: { teamName: string }) {
       <main className="flex flex-col h-screen gap-2 font-sohne bg-black overflow-y-hidden scrollbar-hide">
         {tracklist ? (
           <>
-            <section className="w-full flex flex-col h-screen gap-y-2">
+            <section className="w-full flex flex-col h-screen">
               <section
-                className="flex flex-col sm:flex-row gap-2 mt-2 h-full relative"
+                className="flex flex-col sm:flex-row gap-2 my-2 mx-2 h-full relative"
                 id="music-app-main-cards-wrapper"
               >
                 {recenttunes && (
@@ -193,6 +193,7 @@ export default function MusicApp({ teamName }: { teamName: string }) {
                   className={`rounded-md p-4 bg-ldbackground overflow-y-auto scrollbar-hide w-full flex flex-col gap-4 ${
                     recenttunes && platinumtier ? "sm:w-3/5" : recenttunes ? "sm:w-4/5" : "w-full"
                   }`}
+                  id="music-app-main-center-part"
                 >
                   {!recenttunes && (
                     <header className="">
@@ -242,7 +243,7 @@ export default function MusicApp({ teamName }: { teamName: string }) {
                     {userplaylist ? (
                       <h2 className="text-2xl  font-bold">Trending Hits</h2>
                     ) : (
-                      <h2 className="flex items-center space-x-4">
+                      <h2 className="flex items-center gap-x-4">
                         <IoIosMusicalNotes className="w-10 h-10 text-ldcomplicatedwhite" />
                         <p className="text-2xl font-bold">Track List</p>
                       </h2>
@@ -277,13 +278,12 @@ export default function MusicApp({ teamName }: { teamName: string }) {
                         ))}
                       </div>
                     ) : (
-                      <div
-                        className="relative flex flex-col w-full space-y-2 mx-auto overflow-auto h-4/5 z-10 scrollbar-hide"
-                        style={{ maxHeight: "calc(100vh - 150px)" }}
+                      <table
+                        className="relative flex flex-col w-full overflow-y-auto "
                         id="songs-bulleted-list"
                       >
                         {songsAPI.map((song: any, index: number) => (
-                          <motion.div
+                          <motion.tr
                             initial={{ opacity: 0, scale: 0.25 }}
                             animate={{ opacity: 1, scale: 1 }}
                             transition={{
@@ -292,30 +292,29 @@ export default function MusicApp({ teamName }: { teamName: string }) {
                               delay: index * 0.2,
                             }}
                             key={song.id}
-                            className="grid grid-cols-5 tracklist  w-full text-xl border-b-2 border-b-gray-600/40 py-4 hover:bg-gray-500/20"
+                            className="grid grid-cols-3 items-center w-full text-lg border-b-2 border-b-gray-600/40 py-3 hover:bg-gray-500/20"
                           >
-                            <div className="">
+                            <td className="flex gap-x-4 items-center">
                               {newtoggledb !== "complete" ? (
-                                <Music2Icon className="h-10 w-10 ml-8" />
+                                <Music2Icon className="h-10 w-10" />
                               ) : (
-                                <img src={song.image} className="h-10 w-10 ml-8" />
+                                <img src={song.image} className="h-10 w-10" />
                               )}
-                            </div>
-                            <div className="titletext">
-                              <p>{song.title}</p>
-                            </div>
-                            <div className=" text-lg text-gray-500">
-                              <p>{song.artists}</p>
-                            </div>
-                            <div className="titletext">
+                              <span className="flex flex-col">
+                                <p>{song.title}</p>
+                                <p className="text-base text-gray-500">{song.artists}</p>
+                              </span>
+                            </td>
+
+                            <td className="">
                               <p>{song.album}</p>
-                            </div>
-                            <div className="timer start-end">
+                            </td>
+                            <td className=" text-gray-500 ">
                               <p>{song.duration}</p>
-                            </div>
-                          </motion.div>
+                            </td>
+                          </motion.tr>
                         ))}
-                      </div>
+                      </table>
                     )}
                   </section>
                 </motion.section>
@@ -332,11 +331,8 @@ export default function MusicApp({ teamName }: { teamName: string }) {
                   </motion.section>
                 )}
               </section>
-
-              {/* <BlankSpaceMusicBar height={"h-[18rem] sm:h-[11rem]"} /> */}
               <MusicPlayingBar />
             </section>
-            {/* <MusicPlayingBar /> */}
           </>
         ) : (
           <>
