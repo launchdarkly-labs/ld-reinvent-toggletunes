@@ -3,7 +3,7 @@ import { useFlags } from "launchdarkly-react-client-sdk";
 import { Music2Icon } from "lucide-react";
 import { RxCounterClockwiseClock } from "react-icons/rx";
 
-const PlaylistTablePage = ({ songsAPI }: { songsAPI: any }) => {
+const PlaylistTableSection = ({ songsAPI }: { songsAPI: any }) => {
   const {
     newtoggledb = "complete",
   }: {
@@ -64,4 +64,4 @@ const PlaylistTablePage = ({ songsAPI }: { songsAPI: any }) => {
   );
 };
 
-export default PlaylistTablePage;
+export default PlaylistTableSection;

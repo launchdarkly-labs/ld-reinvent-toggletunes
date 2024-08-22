@@ -9,7 +9,7 @@ import { useBroadcastEvent, useEventListener } from "../liveblocks.config";
 import { Room } from "./room";
 import SimplePlayerScreen from "./SimplePlayerScreen";
 import MusicPlayingBar from "./MusicPlayingBar";
-import PlaylistTablePage from "./PlaylistTablePage";
+import PlaylistTableSection from "./PlaylistTableSection";
 import AdSection from "./AdSection";
 
 //TODO: when you go into playlist 1 /2 or whatever, it should be specific per team1/ team 2 etc
@@ -18,8 +18,8 @@ export default function MusicApp({ teamName }: { teamName: string }) {
   const {
     tracklist = true,
     recenttunes = true,
-    userplaylist = false,
-    platinumtier = false,
+    userplaylist = true,
+    platinumtier = true,
     newtoggledb = "complete",
   }: {
     tracklist: boolean;
@@ -191,7 +191,7 @@ export default function MusicApp({ teamName }: { teamName: string }) {
                     duration: 0.5,
                     ease: [0, 0.71, 0.2, 1.01],
                   }}
-                  className={`rounded-md p-4 bg-ldbackground overflow-y-auto scrollbar-hide w-full flex flex-col gap-4 ${
+                  className={`rounded-md p-4 bg-ldbackground overflow-y-auto scrollbar-hide w-full flex flex-col gap-6 ${
                     recenttunes && platinumtier ? "sm:w-3/5" : recenttunes ? "sm:w-4/5" : "w-full"
                   }`}
                   id="music-app-main-center-part"
@@ -203,7 +203,7 @@ export default function MusicApp({ teamName }: { teamName: string }) {
                   )}
 
                   {userplaylist && (
-                    <section className="flex flex-col gap-y-2">
+                    <section className="flex flex-col gap-y-4">
                       <div className="hidden items-center justify-center pb-4 ">
                         {/* {upgradeAd && (
                     <motion.button
@@ -240,7 +240,7 @@ export default function MusicApp({ teamName }: { teamName: string }) {
                     </section>
                   )}
 
-                  <section className="flex flex-col gap-y-2">
+                  <section className="flex flex-col gap-y-4">
                     {userplaylist ? (
                       <h2 className="text-2xl  font-bold">Trending Hits</h2>
                     ) : (
@@ -279,7 +279,7 @@ export default function MusicApp({ teamName }: { teamName: string }) {
                         ))}
                       </div>
                     ) : (
-                      <PlaylistTablePage songsAPI={songsAPI}/>
+                      <PlaylistTableSection songsAPI={songsAPI}/>
                     )}
                   </section>
                 </motion.section>
