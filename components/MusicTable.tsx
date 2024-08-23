@@ -18,7 +18,7 @@ const MusicTable = () => {
   <tbody>
     {
       songs.map((song, index) => (
-        <tr className="group hover:bg-gray-500/20">
+        <tr className="group hover:bg-gray-500/20" key={index}>
           <td className="whitespace-nowrap px-4 py-2">{index + 1}</td>
           <td className="whitespace-nowrap px-4 py-2 flex gap-3 items-center">
             <div className="h-10 w-10">

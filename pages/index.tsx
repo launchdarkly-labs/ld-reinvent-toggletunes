@@ -1,6 +1,6 @@
 
 import React, { useEffect, useState } from 'react';
-import MusicApp from '@/components/musicapp';
+import MusicApp from "@/components/musicapp";
 import { asyncWithLDProvider } from 'launchdarkly-react-client-sdk';
 import { Room } from '@/components/room';
 import { setCookie } from 'cookies-next';
