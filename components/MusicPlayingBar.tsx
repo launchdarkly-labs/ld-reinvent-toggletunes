@@ -35,6 +35,7 @@ const MusicPlayingBar = () => {
       }}
       className=" h-[18rem] sm:h-36 w-full items-center py-8 sm:py-8  px-8 bg-ldbackground shadow-xl 
       justify-between flex flex-col sm:flex-row"
+      id="music-playing-bar"
     >
       <div className="flex justify-center sm:justify-normal w-full sm:w-[33%]">
         {tracklist == true && userplaylist == true ? (

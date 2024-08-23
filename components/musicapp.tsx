@@ -11,15 +11,16 @@ import SimplePlayerScreen from "./SimplePlayerScreen";
 import MusicPlayingBar from "./MusicPlayingBar";
 import PlaylistTableSection from "./PlaylistTableSection";
 import AdSection from "./AdSection";
+import { playlists, songs } from "@/lib/data";
 
 //TODO: when you go into playlist 1 /2 or whatever, it should be specific per team1/ team 2 etc
 //TODO: i think release should be a really ugly version of spotify from 2012 and then release a new version
 export default function MusicApp({ teamName }: { teamName: string }) {
   const {
     tracklist = true,
-    recenttunes = true,
-    userplaylist = true,
-    platinumtier = true,
+    recenttunes = false,
+    userplaylist = false,
+    platinumtier = false,
     newtoggledb = "complete",
   }: {
     tracklist: boolean;
@@ -29,8 +30,8 @@ export default function MusicApp({ teamName }: { teamName: string }) {
     newtoggledb: string;
   } = useFlags();
 
-  const [playlistAPI, setPlaylistAPI] = useState([]);
-  const [songsAPI, setSongsAPI] = useState([]);
+  const [playlistAPI, setPlaylistAPI] = useState([...playlists, ...playlists]);
+  const [songsAPI, setSongsAPI] = useState([...songs, ...songs, ...songs]);
   // const [setUpgradeAd] = useState(true);
   const [flagOne, setFlagOne] = useState(false);
   const [flagTwo, setFlagTwo] = useState(false);
@@ -135,13 +136,13 @@ export default function MusicApp({ teamName }: { teamName: string }) {
   }, [tracklist, recenttunes, userplaylist, platinumtier, newtoggledb]);
 
   useEffect(() => {
-    setPlaylistAPI([]);
+    // setPlaylistAPI([]);
     const fetchPlaylists = async () => {
       try {
         const subroute = window.location.pathname.split("/")[1];
         const response = await fetch(`/api/playlists/?team=${subroute}`);
         const data = await response.json();
-        await setPlaylistAPI(data);
+        await setPlaylistAPI(playlists);
       } catch (err) {
         console.error(err);
       }
@@ -151,7 +152,7 @@ export default function MusicApp({ teamName }: { teamName: string }) {
         const subroute = window.location.pathname.split("/")[1];
         const response = await fetch(`/api/songs/?team=${subroute}`);
         const data = await response.json();
-        await setSongsAPI(data);
+        await setSongsAPI(songs);
       } catch (err) {
         console.error(err);
       }
@@ -170,12 +171,12 @@ export default function MusicApp({ teamName }: { teamName: string }) {
   return (
     <Room>
       <EventListenerComponent reloadPage={reloadPage} />
-      <main className="flex flex-col h-screen gap-2 font-sohne bg-black overflow-y-hidden scrollbar-hide">
+      <main className="flex flex-col  gap-2 font-sohne bg-black overflow-y-hidden scrollbar-hide">
         {tracklist ? (
           <>
-            <section className="w-full flex flex-col h-screen">
+            <section className="w-full flex flex-col ">
               <section
-                className="flex flex-col sm:flex-row gap-2 my-2 mx-2 h-full relative"
+                className="flex flex-col sm:flex-row gap-2 my-2 mx-2  relative h-full"
                 id="music-app-main-cards-wrapper"
               >
                 {recenttunes && (
@@ -192,7 +193,11 @@ export default function MusicApp({ teamName }: { teamName: string }) {
                     ease: [0, 0.71, 0.2, 1.01],
                   }}
                   className={`rounded-md p-4 bg-ldbackground overflow-y-auto scrollbar-hide w-full flex flex-col gap-6 ${
-                    recenttunes && platinumtier ? "sm:w-3/5" : recenttunes ? "sm:w-4/5" : "w-full"
+                    recenttunes && platinumtier
+                      ? "sm:w-3/5"
+                      : recenttunes
+                      ? "sm:w-4/5"
+                      : "sm:w-full"
                   }`}
                   id="music-app-main-center-part"
                 >
@@ -240,49 +245,52 @@ export default function MusicApp({ teamName }: { teamName: string }) {
                     </section>
                   )}
 
-                  <section className="flex flex-col gap-y-4">
-                    {userplaylist ? (
-                      <h2 className="text-2xl  font-bold">Trending Hits</h2>
-                    ) : (
-                      <h2 className="flex items-center gap-x-4">
-                        <IoIosMusicalNotes className="w-10 h-10 text-ldcomplicatedwhite" />
-                        <p className="text-2xl font-bold">Track List</p>
-                      </h2>
-                    )}
-                    {userplaylist ? (
-                      <div
-                        className="relative flex-row space-x-6 overflow-x-auto whitespace-nowrap scrollbar-hide"
-                        id="song-cards-list"
-                      >
-                        {songsAPI.map((song: any, index) => (
-                          <motion.div
-                            initial={{ opacity: 0, scale: 0.25 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            transition={{
-                              duration: 0.25,
-                              ease: [0, 0.71, 0.2, 1.01],
-                              delay: index * 0.2,
-                            }}
-                            key={song.id}
-                            className="place-items-center border-white bg-ldinputback 
+                  <section className="flex flex-col gap-y-4 h-full">
+                    {userplaylist && (
+                      <>
+                        <h2 className="text-2xl  font-bold">Trending Hits</h2>
+                        <div
+                          className="relative flex-row space-x-6 overflow-x-auto whitespace-nowrap scrollbar-hide"
+                          id="song-cards-list"
+                        >
+                          {songsAPI.map((song: any, index) => (
+                            <motion.div
+                              initial={{ opacity: 0, scale: 0.25 }}
+                              animate={{ opacity: 1, scale: 1 }}
+                              transition={{
+                                duration: 0.25,
+                                ease: [0, 0.71, 0.2, 1.01],
+                                delay: index * 0.2,
+                              }}
+                              key={song.id}
+                              className="place-items-center border-white bg-ldinputback 
                             rounded-md hover:bg-gray-900/50  inline-block p-4"
-                          >
-                            <img
-                              className="object-cover transition-all hover:scale-105 h-48 w-48 mb-4"
-                              alt="astronaut"
-                              src={song.image}
-                            />
-                            <div className="flex flex-col gap-y-2">
-                              <p className="text-lg text-center font-sohne ">{song.title}</p>
-                              <p className="text-base text-gray-500  text-center font-sohne font-thin">
-                                {song.duration}
-                              </p>
-                            </div>
-                          </motion.div>
-                        ))}
-                      </div>
-                    ) : (
-                      <PlaylistTableSection songsAPI={songsAPI} />
+                            >
+                              <img
+                                className="object-cover transition-all hover:scale-105 h-48 w-48 mb-4"
+                                alt="astronaut"
+                                src={song.image}
+                              />
+                              <div className="flex flex-col gap-y-2">
+                                <p className="text-lg text-center font-sohne ">{song.title}</p>
+                                <p className="text-base text-gray-500  text-center font-sohne font-thin">
+                                  {song.duration}
+                                </p>
+                              </div>
+                            </motion.div>
+                          ))}
+                        </div>
+                      </>
+                    )}
+
+                    {userplaylist === false && (
+                      <>
+                        <h2 className="flex items-center gap-x-4">
+                          <IoIosMusicalNotes className="w-10 h-10 text-ldcomplicatedwhite" />
+                          <p className="text-2xl font-bold">Track List</p>
+                        </h2>
+                        <PlaylistTableSection songsAPI={songsAPI} />
+                      </>
                     )}
                   </section>
                 </motion.section>

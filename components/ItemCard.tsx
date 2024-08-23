@@ -8,7 +8,6 @@ interface Props {
 }
 
 const ItemCard = ({ playlist }: Props) => {
-
   return (
     <Link
       key={playlist.id}
@@ -18,13 +17,12 @@ const ItemCard = ({ playlist }: Props) => {
        bg-zinc-500/30 hover:bg-zinc-500/50 focus:bg-zinc-500/50"
       // data-color={playlist.color.dark}
     >
-      <div className="h-20 w-20">
-        <img
-          src={playlist.cover}
-          alt={playlist.title}
-          className="object-cover h-full w-full shadow-[5px_0_30px_0px_rgba(0,0,0,0.3)]"
-        />
-      </div>
+      <img
+        src={playlist.cover}
+        alt={playlist.title}
+        className="object-cover h-20 w-20 shadow-[5px_0_30px_0px_rgba(0,0,0,0.3)]"
+      />
+
       <h3 className="font-bold block mr-4">{playlist.title}</h3>
       <div
         className={

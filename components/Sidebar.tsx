@@ -11,6 +11,7 @@ const SideBar = ({ songsAPI }: any) => {
   }: {
     newtoggledb: string;
   } = useFlags();
+  console.log(songsAPI)
 
   return (
     <motion.nav
@@ -48,7 +49,7 @@ const SideBar = ({ songsAPI }: any) => {
           <ul className="flex flex-col gap-y-4  overflow-y-auto  h-[10rem]" >
             {songsAPI.map((song: any, index: number) => (
               <li key={index} className="flex items-center gap-2 cursor-default">
-                {newtoggledb?.includes("off") ? (
+                {false ? (
                   <Music2Icon className="h-8 w-8" />
                 ) : (
                   <img src={song.image} alt={song.title} className="h-8 w-8 rounded-sm" />

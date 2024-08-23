@@ -34,7 +34,7 @@ const PlaylistTableSection = ({ songsAPI }: { songsAPI: any }) => {
               ease: [0, 0.71, 0.2, 1.01],
               delay: index * 0.2,
             }}
-            key={song.id}
+            key={`${song.id} ${index}`}
             className="grid grid-cols-[minmax(0,_0.1fr)_minmax(0,_1.5fr)__minmax(0,_1fr)_minmax(0,_0.1fr)] items-center  text-lg
                              border-b-2 border-b-gray-600/40 p-3 hover:bg-gray-500/20"
           >
