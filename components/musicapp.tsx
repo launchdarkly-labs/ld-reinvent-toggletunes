@@ -264,29 +264,30 @@ export default function MusicApp({ teamName }: { teamName: string }) {
                               delay: index * 0.2,
                             }}
                             key={song.id}
-                            className="place-items-center border-white bg-ldinputback rounded-md hover:bg-gray-900/50  inline-block py-4"
+                            className="place-items-center border-white bg-ldinputback 
+                            rounded-md hover:bg-gray-900/50  inline-block p-4"
                           >
                             <img
-                              className="p-4 object-cover transition-all hover:scale-105 h-48 w-48"
+                              className="object-cover transition-all hover:scale-105 h-48 w-48 mb-4"
                               alt="astronaut"
                               src={song.image}
                             />
-                            <p className="text-lg px-4 text-center font-sohne pb-4">{song.title}</p>
-                            <p className="text-xs text-gray-500 px-4 text-center font-sohne font-thin">
-                              {song.duration}
-                            </p>
+                            <div className="flex flex-col gap-y-2">
+                              <p className="text-lg text-center font-sohne ">{song.title}</p>
+                              <p className="text-base text-gray-500  text-center font-sohne font-thin">
+                                {song.duration}
+                              </p>
+                            </div>
                           </motion.div>
                         ))}
                       </div>
                     ) : (
-                      <PlaylistTableSection songsAPI={songsAPI}/>
+                      <PlaylistTableSection songsAPI={songsAPI} />
                     )}
                   </section>
                 </motion.section>
 
-                {platinumtier && (
-                  <AdSection/>
-                )}
+                {platinumtier && <AdSection />}
               </section>
               <MusicPlayingBar />
             </section>
