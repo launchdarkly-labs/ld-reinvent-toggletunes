@@ -33,7 +33,7 @@ const MusicPlayingBar = () => {
         duration: 0.5,
         ease: [0, 0.71, 0.2, 1.01],
       }}
-      className=" h-[18rem] sm:h-36 w-full items-center py-8 sm:py-8  px-8 bg-ldbackground shadow-xl 
+      className="box-border h-[18rem] sm:h-36 w-full items-center py-8 sm:py-8  px-8 bg-ldbackground shadow-xl 
       justify-between flex flex-col sm:flex-row"
       id="music-playing-bar"
     >

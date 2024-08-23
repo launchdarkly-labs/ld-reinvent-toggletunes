@@ -18,8 +18,8 @@ import { playlists, songs } from "@/lib/data";
 export default function MusicApp({ teamName }: { teamName: string }) {
   const {
     tracklist = true,
-    recenttunes = false,
-    userplaylist = false,
+    recenttunes = true,
+    userplaylist = true,
     platinumtier = false,
     newtoggledb = "complete",
   }: {
@@ -171,12 +171,12 @@ export default function MusicApp({ teamName }: { teamName: string }) {
   return (
     <Room>
       <EventListenerComponent reloadPage={reloadPage} />
-      <main className="flex flex-col  gap-2 font-sohne bg-black overflow-y-hidden scrollbar-hide">
+      <main className="flex flex-col gap-2 font-sohne bg-black overflow-y-visible">
         {tracklist ? (
           <>
             <section className="w-full flex flex-col ">
               <section
-                className="flex flex-col sm:flex-row gap-2 my-2 mx-2  relative h-full"
+                className="flex flex-col sm:flex-row gap-2 my-2 mx-2  relative h-full overflow-y-visible"
                 id="music-app-main-cards-wrapper"
               >
                 {recenttunes && (
@@ -192,7 +192,7 @@ export default function MusicApp({ teamName }: { teamName: string }) {
                     duration: 0.5,
                     ease: [0, 0.71, 0.2, 1.01],
                   }}
-                  className={`rounded-md p-4 bg-ldbackground overflow-y-auto scrollbar-hide w-full flex flex-col gap-6 ${
+                  className={`rounded-md p-4 bg-ldbackground overflow-y-auto scrollbar-hide w-full flex flex-col gap-6 h-full ${
                     recenttunes && platinumtier
                       ? "sm:w-3/5"
                       : recenttunes
@@ -245,7 +245,7 @@ export default function MusicApp({ teamName }: { teamName: string }) {
                     </section>
                   )}
 
-                  <section className="flex flex-col gap-y-4 h-full">
+                  <section className={`flex flex-col gap-y-4 ${userplaylist===false && "h-[calc(100vh-21rem)] sm:h-[calc(100vh-14rem)]"}`}>
                     {userplaylist && (
                       <>
                         <h2 className="text-2xl  font-bold">Trending Hits</h2>
