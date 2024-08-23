@@ -5,7 +5,7 @@ import { RxCounterClockwiseClock } from "react-icons/rx";
 
 const PlaylistTableSection = ({ songsAPI }: { songsAPI: any }) => {
   const {
-    newtoggledb = "complete",
+    newtoggledb = "off",
   }: {
     newtoggledb: string;
   } = useFlags();
@@ -40,7 +40,7 @@ const PlaylistTableSection = ({ songsAPI }: { songsAPI: any }) => {
           >
             <td className="">{index + 1}</td>
             <td className="flex gap-x-4 items-center">
-              {newtoggledb !== "complete" ? (
+              {newtoggledb?.includes("off") ? (
                 <Music2Icon className="h-10 w-10" />
               ) : (
                 <img src={song.image} className="h-10 w-10" />

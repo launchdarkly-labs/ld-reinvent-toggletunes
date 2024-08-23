@@ -17,11 +17,11 @@ import { playlists, songs } from "@/lib/data";
 //TODO: i think release should be a really ugly version of spotify from 2012 and then release a new version
 export default function MusicApp({ teamName }: { teamName: string }) {
   const {
-    tracklist = true,
-    recenttunes = true,
-    userplaylist = true,
+    tracklist = false,
+    recenttunes = false,
+    userplaylist = false,
     platinumtier = false,
-    newtoggledb = "complete",
+    newtoggledb = "off",
   }: {
     tracklist: boolean;
     recenttunes: boolean;
@@ -262,7 +262,7 @@ export default function MusicApp({ teamName }: { teamName: string }) {
                                 ease: [0, 0.71, 0.2, 1.01],
                                 delay: index * 0.2,
                               }}
-                              key={song.id}
+                              key={`${song.id} ${index}`}
                               className="place-items-center border-white bg-ldinputback 
                             rounded-md hover:bg-gray-900/50  inline-block p-4"
                             >

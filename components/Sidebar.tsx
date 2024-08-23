@@ -7,7 +7,7 @@ import { useFlags, useLDClient } from "launchdarkly-react-client-sdk";
 
 const SideBar = ({ songsAPI }: any) => {
   const {
-    newtoggledb = "complete",
+    newtoggledb = "off",
   }: {
     newtoggledb: string;
   } = useFlags();
@@ -47,17 +47,6 @@ const SideBar = ({ songsAPI }: any) => {
         </h2>
         <div className="">
           <ul className="flex flex-col gap-y-4  overflow-y-auto  h-[calc(100vh-21rem)] sm:h-[calc(100vh-24rem)]" >
-            {songsAPI.map((song: any, index: number) => (
-              <li key={index} className="flex items-center gap-2 cursor-default">
-                {false ? (
-                  <Music2Icon className="h-8 w-8" />
-                ) : (
-                  <img src={song.image} alt={song.title} className="h-8 w-8 rounded-sm" />
-                )}
-                <span className="flex-grow">{song.title}</span>
-                {/* <span>{song.duration}</span> */}
-              </li>
-            ))}
             {songsAPI.map((song: any, index: number) => (
               <li key={index} className="flex items-center gap-2 cursor-default">
                 {newtoggledb?.includes("off") ? (
