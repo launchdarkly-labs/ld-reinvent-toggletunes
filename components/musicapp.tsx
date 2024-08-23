@@ -192,7 +192,7 @@ export default function MusicApp({ teamName }: { teamName: string }) {
                     duration: 0.5,
                     ease: [0, 0.71, 0.2, 1.01],
                   }}
-                  className={`rounded-md p-4 bg-ldbackground overflow-y-auto scrollbar-hide w-full flex flex-col gap-6 h-full ${
+                  className={`rounded-md p-4 bg-ldbackground overflow-y-auto scrollbar-hide w-full flex flex-col gap-6 ${userplaylist? "h-screen lg:h-full" :"h-full"} ${
                     recenttunes && platinumtier
                       ? "sm:w-3/5"
                       : recenttunes
