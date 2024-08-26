@@ -39,7 +39,7 @@ const SideBar = ({ songsAPI }: any) => {
         </ul>
       </section>
 
-      <section className="bg-ldbackground rounded-md flex-1 p-4 ">
+      <section className="bg-ldbackground rounded-md flex-1 p-4 "> 
         <h2 className="flex gap-3 lg:gap-4 text-ldcomplicatedwhite font-semibold text-lg sm:text-lg xl:text-2xl items-center font-extra mb-6 w-full truncate ">
           <RxCounterClockwiseClock className="h-6 w-6 hidden lg:block" />
           <span> Recently Played</span>
