@@ -21,7 +21,7 @@ export default function MusicApp({ teamName }: { teamName: string }) {
     recenttunes = true,
     userplaylist = true,
     platinumtier = true,
-    newtoggledb = "off",
+    newtoggledb = "complete",
   }: {
     tracklist: boolean;
     recenttunes: boolean;

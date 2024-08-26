@@ -10,7 +10,7 @@ import { motion } from "framer-motion";
 const MusicPlayingBar = () => {
   const {
     tracklist = true,
-    userplaylist = false,
+    userplaylist = true,
   }: {
     tracklist: boolean;
     userplaylist: boolean;
@@ -39,7 +39,7 @@ const MusicPlayingBar = () => {
     >
       <div className="flex justify-center sm:justify-normal w-full sm:w-[33%]">
         {tracklist == true && userplaylist == true ? (
-          <img src={songs[currentSongIndex].image} className="h-28 mr-4 hidden sm:block" />
+          <img src={songs[currentSongIndex].image} className="h-20 mr-4 hidden sm:block" />
         ) : tracklist == true && userplaylist == false ? (
           <Music2Icon className="h-14 w-14 mr-4 hidden sm:block" />
         ) : null}

@@ -47,8 +47,8 @@ export default async function handler(
     tier: "Platinum",
   };
 
-  newtoggledb = await ldClient.variation("newtoggledb", jsonObject, "off");
-  //newtoggledb =   "complete"
+  // newtoggledb = await ldClient.variation("newtoggledb", jsonObject, "off");
+  newtoggledb =   "complete"
 
   let lists;
   if (newtoggledb === "complete") {
