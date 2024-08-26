@@ -12,13 +12,14 @@ import MusicPlayingBar from "./MusicPlayingBar";
 import PlaylistTableSection from "./PlaylistTableSection";
 import AdSection from "./AdSection";
 import { playlists, songs } from "@/lib/data";
+import { wait } from "@/lib/utils";
 
 //TODO: when you go into playlist 1 /2 or whatever, it should be specific per team1/ team 2 etc
 //TODO: i think release should be a really ugly version of spotify from 2012 and then release a new version
 export default function MusicApp({ teamName }: { teamName: string }) {
   const {
-    tracklist = false,
-    recenttunes = false,
+    tracklist = true,
+    recenttunes = true,
     userplaylist = false,
     platinumtier = false,
     newtoggledb = "complete",
@@ -30,8 +31,8 @@ export default function MusicApp({ teamName }: { teamName: string }) {
     newtoggledb: string;
   } = useFlags();
 
-  const [playlistAPI, setPlaylistAPI] = useState([...playlists, ...playlists]);
-  const [songsAPI, setSongsAPI] = useState([...songs, ...songs, ...songs]);
+  const [playlistAPI, setPlaylistAPI] = useState([...playlists]);
+  const [songsAPI, setSongsAPI] = useState([...songs]);
   // const [setUpgradeAd] = useState(true);
   const [flagOne, setFlagOne] = useState(false);
   const [flagTwo, setFlagTwo] = useState(false);
@@ -138,25 +139,14 @@ export default function MusicApp({ teamName }: { teamName: string }) {
   useEffect(() => {
     // setPlaylistAPI([]);
     const fetchPlaylists = async () => {
-      try {
-        const subroute = window.location.pathname.split("/")[1];
-        const response = await fetch(`/api/playlists/?team=${subroute}`);
-        const data = await response.json();
-        await setPlaylistAPI(playlists);
-      } catch (err) {
-        console.error(err);
-      }
+      // await wait(1);
+      setPlaylistAPI([...playlists, ...playlists]);
     };
     const fetchSongs = async () => {
-      try {
-        const subroute = window.location.pathname.split("/")[1];
-        const response = await fetch(`/api/songs/?team=${subroute}`);
-        const data = await response.json();
-        await setSongsAPI(songs);
-      } catch (err) {
-        console.error(err);
-      }
+      // await wait(1);
+      setSongsAPI([...songs, ...songs, ...songs]);
     };
+    if(newtoggledb.includes("off")) return;
     fetchPlaylists();
     fetchSongs();
   }, [newtoggledb]);
@@ -202,15 +192,10 @@ export default function MusicApp({ teamName }: { teamName: string }) {
                     <h2 className="flex items-center gap-x-4">
                       <IoIosMusicalNotes className="w-10 h-10 text-ldcomplicatedwhite" />
                       <p className="text-2xl font-bold">Track List</p>
+                      <img src="/images/tunes.png" className="ml-auto mr-5" />
                     </h2>
                     <PlaylistTableSection songsAPI={songsAPI} />
                   </>
-                )}
-
-                {!recenttunes && (
-                  <header className="">
-                    <img src="/images/tunes.png" className="ml-auto mr-5" />
-                  </header>
                 )}
 
                 {userplaylist && (

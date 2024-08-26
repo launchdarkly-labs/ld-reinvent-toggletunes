@@ -1,6 +1,5 @@
 import { motion } from "framer-motion";
 import { IoIosMusicalNotes } from "react-icons/io";
-import BlankSpaceMusicBar from "./BlankSpaceMusicBar";
 import MusicPlayingBar from "./MusicPlayingBar";
 
 const SimplePlayerScreen = () => {

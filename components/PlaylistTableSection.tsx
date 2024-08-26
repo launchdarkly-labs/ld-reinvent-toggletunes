@@ -14,7 +14,7 @@ const PlaylistTableSection = ({ songsAPI }: { songsAPI: any }) => {
       <thead>
         <tr
           className="grid grid-cols-[minmax(0,_0.1fr)_minmax(0,_1.5fr)__minmax(0,_1fr)_minmax(0,_0.1fr)] items-center 
-                             border-b-2 border-b-gray-600/40 p-3 justify-items-start text-base"
+                             border-b-2  border-b-gray-600/40 p-3 justify-items-start text-base"
         >
           <th>#</th>
           <th>Title</th>
@@ -36,7 +36,7 @@ const PlaylistTableSection = ({ songsAPI }: { songsAPI: any }) => {
             }}
             key={`${song.id} ${index}`}
             className="grid grid-cols-[minmax(0,_0.1fr)_minmax(0,_1.5fr)__minmax(0,_1fr)_minmax(0,_0.1fr)] items-center  text-lg
-                             border-b-2 border-b-gray-600/40 p-3 hover:bg-gray-500/20"
+                             [&:not(:last-child)]:border-b-2 border-b-gray-600/40 p-3 hover:bg-gray-500/20"
           >
             <td className="">{index + 1}</td>
             <td className="flex gap-x-4 items-center">
