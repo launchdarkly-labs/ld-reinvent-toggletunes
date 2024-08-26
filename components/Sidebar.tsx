@@ -40,12 +40,12 @@ const SideBar = ({ songsAPI }: any) => {
       </section>
 
       <section className="bg-ldbackground rounded-md flex-1 p-4 h-full">
-        <h2 className="flex gap-4 text-ldcomplicatedwhite font-semibold text-2xl items-center font-extra mb-6 ">
+        <h2 className="flex gap-4 text-ldcomplicatedwhite font-semibold text-lg sm:text-xl xl:text-2xl items-center font-extra mb-6 w-full ">
           <RxCounterClockwiseClock className="h-6 w-6" />
           Recently Played
         </h2>
         <div className="">
-          <ul className="flex flex-col gap-y-4  overflow-y-auto  h-[calc(100vh-21rem)] sm:h-[calc(100vh-25.4rem)]" >
+          <ul className="flex flex-col gap-y-4  overflow-y-auto  h-[calc(100vh-21rem)] sm:h-[calc(100vh-25.4rem)] scrollbar-hide" >
             {songsAPI.map((song: any, index: number) => (
               <li key={index} className="flex items-center gap-2 cursor-default">
                 {newtoggledb?.includes("off") ? (

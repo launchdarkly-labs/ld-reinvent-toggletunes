@@ -18,9 +18,9 @@ import { playlists, songs } from "@/lib/data";
 export default function MusicApp({ teamName }: { teamName: string }) {
   const {
     tracklist = true,
-    recenttunes = false,
-    userplaylist = false,
-    platinumtier = false,
+    recenttunes = true,
+    userplaylist = true,
+    platinumtier = true,
     newtoggledb = "complete",
   }: {
     tracklist: boolean;
@@ -175,7 +175,7 @@ export default function MusicApp({ teamName }: { teamName: string }) {
         {tracklist && (
           <section className="w-full flex flex-col ">
             <section
-              className="flex flex-col sm:flex-row gap-2 my-2 mx-2  relative h-full overflow-y-visible"
+              className="flex flex-col sm:flex-row gap-2 my-2 mx-2  h-[calc(100vh-19rem)] sm:h-[calc(100vh-10rem)] relative overflow-y-visible"
               id="music-app-main-cards-wrapper"
             >
               {recenttunes && (
@@ -192,7 +192,7 @@ export default function MusicApp({ teamName }: { teamName: string }) {
                   ease: [0, 0.71, 0.2, 1.01],
                 }}
                 className={`rounded-md p-4 bg-ldbackground overflow-y-auto scrollbar-hide w-full flex flex-col gap-6
-                 h-[calc(100vh-19rem)] sm:h-[calc(100vh-10rem)] ${
+                 ${
                    recenttunes && platinumtier ? "sm:w-3/5" : recenttunes ? "sm:w-4/5" : "sm:w-full"
                  }`}
                 id="music-app-main-center-part"
@@ -206,8 +206,6 @@ export default function MusicApp({ teamName }: { teamName: string }) {
                     <PlaylistTableSection songsAPI={songsAPI} />
                   </>
                 )}
-
-                {/* userplaylist === false && "h-[calc(100vh-21rem)] sm:h-[calc(100vh-14rem)]" */}
 
                 {!recenttunes && (
                   <header className="">
