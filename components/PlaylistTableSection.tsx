@@ -5,7 +5,7 @@ import { RxCounterClockwiseClock } from "react-icons/rx";
 
 const PlaylistTableSection = ({ songsAPI }: { songsAPI: any }) => {
   const {
-    newtoggledb = "off",
+    newtoggledb = "complete",
   }: {
     newtoggledb: string;
   } = useFlags();

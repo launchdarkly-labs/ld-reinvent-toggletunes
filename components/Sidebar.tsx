@@ -20,7 +20,7 @@ const SideBar = ({ songsAPI }: any) => {
       className="flex flex-col  gap-2 h-full"
     >
       <section className="bg-ldbackground rounded-md p-4">
-        <img src="/images/ToggleTunes.png" className="w-2/3 mb-6" />
+        <img src="/images/ToggleTunes.png" className="w-full lg:w-2/3 mb-6" />
         <ul className="flex flex-col gap-y-4">
           <li
             key="1a"
