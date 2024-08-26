@@ -17,8 +17,8 @@ import { playlists, songs } from "@/lib/data";
 //TODO: i think release should be a really ugly version of spotify from 2012 and then release a new version
 export default function MusicApp({ teamName }: { teamName: string }) {
   const {
-    tracklist = true,
-    recenttunes = true,
+    tracklist = false,
+    recenttunes = false,
     userplaylist = false,
     platinumtier = false,
     newtoggledb = "complete",
