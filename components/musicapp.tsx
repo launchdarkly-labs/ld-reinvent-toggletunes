@@ -17,10 +17,10 @@ import { playlists, songs } from "@/lib/data";
 //TODO: i think release should be a really ugly version of spotify from 2012 and then release a new version
 export default function MusicApp({ teamName }: { teamName: string }) {
   const {
-    tracklist = false,
-    recenttunes = false,
-    userplaylist = false,
-    platinumtier = false,
+    tracklist = true,
+    recenttunes = true,
+    userplaylist = true,
+    platinumtier = true,
     newtoggledb = "off",
   }: {
     tracklist: boolean;
@@ -171,7 +171,7 @@ export default function MusicApp({ teamName }: { teamName: string }) {
   return (
     <Room>
       <EventListenerComponent reloadPage={reloadPage} />
-      <main className="flex flex-col gap-2 font-sohne bg-black overflow-y-visible">
+      <main className="flex flex-col gap-2 font-sohne bg-black overflow-y-visible h-full">
         {tracklist ? (
           <>
             <section className="w-full flex flex-col ">
