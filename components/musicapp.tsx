@@ -18,9 +18,9 @@ import { playlists, songs } from "@/lib/data";
 export default function MusicApp({ teamName }: { teamName: string }) {
   const {
     tracklist = true,
-    recenttunes = true,
-    userplaylist = true,
-    platinumtier = true,
+    recenttunes = false,
+    userplaylist = false,
+    platinumtier = false,
     newtoggledb = "complete",
   }: {
     tracklist: boolean;
@@ -171,46 +171,54 @@ export default function MusicApp({ teamName }: { teamName: string }) {
   return (
     <Room>
       <EventListenerComponent reloadPage={reloadPage} />
-      <main className="flex flex-col gap-2 font-sohne bg-black overflow-y-visible h-full">
-        {tracklist ? (
-          <>
-            <section className="w-full flex flex-col ">
-              <section
-                className="flex flex-col sm:flex-row gap-2 my-2 mx-2  relative h-full overflow-y-visible"
-                id="music-app-main-cards-wrapper"
+      <main className="flex flex-col gap-2 font-sohne bg-black overflow-y-visible h-screen lg:overflow-y-hidden">
+        {tracklist && (
+          <section className="w-full flex flex-col ">
+            <section
+              className="flex flex-col sm:flex-row gap-2 my-2 mx-2  relative h-full overflow-y-visible"
+              id="music-app-main-cards-wrapper"
+            >
+              {recenttunes && (
+                <section className="w-1/5 hidden sm:block">
+                  <SideBar songsAPI={songsAPI} />
+                </section>
+              )}
+
+              <motion.section
+                initial={{ opacity: 0, scale: 0.25 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{
+                  duration: 0.5,
+                  ease: [0, 0.71, 0.2, 1.01],
+                }}
+                className={`rounded-md p-4 bg-ldbackground overflow-y-auto scrollbar-hide w-full flex flex-col gap-6
+                 h-[calc(100vh-19rem)] sm:h-[calc(100vh-10rem)] ${
+                   recenttunes && platinumtier ? "sm:w-3/5" : recenttunes ? "sm:w-4/5" : "sm:w-full"
+                 }`}
+                id="music-app-main-center-part"
               >
-                {recenttunes && (
-                  <section className="w-1/5 hidden sm:block">
-                    <SideBar songsAPI={songsAPI} />
-                  </section>
+                {userplaylist === false && (
+                  <>
+                    <h2 className="flex items-center gap-x-4">
+                      <IoIosMusicalNotes className="w-10 h-10 text-ldcomplicatedwhite" />
+                      <p className="text-2xl font-bold">Track List</p>
+                    </h2>
+                    <PlaylistTableSection songsAPI={songsAPI} />
+                  </>
                 )}
 
-                <motion.section
-                  initial={{ opacity: 0, scale: 0.25 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{
-                    duration: 0.5,
-                    ease: [0, 0.71, 0.2, 1.01],
-                  }}
-                  className={`rounded-md p-4 bg-ldbackground overflow-y-auto scrollbar-hide w-full flex flex-col gap-6 ${userplaylist? "h-screen lg:h-full" :"h-full"} ${
-                    recenttunes && platinumtier
-                      ? "sm:w-3/5"
-                      : recenttunes
-                      ? "sm:w-4/5"
-                      : "sm:w-full"
-                  }`}
-                  id="music-app-main-center-part"
-                >
-                  {!recenttunes && (
-                    <header className="">
-                      <img src="/images/tunes.png" className="ml-auto mr-5" />
-                    </header>
-                  )}
+                {/* userplaylist === false && "h-[calc(100vh-21rem)] sm:h-[calc(100vh-14rem)]" */}
 
-                  {userplaylist && (
-                    <section className="flex flex-col gap-y-4">
-                      <div className="hidden items-center justify-center pb-4 ">
-                        {/* {upgradeAd && (
+                {!recenttunes && (
+                  <header className="">
+                    <img src="/images/tunes.png" className="ml-auto mr-5" />
+                  </header>
+                )}
+
+                {userplaylist && (
+                  <section className="flex flex-col gap-y-4">
+                    <div className="hidden items-center justify-center pb-4 ">
+                      {/* {upgradeAd && (
                     <motion.button
                       whileTap={{ scale: 0.9 }}
                       transition={{ delay: 2 }}
@@ -222,89 +230,74 @@ export default function MusicApp({ teamName }: { teamName: string }) {
                       <Sparkle className="w-8 h-8 ml-2" />
                     </motion.button>
                      )} */}
-                      </div>
+                    </div>
 
-                      <h2 className="text-2xl font-bold items-center">Recommended Playlist</h2>
+                    <h2 className="text-2xl font-bold items-center">Recommended Playlist</h2>
 
-                      <div className="relative grid gap-y-4 gap-x-6 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3">
-                        {playlistAPI.map((playlist, index) => (
-                          <motion.div
-                            initial={{ opacity: 0, scale: 0.25 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            transition={{
-                              duration: 0.5,
-                              ease: [0, 0.71, 0.2, 1.01],
-                              delay: index * 0.2,
-                            }}
-                            key={index}
-                          >
-                            <ItemCard playlist={playlist} />
-                          </motion.div>
-                        ))}
-                      </div>
-                    </section>
-                  )}
-
-                  <section className={`flex flex-col gap-y-4 ${userplaylist===false && "h-[calc(100vh-21rem)] sm:h-[calc(100vh-14rem)]"}`}>
-                    {userplaylist && (
-                      <>
-                        <h2 className="text-2xl  font-bold">Trending Hits</h2>
-                        <div
-                          className="relative flex-row space-x-6 overflow-x-auto whitespace-nowrap scrollbar-hide"
-                          id="song-cards-list"
+                    <div className="relative grid gap-y-4 gap-x-6 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3">
+                      {playlistAPI.map((playlist, index) => (
+                        <motion.div
+                          initial={{ opacity: 0, scale: 0.25 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          transition={{
+                            duration: 0.5,
+                            ease: [0, 0.71, 0.2, 1.01],
+                            delay: index * 0.2,
+                          }}
+                          key={index}
                         >
-                          {songsAPI.map((song: any, index) => (
-                            <motion.div
-                              initial={{ opacity: 0, scale: 0.25 }}
-                              animate={{ opacity: 1, scale: 1 }}
-                              transition={{
-                                duration: 0.25,
-                                ease: [0, 0.71, 0.2, 1.01],
-                                delay: index * 0.2,
-                              }}
-                              key={`${song.id} ${index}`}
-                              className="place-items-center border-white bg-ldinputback 
-                            rounded-md hover:bg-gray-900/50  inline-block p-4"
-                            >
-                              <img
-                                className="object-cover transition-all hover:scale-105 h-48 w-48 mb-4"
-                                alt="astronaut"
-                                src={song.image}
-                              />
-                              <div className="flex flex-col gap-y-2">
-                                <p className="text-lg text-center font-sohne ">{song.title}</p>
-                                <p className="text-base text-gray-500  text-center font-sohne font-thin">
-                                  {song.duration}
-                                </p>
-                              </div>
-                            </motion.div>
-                          ))}
-                        </div>
-                      </>
-                    )}
-
-                    {userplaylist === false && (
-                      <>
-                        <h2 className="flex items-center gap-x-4">
-                          <IoIosMusicalNotes className="w-10 h-10 text-ldcomplicatedwhite" />
-                          <p className="text-2xl font-bold">Track List</p>
-                        </h2>
-                        <PlaylistTableSection songsAPI={songsAPI} />
-                      </>
-                    )}
+                          <ItemCard playlist={playlist} />
+                        </motion.div>
+                      ))}
+                    </div>
                   </section>
-                </motion.section>
+                )}
 
-                {platinumtier && <AdSection />}
-              </section>
-              <MusicPlayingBar />
+                {userplaylist && (
+                  <section className={`flex flex-col gap-y-4 `}>
+                    <h2 className="text-2xl  font-bold">Trending Hits</h2>
+                    <div
+                      className="relative flex-row space-x-6 overflow-x-auto whitespace-nowrap scrollbar-hide"
+                      id="song-cards-list"
+                    >
+                      {songsAPI.map((song: any, index) => (
+                        <motion.div
+                          initial={{ opacity: 0, scale: 0.25 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          transition={{
+                            duration: 0.25,
+                            ease: [0, 0.71, 0.2, 1.01],
+                            delay: index * 0.2,
+                          }}
+                          key={`${song.id} ${index}`}
+                          className="place-items-center border-white bg-ldinputback 
+                            rounded-md hover:bg-gray-900/50  inline-block p-4"
+                        >
+                          <img
+                            className="object-cover transition-all hover:scale-105 h-48 w-48 mb-4"
+                            alt="astronaut"
+                            src={song.image}
+                          />
+                          <div className="flex flex-col gap-y-2">
+                            <p className="text-lg text-center font-sohne ">{song.title}</p>
+                            <p className="text-base text-gray-500  text-center font-sohne font-thin">
+                              {song.duration}
+                            </p>
+                          </div>
+                        </motion.div>
+                      ))}
+                    </div>
+                  </section>
+                )}
+              </motion.section>
+
+              {platinumtier && <AdSection />}
             </section>
-          </>
-        ) : (
-          <>
-            <SimplePlayerScreen />
-          </>
+            <MusicPlayingBar />
+          </section>
         )}
+
+        {tracklist === false && <SimplePlayerScreen />}
       </main>
     </Room>
   );

@@ -11,7 +11,6 @@ const SideBar = ({ songsAPI }: any) => {
   }: {
     newtoggledb: string;
   } = useFlags();
-  console.log(songsAPI)
 
   return (
     <motion.nav
@@ -46,7 +45,7 @@ const SideBar = ({ songsAPI }: any) => {
           Recently Played
         </h2>
         <div className="">
-          <ul className="flex flex-col gap-y-4  overflow-y-auto  h-[calc(100vh-21rem)] sm:h-[calc(100vh-25rem)]" >
+          <ul className="flex flex-col gap-y-4  overflow-y-auto  h-[calc(100vh-21rem)] sm:h-[calc(100vh-25.4rem)]" >
             {songsAPI.map((song: any, index: number) => (
               <li key={index} className="flex items-center gap-2 cursor-default">
                 {newtoggledb?.includes("off") ? (
