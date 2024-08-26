@@ -11,7 +11,7 @@ import SimplePlayerScreen from "./SimplePlayerScreen";
 import MusicPlayingBar from "./MusicPlayingBar";
 import PlaylistTableSection from "./PlaylistTableSection";
 import AdSection from "./AdSection";
-import { playlists, songs } from "@/lib/data";
+import { playlists, moreNewPlaylists,moreNewSongs, songs } from "@/lib/data";
 import { wait } from "@/lib/utils";
 
 //TODO: when you go into playlist 1 /2 or whatever, it should be specific per team1/ team 2 etc
@@ -140,11 +140,11 @@ export default function MusicApp({ teamName }: { teamName: string }) {
     // setPlaylistAPI([]);
     const fetchPlaylists = async () => {
       // await wait(1);
-      setPlaylistAPI([...playlists, ...playlists]);
+      setPlaylistAPI(prevState=>([...prevState,...moreNewPlaylists]));
     };
     const fetchSongs = async () => {
       // await wait(1);
-      setSongsAPI([...songs, ...songs, ...songs]);
+      setSongsAPI(prevState=>([...prevState,...moreNewSongs,...moreNewSongs]));
     };
     if(newtoggledb.includes("off")) return;
     fetchPlaylists();

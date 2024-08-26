@@ -13,13 +13,13 @@ const PlaylistTableSection = ({ songsAPI }: { songsAPI: any }) => {
     <table id="songs-bulleted-list" className="mx-4">
       <thead>
         <tr
-          className="grid grid-cols-[minmax(0,_0.1fr)_minmax(0,_1.5fr)__minmax(0,_1fr)_minmax(0,_0.1fr)] items-center 
+          className="grid grid-cols-[minmax(0,_0.1fr)_minmax(0,_1.5fr)__minmax(0,_1fr)_minmax(0,_0.2fr)] items-center 
                              border-b-2  border-b-gray-600/40 p-3 justify-items-start text-base"
         >
           <th>#</th>
           <th>Title</th>
           <th>Album</th>
-          <th>
+          <th className="mx-auto">
             <RxCounterClockwiseClock className="h-5 w-5" />
           </th>
         </tr>
@@ -35,7 +35,7 @@ const PlaylistTableSection = ({ songsAPI }: { songsAPI: any }) => {
               delay: index * 0.2,
             }}
             key={`${song.id} ${index}`}
-            className="grid grid-cols-[minmax(0,_0.1fr)_minmax(0,_1.5fr)__minmax(0,_1fr)_minmax(0,_0.1fr)] items-center  text-lg
+            className="grid grid-cols-[minmax(0,_0.1fr)_minmax(0,_1.5fr)__minmax(0,_1fr)_minmax(0,_0.2fr)] items-center  text-lg
                              [&:not(:last-child)]:border-b-2 border-b-gray-600/40 p-3 hover:bg-gray-500/20"
           >
             <td className="">{index + 1}</td>
@@ -54,7 +54,7 @@ const PlaylistTableSection = ({ songsAPI }: { songsAPI: any }) => {
             <td className="">
               <p>{song.album}</p>
             </td>
-            <td className=" text-gray-500 ">
+            <td className=" text-gray-500 mx-auto">
               <p>{song.duration}</p>
             </td>
           </motion.tr>

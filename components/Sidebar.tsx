@@ -39,7 +39,7 @@ const SideBar = ({ songsAPI }: any) => {
         </ul>
       </section>
 
-      <section className="bg-ldbackground rounded-md flex-1 p-4 "> 
+      <section className="bg-ldbackground rounded-md flex-1 p-4 ">
         <h2 className="flex gap-3 lg:gap-4 text-ldcomplicatedwhite font-semibold text-lg sm:text-lg xl:text-2xl items-center font-extra mb-6 w-full truncate ">
           <RxCounterClockwiseClock className="h-6 w-6 hidden lg:block" />
           <span> Recently Played</span>
@@ -47,7 +47,17 @@ const SideBar = ({ songsAPI }: any) => {
         <div className="">
           <ul className="flex flex-col gap-y-4  overflow-y-auto  h-[calc(100vh-21rem)] sm:h-[calc(100vh-25.4rem)] scrollbar-hide">
             {songsAPI.map((song: any, index: number) => (
-              <li key={index} className="flex items-center gap-2 cursor-default">
+              <motion.li
+                initial={{ opacity: 0, scale: 0.25 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{
+                  duration: 0.5,
+                  ease: [0, 0.71, 0.2, 1.01],
+                  delay: index * 0.2,
+                }}
+                key={index}
+                className="flex items-center gap-2 cursor-default"
+              >
                 {newtoggledb?.includes("off") ? (
                   <Music2Icon className="h-8 w-8" />
                 ) : (
@@ -55,7 +65,7 @@ const SideBar = ({ songsAPI }: any) => {
                 )}
                 <span className="flex-grow">{song.title}</span>
                 {/* <span>{song.duration}</span> */}
-              </li>
+              </motion.li>
             ))}
           </ul>
         </div>
