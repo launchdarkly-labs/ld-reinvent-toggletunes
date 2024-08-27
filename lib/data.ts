@@ -18,7 +18,7 @@ export const playlists: Playlist[] = [
   },
   {
     id: 3,
-    title: "Rollbackin",
+    title: "Rollback Mix",
     color: colors.rose,
     cover: "./images/Rollback Mix cover.png",
     artists: "Last Pipelines",
@@ -27,24 +27,24 @@ export const playlists: Playlist[] = [
 
 export const moreNewPlaylists: Playlist[] = [
   {
-    id: 1,
-    title: "Liked Songs",
+    id: 4,
+    title: "Launch Party Jams",
     color: colors.teal,
-    cover: "/images/heart.png",
+    cover: "/images/Launch Party Jams cover.png",
     artists: "",
   },
   {
-    id: 2,
-    title: "Shipper Beats",
+    id: 5,
+    title: "Cosmic Vibes",
     color: colors.green,
-    cover: "/images/Shipper beats cover.png",
+    cover: "/images/Cosmic vibes cover.png",
     artists: "Killswitches",
   },
   {
-    id: 3,
-    title: "Rollbackin",
+    id: 6,
+    title: "Codebreaker Blues",
     color: colors.rose,
-    cover: "./images/Rollback Mix cover.png",
+    cover: "./images/Codebreaker blues cover.png",
     artists: "Last Pipelines",
   },
 ];
