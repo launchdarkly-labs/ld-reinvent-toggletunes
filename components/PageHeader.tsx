@@ -10,12 +10,12 @@ const PageHeader = () => {
         className="inline-flex justify-center items-center h-8 w-8"
       >
         <div className="ml-4 flex">
-          <ChevronLeft className="h-10 w-10 text-gray-700" />
-          <ChevronRight className="h-10 w-10 text-gray-700 " />
+          <ChevronLeft className="h-10 w-10 text-white" />
+          <ChevronRight className="h-10 w-10 text-white " />
         </div>
 
         <div className="absolute right-5">
-          <XIcon className="h-10 w-10 text-gray-700" />
+          <XIcon className="h-10 w-10 text-white" />
         </div>
       </button>
     </div>

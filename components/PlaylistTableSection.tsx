@@ -2,8 +2,9 @@ import { motion } from "framer-motion";
 import { useFlags } from "launchdarkly-react-client-sdk";
 import { Music2Icon } from "lucide-react";
 import { RxCounterClockwiseClock } from "react-icons/rx";
+import { songs } from "@/lib/data";
 
-const PlaylistTableSection = ({ songsAPI }: { songsAPI: any }) => {
+const PlaylistTableSection = ({ songsAPI = songs }: { songsAPI: any }) => {
   const {
     newtoggledb = "complete",
   }: {
@@ -36,7 +37,7 @@ const PlaylistTableSection = ({ songsAPI }: { songsAPI: any }) => {
             }}
             key={`${song.id} ${index}`}
             className="grid grid-cols-[minmax(0,_0.1fr)_minmax(0,_1.5fr)__minmax(0,_1fr)_minmax(0,_0.2fr)] items-center  text-lg
-                             [&:not(:last-child)]:border-b-2 border-b-gray-600/40 p-3 hover:bg-gray-500/20"
+                           p-3 hover:bg-gray-500/20 cursor-default"
           >
             <td className="">{index + 1}</td>
             <td className="flex gap-x-4 items-center">

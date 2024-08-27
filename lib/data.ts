@@ -5,22 +5,22 @@ export const playlists: Playlist[] = [
   {
     id: 1,
     title: "Liked Songs",
-    color: colors.teal,
+    color: colors.emerald,
     cover: "/images/heart.png",
     artists: "",
   },
   {
     id: 2,
     title: "Shipper Beats",
-    color: colors.green,
+    color: colors.pink,
     cover: "/images/Shipper beats cover.png",
     artists: "Killswitches",
   },
   {
     id: 3,
     title: "Rollback Mix",
-    color: colors.rose,
-    cover: "./images/Rollback Mix cover.png",
+    color: colors.indigo,
+    cover: "/images/Rollback Mix cover.png",
     artists: "Last Pipelines",
   },
 ];
@@ -29,22 +29,22 @@ export const moreNewPlaylists: Playlist[] = [
   {
     id: 4,
     title: "Launch Party Jams",
-    color: colors.teal,
+    color: colors.green,
     cover: "/images/Launch Party Jams cover.png",
     artists: "",
   },
   {
     id: 5,
     title: "Cosmic Vibes",
-    color: colors.green,
+    color: colors.rose,
     cover: "/images/Cosmic vibes cover.png",
     artists: "Killswitches",
   },
   {
     id: 6,
     title: "Codebreaker Blues",
-    color: colors.rose,
-    cover: "./images/Codebreaker blues cover.png",
+    color: colors.blue,
+    cover: "/images/Codebreaker blues cover.png",
     artists: "Last Pipelines",
   },
 ];
