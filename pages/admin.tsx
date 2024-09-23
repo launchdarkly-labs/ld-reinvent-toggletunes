@@ -32,6 +32,7 @@ function AdminUIComponent() {
     e.target.innerText = "Resetting...";
     broadcast({ type: "resetTimer" });
     const resp = await fetch("/api/apiReset");
+    console.log("resp",resp)
     if (resp.ok) {
       console.log("Reset successful");
       handleReload();

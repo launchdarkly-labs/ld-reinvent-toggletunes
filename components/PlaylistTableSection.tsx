@@ -5,11 +5,8 @@ import { RxCounterClockwiseClock } from "react-icons/rx";
 import { songs } from "@/lib/data";
 
 const PlaylistTableSection = ({ songsAPI = songs }: { songsAPI: any }) => {
-  const {
-    newtoggledb = "complete",
-  }: {
-    newtoggledb: string;
-  } = useFlags();
+  
+  const migrateNewSongDBLDFlag: string = useFlags()["migrate-new-song-db"];
   return (
     <table id="songs-bulleted-list" className="mx-4">
       <thead>
@@ -41,7 +38,7 @@ const PlaylistTableSection = ({ songsAPI = songs }: { songsAPI: any }) => {
           >
             <td className="">{index + 1}</td>
             <td className="flex gap-x-4 items-center">
-              {newtoggledb?.includes("off") ? (
+              {migrateNewSongDBLDFlag?.includes("off") ? (
                 <Music2Icon className="h-10 w-10" />
               ) : (
                 <img src={song.image} className="h-10 w-10" />

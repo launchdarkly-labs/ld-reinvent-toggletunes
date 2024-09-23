@@ -11,25 +11,18 @@ import SimplePlayerScreen from "./SimplePlayerScreen";
 import MusicPlayingBar from "./MusicPlayingBar";
 import PlaylistTableSection from "./PlaylistTableSection";
 import AdSection from "./AdSection";
-import { playlists, moreNewPlaylists,moreNewSongs, songs } from "@/lib/data";
+import { playlists, moreNewPlaylists, moreNewSongs, songs } from "@/lib/data";
 import { wait } from "@/lib/utils";
 
 //TODO: when you go into playlist 1 /2 or whatever, it should be specific per team1/ team 2 etc
 //TODO: i think release should be a really ugly version of spotify from 2012 and then release a new version
 export default function MusicApp({ teamName }: { teamName: string }) {
-  const {
-    tracklist = true,
-    recenttunes = true,
-    userplaylist = true,
-    platinumtier = false,
-    newtoggledb = "complete",
-  }: {
-    tracklist: boolean;
-    recenttunes: boolean;
-    userplaylist: boolean;
-    platinumtier: boolean;
-    newtoggledb: string;
-  } = useFlags();
+
+  const releaseTracklistLDFlag: boolean = useFlags()["release-tracklist"];
+  const releaseRecentTunesLDFlag: boolean = useFlags()["release-recent-tunes"];
+  const releaseNewUsersPlaylistLDFlag: boolean = useFlags()["release-new-users-playlist"];
+  const releaseAdSidebarLDFlag: boolean = useFlags()["release-ad-sidebar"];
+  const migrateNewSongDBLDFlag: string = useFlags()["migrate-new-song-db"];
 
   const [playlistAPI, setPlaylistAPI] = useState([...playlists]);
   const [songsAPI, setSongsAPI] = useState([...songs]);
@@ -55,7 +48,7 @@ export default function MusicApp({ teamName }: { teamName: string }) {
   useEffect(() => {
     const triggerSteps = async () => {
       try {
-        if (tracklist === true && flagOne === false) {
+        if (releaseTracklistLDFlag === true && flagOne === false) {
           broadcast({ type: teamName, complete: "stepOneComplete", value: 20 });
           // console.log("first step running");
           // await triggerStep("first step complete", "stepOneComplete");
@@ -64,7 +57,7 @@ export default function MusicApp({ teamName }: { teamName: string }) {
           console.log("Step 1 not eligible for evaluation!");
         }
 
-        if (recenttunes === true && flagTwo === false) {
+        if (releaseRecentTunesLDFlag === true && flagTwo === false) {
           broadcast({ type: teamName, complete: "stepTwoComplete", value: 20 });
           // console.log("second step running");
           // await triggerStep("second step complete", "stepTwoComplete");
@@ -73,7 +66,7 @@ export default function MusicApp({ teamName }: { teamName: string }) {
           console.log("Step 2 not eligible for evaluation!");
         }
 
-        if (newtoggledb === "complete" && flagThree === false) {
+        if (migrateNewSongDBLDFlag === "complete" && flagThree === false) {
           broadcast({
             type: teamName,
             complete: "stepThreeComplete",
@@ -86,7 +79,7 @@ export default function MusicApp({ teamName }: { teamName: string }) {
           console.log("Step 3 not eligible for evaluation!");
         }
 
-        if (userplaylist === true && flagFour === false) {
+        if (releaseNewUsersPlaylistLDFlag === true && flagFour === false) {
           broadcast({
             type: teamName,
             complete: "stepFourComplete",
@@ -99,7 +92,7 @@ export default function MusicApp({ teamName }: { teamName: string }) {
           console.log("Step 4 not eligible for evaluation!");
         }
 
-        if (platinumtier === true && flagFive === false) {
+        if (releaseAdSidebarLDFlag === true && flagFive === false) {
           broadcast({
             type: teamName,
             complete: "stepFiveComplete",
@@ -134,22 +127,22 @@ export default function MusicApp({ teamName }: { teamName: string }) {
     // };
 
     triggerSteps();
-  }, [tracklist, recenttunes, userplaylist, platinumtier, newtoggledb]);
+  }, [releaseTracklistLDFlag, releaseRecentTunesLDFlag, releaseNewUsersPlaylistLDFlag, releaseAdSidebarLDFlag, migrateNewSongDBLDFlag]);
 
   useEffect(() => {
     // setPlaylistAPI([]);
     const fetchPlaylists = async () => {
       // await wait(1);
-      setPlaylistAPI(prevState=>([...prevState,...moreNewPlaylists]));
+      setPlaylistAPI((prevState) => [...prevState, ...moreNewPlaylists]);
     };
     const fetchSongs = async () => {
       // await wait(1);
-      setSongsAPI(prevState=>([...prevState,...moreNewSongs,...moreNewSongs]));
+      setSongsAPI((prevState) => [...prevState, ...moreNewSongs, ...moreNewSongs]);
     };
-    if(newtoggledb.includes("off")) return;
+    if (migrateNewSongDBLDFlag.includes("off")) return;
     fetchPlaylists();
     fetchSongs();
-  }, [newtoggledb]);
+  }, [migrateNewSongDBLDFlag]);
 
   // const handleSubscriptionClick = async () => {
   //   const context: any = ldClient?.getContext();
@@ -162,13 +155,13 @@ export default function MusicApp({ teamName }: { teamName: string }) {
     <Room>
       <EventListenerComponent reloadPage={reloadPage} />
       <main className="flex flex-col gap-2 font-sohne bg-black overflow-y-visible h-screen lg:overflow-y-hidden">
-        {tracklist && (
+        {releaseTracklistLDFlag && (
           <section className="w-full flex flex-col ">
             <section
               className="flex flex-col sm:flex-row gap-2 my-2 mx-2  h-[calc(100vh-19rem)] sm:h-[calc(100vh-10rem)] relative overflow-y-visible"
               id="music-app-main-cards-wrapper"
             >
-              {recenttunes && (
+              {releaseRecentTunesLDFlag && (
                 <section className="w-1/5 hidden sm:block">
                   <SideBar songsAPI={songsAPI} />
                 </section>
@@ -183,11 +176,11 @@ export default function MusicApp({ teamName }: { teamName: string }) {
                 }}
                 className={`rounded-md p-4 bg-ldbackground overflow-y-auto scrollbar-hide w-full flex flex-col gap-6
                  ${
-                   recenttunes && platinumtier ? "sm:w-3/5" : recenttunes ? "sm:w-4/5" : "sm:w-full"
+                   releaseRecentTunesLDFlag && releaseAdSidebarLDFlag ? "sm:w-3/5" : releaseRecentTunesLDFlag ? "sm:w-4/5" : "sm:w-full"
                  }`}
                 id="music-app-main-center-part"
               >
-                {userplaylist === false && (
+                {releaseNewUsersPlaylistLDFlag === false && (
                   <>
                     <h2 className="flex items-center gap-x-4">
                       <IoIosMusicalNotes className="w-10 h-10 text-ldcomplicatedwhite" />
@@ -198,7 +191,7 @@ export default function MusicApp({ teamName }: { teamName: string }) {
                   </>
                 )}
 
-                {userplaylist && (
+                {releaseNewUsersPlaylistLDFlag && (
                   <section className="flex flex-col gap-y-4">
                     <div className="hidden items-center justify-center pb-4 ">
                       {/* {upgradeAd && (
@@ -236,7 +229,7 @@ export default function MusicApp({ teamName }: { teamName: string }) {
                   </section>
                 )}
 
-                {userplaylist && (
+                {releaseNewUsersPlaylistLDFlag && (
                   <section className={`flex flex-col gap-y-4 `}>
                     <h2 className="text-2xl  font-bold">Trending Hits</h2>
                     <div
@@ -274,13 +267,13 @@ export default function MusicApp({ teamName }: { teamName: string }) {
                 )}
               </motion.section>
 
-              {platinumtier && <AdSection />}
+              {releaseAdSidebarLDFlag && <AdSection />}
             </section>
             <MusicPlayingBar />
           </section>
         )}
 
-        {tracklist === false && <SimplePlayerScreen />}
+        {releaseTracklistLDFlag === false && <SimplePlayerScreen />}
       </main>
     </Room>
   );

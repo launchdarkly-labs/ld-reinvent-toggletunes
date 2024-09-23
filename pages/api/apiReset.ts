@@ -3,11 +3,12 @@ import type { NextApiRequest, NextApiResponse } from "next";
 // we need to list the project keys for each of the projects that we want to clean up
 // this prevents us from accidentally deleting flags from the wrong project
 // since the API key has access to all projects
+//"toggle-tunes-team-1"
 const projectKeys: Array<string> = [
-  "toggle-tunes-team-1",
-  "toggle-tunes-team-2",
-  "toggle-tunes-team-3",
-  "toggle-tunes-team-4",
+  "team-1",
+  "team-2",
+  "team-3",
+  "team-4",
 ];
 const API_KEY: string = process.env.LD_API_KEY as string;
 const delay = 1000;
@@ -21,6 +22,7 @@ export default async function handler(
     for (const projectKey of projectKeys) {
       // get the flags then delete them
       const flags = await getFlags(projectKey);
+      console.log("flags",flags)
       for (const flag of flags.items) {
         await deleteFlag(projectKey, flag.key);
         await sleep(delay);
@@ -67,8 +69,9 @@ async function getEnvironments(projectKey: string) {
 }
 
 async function getFlags(projectKey: string) {
+  //TODO: NEED TO CHANGE THIS TO SEPARATE PROJECTS
   const resp = await fetch(
-    `https://app.launchdarkly.com/api/v2/flags/${projectKey}`,
+    `https://app.launchdarkly.com/api/v2/flags/toggletunes?env=${projectKey}&selected-env=${projectKey}`,
     {
       method: "GET",
       headers: {

@@ -6,11 +6,7 @@ import { motion } from "framer-motion";
 import { useFlags, useLDClient } from "launchdarkly-react-client-sdk";
 
 const SideBar = ({ songsAPI }: any) => {
-  const {
-    newtoggledb = "complete",
-  }: {
-    newtoggledb: string;
-  } = useFlags();
+  const migrateNewSongDBLDFlag: string = useFlags()["migrate-new-song-db"];
 
   return (
     <motion.nav
@@ -58,7 +54,7 @@ const SideBar = ({ songsAPI }: any) => {
                 key={index}
                 className="flex items-center gap-2 cursor-default"
               >
-                {newtoggledb?.includes("off") ? (
+                {migrateNewSongDBLDFlag?.includes("off") ? (
                   <Music2Icon className="h-8 w-8" />
                 ) : (
                   <img src={song.image} alt={song.title} className="h-8 w-8 rounded-sm" />
