@@ -16,7 +16,7 @@ import {
   RotateCcw,
   RefreshCw,
   Home,
-  Archive
+  Archive,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -58,12 +58,12 @@ function GameAdminDashboard() {
   };
 
   const broadcast = useBroadcastEvent();
-  const [displayMessage, setDisplayMessage] = useState(false);
+  const [displayErrorMessage, setDisplayErrorMessage] = useState(false);
   const [archivedMessage, setArchivedMessage] = useState("");
 
   const handleStart = async () => {
     setArchivedMessage("");
-    setDisplayMessage(false);
+    setDisplayErrorMessage(false);
     broadcast({ type: "startTimer" });
   };
 
@@ -73,7 +73,7 @@ function GameAdminDashboard() {
 
   const handleReset = async (e: any) => {
     setArchivedMessage("");
-    setDisplayMessage(false);
+    setDisplayErrorMessage(false);
     e.target.disabled = true;
     e.target.innerText = "Resetting...";
     broadcast({ type: "resetTimer" });
@@ -84,7 +84,7 @@ function GameAdminDashboard() {
       handleReload();
     } else {
       console.log("Reset failed");
-      setDisplayMessage(true);
+      setDisplayErrorMessage(true);
     }
     e.target.innerText = "Reset";
     e.target.disabled = false;
@@ -181,10 +181,16 @@ function GameAdminDashboard() {
             <div className="bg-gray-800 shadow rounded-lg p-4 mb-8">
               <h2 className="text-xl font-semibold text-white mb-4">Game Controls</h2>
               <div className="flex flex-wrap gap-8">
-                <Button className="flex items-center bg-green-600 hover:bg-green-700 text-white" onClick={()=>handleStart()}>
+                <Button
+                  className="flex items-center bg-green-600 hover:bg-green-700 text-white"
+                  onClick={() => handleStart()}
+                >
                   <Play className="mr-2 h-4 w-4" /> Start
                 </Button>
-                <Button className="flex items-center bg-red-600 hover:bg-red-700 text-white" onClick={()=>handleStop()}>
+                <Button
+                  className="flex items-center bg-red-600 hover:bg-red-700 text-white"
+                  onClick={() => handleStop()}
+                >
                   <XIcon className="mr-2 h-4 w-4" /> Stop
                 </Button>
                 <Button
@@ -193,14 +199,38 @@ function GameAdminDashboard() {
                 >
                   <RotateCcw className="mr-2 h-4 w-4" /> Reset
                 </Button>
-                <Button className="flex items-center bg-blue-600 hover:bg-blue-700 text-white" onClick={()=>handleReload()}>
+                <Button
+                  className="flex items-center bg-blue-600 hover:bg-blue-700 text-white"
+                  onClick={() => handleReload()}
+                >
                   <RefreshCw className="mr-2 h-4 w-4" /> Reload
                 </Button>
-                <Button className="flex items-center bg-purple-600 hover:bg-purple-700 text-white" onClick={()=>handleArchived()}>
+                <Button
+                  className="flex items-center bg-purple-600 hover:bg-purple-700 text-white"
+                  onClick={() => handleArchived()}
+                >
                   <Archive className="mr-2 h-4 w-4" /> Archive
                 </Button>
               </div>
             </div>
+
+            {/* Error Message Bar Card */}
+            {displayErrorMessage || archivedMessage !== "" ? (
+              <div className="bg-gray-800 shadow rounded-lg p-4 mb-8">
+                <h2 className="text-xl font-semibold text-white mb-4">Error Message</h2>
+                <div
+                  className=" text-lg text-yellow-800 bg-yellow-50 dark:bg-gray-800 dark:text-yellow-300"
+                  role="alert"
+                >
+                  {displayErrorMessage && (
+                    <h3>
+                      Reset <span className="font-bold text-xl text-red-500">failed</span>! Please try running it again.
+                    </h3>
+                  )}
+                  {archivedMessage !== "" && <h3>{archivedMessage}</h3>}
+                </div>
+              </div>
+            ) : null}
 
             {/* Progress Bar Card */}
             <div className="bg-gray-800 shadow rounded-lg p-4 mb-8">
