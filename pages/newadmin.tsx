@@ -8,15 +8,33 @@ import Link from 'next/link'
 export default function GameAdminDashboard() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
   const [darkMode, setDarkMode] = useState(true)
+  const [resetProgress, setResetProgress] = useState(0)
+  const [codeLogs, setCodeLogs] = useState<string[]>([])
 
   useEffect(() => {
     document.documentElement.classList.add('dark')
   }, [])
 
+  const handleReset = () => {
+    setResetProgress(0)
+    setCodeLogs([])
+    const interval = setInterval(() => {
+      setResetProgress((prevProgress) => {
+        if (prevProgress >= 100) {
+          clearInterval(interval)
+          return 100
+        }
+        const newProgress = prevProgress + 10
+        setCodeLogs((prevLogs) => [...prevLogs, `Reset progress: ${newProgress}%`])
+        return newProgress
+      })
+    }, 500)
+  }
+
   return (
     <div className="flex h-screen bg-gray-900 text-white font-mono">
       {/* Sidebar */}
-      <aside className={`${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} fixed inset-y-0 left-0 z-50 w-64 bg-gray-800 transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0`}>
+      {/* <aside className={`${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} fixed inset-y-0 left-0 z-50 w-64 bg-gray-800 transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0`}>
         <div className="flex items-center justify-center h-16 bg-purple-700">
           <span className="text-white text-2xl font-semibold">Game Admin</span>
         </div>
@@ -34,12 +52,12 @@ export default function GameAdminDashboard() {
             Servers
           </Link>
         </nav>
-      </aside>
+      </aside> */}
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden bg-gray-900">
         {/* Header */}
-        <header className="flex items-center justify-between px-6 py-4 bg-gray-800">
+        {/* <header className="flex items-center justify-between px-6 py-4 bg-gray-800">
           <div className="flex items-center">
             <Button variant="ghost" size="icon" className="lg:hidden mr-2 text-white" onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
               <Menu className="h-6 w-6" />
@@ -57,7 +75,7 @@ export default function GameAdminDashboard() {
               <img src="/placeholder.svg?height=32&width=32" alt="Admin" className="rounded-full" />
             </Button>
           </div>
-        </header>
+        </header> */}
 
         {/* Main Content */}
         <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-900">
@@ -65,12 +83,12 @@ export default function GameAdminDashboard() {
             <h1 className="text-3xl font-semibold text-white mb-6">Dashboard</h1>
             
             {/* Stats Cards */}
-            <div className="grid gap-6 mb-8 md:grid-cols-2 xl:grid-cols-4">
+            {/* <div className="grid gap-6 mb-8 md:grid-cols-2 xl:grid-cols-4">
               <StatCard title="Total Players" value="10,245" icon={<Users className="h-8 w-8" />} />
               <StatCard title="Active Servers" value="23" icon={<Server className="h-8 w-8" />} />
               <StatCard title="Daily Active Users" value="5,678" icon={<BarChart className="h-8 w-8" />} />
               <StatCard title="Revenue" value="$12,345" icon={<BarChart className="h-8 w-8" />} />
-            </div>
+            </div> */}
 
             {/* Game Controls */}
             <div className="bg-gray-800 shadow rounded-lg p-4 mb-8">
@@ -91,8 +109,30 @@ export default function GameAdminDashboard() {
               </div>
             </div>
 
-            {/* Player Management */}
+            {/* Progress Bar Card */}
             <div className="bg-gray-800 shadow rounded-lg p-4 mb-8">
+              <h2 className="text-xl font-semibold text-white mb-4">Reset Progress</h2>
+              <div className="w-full bg-gray-700 rounded-full h-4 mb-4">
+                <div
+                  className="bg-purple-600 h-4 rounded-full transition-all duration-500 ease-out"
+                  style={{ width: `${resetProgress}%` }}
+                ></div>
+              </div>
+              <p className="text-gray-300">Progress: {resetProgress}%</p>
+            </div>
+
+            {/* Code Logs Card */}
+            <div className="bg-gray-800 shadow rounded-lg p-4 mb-8">
+              <h2 className="text-xl font-semibold text-white mb-4">Code Logs</h2>
+              <div className="bg-gray-900 p-4 rounded-lg h-48 overflow-y-auto">
+                {codeLogs.map((log, index) => (
+                  <p key={index} className="text-gray-300 font-mono">{log}</p>
+                ))}
+              </div>
+            </div>
+
+            {/* Player Management */}
+            {/* <div className="bg-gray-800 shadow rounded-lg p-4 mb-8">
               <h2 className="text-xl font-semibold text-white mb-4">Player Management</h2>
               <Table>
                 <TableHeader>
@@ -134,17 +174,17 @@ export default function GameAdminDashboard() {
                   </TableRow>
                 </TableBody>
               </Table>
-            </div>
+            </div> */}
 
             {/* Server Status */}
-            <div className="bg-gray-800 shadow rounded-lg p-4">
+            {/* <div className="bg-gray-800 shadow rounded-lg p-4">
               <h2 className="text-xl font-semibold text-white mb-4">Server Status</h2>
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                 <ServerStatusCard name="US East" status="Online" players="1,234" />
                 <ServerStatusCard name="EU West" status="Online" players="2,345" />
                 <ServerStatusCard name="Asia Pacific" status="Maintenance" players="0" />
               </div>
-            </div>
+            </div> */}
           </div>
         </main>
       </div>
