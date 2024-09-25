@@ -37,7 +37,7 @@ export default async function handler(
   }
 
   ldClient = await getServerClient(sdkKey || "");
-  let newtoggledb;
+  let migrateNewSongDBLDFlag;
   let jsonObject;
 
   jsonObject = {
@@ -47,11 +47,11 @@ export default async function handler(
     tier: "Platinum",
   };
 
-  newtoggledb = await ldClient.variation("newtoggledb", jsonObject, "off");
-  //newtoggledb =   "complete"
+  // migrateNewSongDBLDFlag = await ldClient.variation("migrate-new-song-db", jsonObject, "off");
+  migrateNewSongDBLDFlag =   "complete"
 
   let lists;
-  if (newtoggledb === "complete") {
+  if (migrateNewSongDBLDFlag === "complete") {
     if (!connectionString) {
       throw new Error("DATABASE_URL is not set");
     }

@@ -41,7 +41,7 @@ export default async function handler(
   // console.log(`Team: ${team}, SDK Key: ${sdkKey}`);
 
   ldClient = await getServerClient(sdkKey || "");
-  let newtoggledb;
+  let migrateNewSongDBLDFlag;
   let jsonObject;
 
   // console.log(jsonObject)
@@ -53,12 +53,12 @@ export default async function handler(
     tier: "Platinum",
   };
 
-  newtoggledb = await ldClient.variation("newtoggledb", jsonObject, "off");
-  // newtoggledb = "complete";
+  // migrateNewSongDBLDFlag = await ldClient.variation("migrate-new-song-db", jsonObject, "off");
+  migrateNewSongDBLDFlag = "complete";
 
   let songList;
-  if (newtoggledb === "complete") {
-    await console.log(newtoggledb + "for team" + team);
+  if (migrateNewSongDBLDFlag === "complete") {
+    await console.log(migrateNewSongDBLDFlag + "for team" + team);
     // console.log("sdk key is " + sdkKey)
     if (!connectionString) {
       throw new Error("DATABASE_URL is not set");
@@ -69,7 +69,7 @@ export default async function handler(
     });
 
     const db = await drizzle(pool);
-    // console.log(newtoggledb)
+    // console.log(migrateNewSongDBLDFlag)
     songList = await db
       .select()
       .from(songs)

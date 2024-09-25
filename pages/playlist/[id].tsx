@@ -3,33 +3,18 @@ import { useRouter } from "next/router";
 import { motion, AnimatePresence } from "framer-motion";
 import { useCallback, useEffect } from "react";
 import PlaylistArtists from "@/components/PlaylistArtists";
-import { playlists } from "@/lib/data";
+import { playlists, moreNewPlaylists, songs } from "@/lib/data";
 import MusicTable from "@/components/MusicTable";
+import { PlayIcon, HeartIcon, CircleEllipsisIcon } from "lucide-react";
+import PlaylistTableSection from "@/components/PlaylistTableSection";
 
 const Item = () => {
   const router = useRouter();
-  const { id } = router.query;
+  const { id } = router.query; //string
 
-  const morePlaylists = [
-    ...playlists.map((item) => ({
-      ...item,
-      id: item.id + "a",
-    })),
-  ];
+  const allPlaylists = [...playlists, ...moreNewPlaylists];
 
-  const sidebarPlaylists = [
-    ...playlists.map((item) => ({
-      ...item,
-      id: item.id + "_side",
-    })),
-  ];
-
-  const allPlaylists = [...playlists, ...morePlaylists, ...sidebarPlaylists];
-
-  const playlist = allPlaylists.find((playlist) => playlist.id === id);
-
-  console.log(id);
-  console.log(playlist);
+  const playlist = allPlaylists.find((playlist) => playlist.id === parseInt(id, 10));
 
   return (
     <AnimatePresence>
@@ -72,14 +57,15 @@ const Item = () => {
           </div>
         </div>
         <div className="bg-zinc-900/30 mt-6 flex-1 p-6 blur-100 z-10">
-          <div className="flex gap-1 items-center">
-            {/* <PlayButton size="lg" /> */}
-            <div className="ml-4"></div>
-            {/* <LikeButton />
-        <DotsButton /> */}
+          <div className="flex gap-4 px-6 items-center">
+            <PlayIcon className="h-14 w-14 rounded-full p-3 bg-ldbackground hover:brightness-125" />
+
+        
+            <HeartIcon className="h-8 w-8"/>
+            <CircleEllipsisIcon className="h-8 w-8"/>
           </div>
-          <div className="px-6 pt-4">
-            <MusicTable />
+          <div className="px-6 py-4  w-full flex flex-col ">
+            <PlaylistTableSection songsAPI={songs} />
           </div>
         </div>
         <motion.div
