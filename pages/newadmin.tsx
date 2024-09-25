@@ -1,35 +1,49 @@
-import { useState, useEffect } from 'react'
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from  '@/components/table'
-import { BarChart, Users, Server, Search, Bell, Menu, Moon, Sun, Play, XIcon, RotateCcw, RefreshCw } from "lucide-react"
-import Link from 'next/link'
+import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/table";
+import {
+  BarChart,
+  Users,
+  Server,
+  Search,
+  Bell,
+  Menu,
+  Moon,
+  Sun,
+  Play,
+  XIcon,
+  RotateCcw,
+  RefreshCw,
+  Home,
+} from "lucide-react";
+import Link from "next/link";
 
 export default function GameAdminDashboard() {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false)
-  const [darkMode, setDarkMode] = useState(true)
-  const [resetProgress, setResetProgress] = useState(0)
-  const [codeLogs, setCodeLogs] = useState<string[]>([])
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [darkMode, setDarkMode] = useState(true);
+  const [resetProgress, setResetProgress] = useState(0);
+  const [codeLogs, setCodeLogs] = useState<string[]>([]);
 
   useEffect(() => {
-    document.documentElement.classList.add('dark')
-  }, [])
+    document.documentElement.classList.add("dark");
+  }, []);
 
   const handleReset = () => {
-    setResetProgress(0)
-    setCodeLogs([])
+    setResetProgress(0);
+    setCodeLogs([]);
     const interval = setInterval(() => {
       setResetProgress((prevProgress) => {
         if (prevProgress >= 100) {
-          clearInterval(interval)
-          return 100
+          clearInterval(interval);
+          return 100;
         }
-        const newProgress = prevProgress + 10
-        setCodeLogs((prevLogs) => [...prevLogs, `Reset progress: ${newProgress}%`])
-        return newProgress
-      })
-    }, 500)
-  }
+        const newProgress = prevProgress + 10;
+        setCodeLogs((prevLogs) => [...prevLogs, `Reset progress: ${newProgress}%`]);
+        return newProgress;
+      });
+    }, 500);
+  };
 
   return (
     <div className="flex h-screen bg-gray-900 text-white font-mono">
@@ -57,31 +71,46 @@ export default function GameAdminDashboard() {
       {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden bg-gray-900">
         {/* Header */}
-        {/* <header className="flex items-center justify-between px-6 py-4 bg-gray-800">
-          <div className="flex items-center">
-            <Button variant="ghost" size="icon" className="lg:hidden mr-2 text-white" onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
-              <Menu className="h-6 w-6" />
-            </Button>
-            <div className="relative">
-              <Search className="absolute left-2 top-2 h-5 w-5 text-gray-400" />
-              <Input type="search" placeholder="Search..." className="pl-10 pr-4 bg-gray-700 text-white border-gray-600 focus:border-purple-500" />
+        <header className="bg-gray-800">
+          <div className="container flex justify-between mx-auto  px-6 py-4">
+            <div className="flex items-center">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="lg:hidden mr-2 text-white"
+                onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+              >
+                <Menu className="h-6 w-6" />
+              </Button>
+              {/* <div className="relative">
+                <Search className="absolute left-2 top-2 h-5 w-5 text-gray-400" />
+                <Input
+                  type="search"
+                  placeholder="Search..."
+                  className="pl-10 pr-4 bg-gray-700 text-white border-gray-600 focus:border-purple-500"
+                />
+              </div> */}
+
+              <Link href="/" className=" text-gray-300 hover:bg-gray-700" title="Home">
+                <img src="/images/ToggleTunes.png" className="h-10" />
+              </Link>
             </div>
-          </div>
-          <div className="flex items-center">
+            {/* <div className="flex items-center">
             <Button variant="ghost" size="icon" className="mr-2 text-white">
               <Bell className="h-5 w-5" />
             </Button>
             <Button variant="ghost" size="icon" className="text-white">
               <img src="/placeholder.svg?height=32&width=32" alt="Admin" className="rounded-full" />
             </Button>
+          </div> */}
           </div>
-        </header> */}
+        </header>
 
         {/* Main Content */}
         <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-900">
           <div className="container mx-auto px-6 py-8">
             <h1 className="text-3xl font-semibold text-white mb-6">Dashboard</h1>
-            
+
             {/* Stats Cards */}
             {/* <div className="grid gap-6 mb-8 md:grid-cols-2 xl:grid-cols-4">
               <StatCard title="Total Players" value="10,245" icon={<Users className="h-8 w-8" />} />
@@ -126,7 +155,9 @@ export default function GameAdminDashboard() {
               <h2 className="text-xl font-semibold text-white mb-4">Code Logs</h2>
               <div className="bg-gray-900 p-4 rounded-lg h-48 overflow-y-auto">
                 {codeLogs.map((log, index) => (
-                  <p key={index} className="text-gray-300 font-mono">{log}</p>
+                  <p key={index} className="text-gray-300 font-mono">
+                    {log}
+                  </p>
                 ))}
               </div>
             </div>
@@ -189,30 +220,28 @@ export default function GameAdminDashboard() {
         </main>
       </div>
     </div>
-  )
+  );
 }
 
 function StatCard({ title, value, icon }) {
   return (
     <div className="bg-gray-800 rounded-lg shadow p-4 flex items-center">
-      <div className="p-3 rounded-full bg-purple-600 bg-opacity-75">
-        {icon}
-      </div>
+      <div className="p-3 rounded-full bg-purple-600 bg-opacity-75">{icon}</div>
       <div className="ml-4">
         <p className="mb-2 text-sm font-medium text-gray-400">{title}</p>
         <p className="text-lg font-semibold text-white">{value}</p>
       </div>
     </div>
-  )
+  );
 }
 
 function ServerStatusCard({ name, status, players }) {
-  const statusColor = status === 'Online' ? 'text-green-400' : 'text-red-400'
+  const statusColor = status === "Online" ? "text-green-400" : "text-red-400";
   return (
     <div className="bg-gray-700 rounded-lg p-4">
       <h3 className="text-lg font-semibold text-white mb-2">{name}</h3>
       <p className={`text-sm font-medium ${statusColor}`}>{status}</p>
       <p className="text-sm text-gray-300">Active Players: {players}</p>
     </div>
-  )
+  );
 }
