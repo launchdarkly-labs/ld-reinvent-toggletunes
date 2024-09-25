@@ -19,7 +19,18 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 
-export default function GameAdminDashboard() {
+import { Room } from "@/components/room";
+import { useBroadcastEvent } from "@/liveblocks.config";
+
+export default function Admin() {
+  return (
+    <Room>
+      <GameAdminDashboard />
+    </Room>
+  );
+}
+
+function GameAdminDashboard() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [darkMode, setDarkMode] = useState(true);
   const [resetProgress, setResetProgress] = useState(0);
@@ -29,7 +40,7 @@ export default function GameAdminDashboard() {
     document.documentElement.classList.add("dark");
   }, []);
 
-  const handleReset = () => {
+  const handleReset3 = () => {
     setResetProgress(0);
     setCodeLogs([]);
     const interval = setInterval(() => {
@@ -43,6 +54,52 @@ export default function GameAdminDashboard() {
         return newProgress;
       });
     }, 500);
+  };
+
+  const broadcast = useBroadcastEvent();
+  const [displayMessage, setDisplayMessage] = useState(false);
+  const [archivedMessage, setArchivedMessage] = useState("");
+
+  const handleStart = async () => {
+    setArchivedMessage("");
+    setDisplayMessage(false);
+    broadcast({ type: "startTimer" });
+  };
+
+  const handleStop = async () => {
+    broadcast({ type: "stopTimer" });
+  };
+
+  const handleReset = async (e: any) => {
+    setArchivedMessage("");
+    setDisplayMessage(false);
+    e.target.disabled = true;
+    e.target.innerText = "Resetting...";
+    broadcast({ type: "resetTimer" });
+    const resp = await fetch("/api/apiReset");
+    console.log("resp", resp);
+    if (resp.ok) {
+      console.log("Reset successful");
+      handleReload();
+    } else {
+      console.log("Reset failed");
+      setDisplayMessage(true);
+    }
+    e.target.innerText = "Reset";
+    e.target.disabled = false;
+  };
+
+  const handleReload = async () => {
+    broadcast({ type: "reload" });
+  };
+
+  const handleArchived = async () => {
+    setArchivedMessage("");
+    const resp = await fetch("/api/archived");
+    if (resp.ok) {
+      const data = await resp.json();
+      setArchivedMessage(data.message);
+    }
   };
 
   return (
@@ -129,7 +186,10 @@ export default function GameAdminDashboard() {
                 <Button className="flex items-center bg-red-600 hover:bg-red-700 text-white">
                   <XIcon className="mr-2 h-4 w-4" /> Stop
                 </Button>
-                <Button className="flex items-center bg-yellow-600 hover:bg-yellow-700 text-white">
+                <Button
+                  className="flex items-center bg-yellow-600 hover:bg-yellow-700 text-white"
+                  onClick={() => handleReset3()}
+                >
                   <RotateCcw className="mr-2 h-4 w-4" /> Reset
                 </Button>
                 <Button className="flex items-center bg-blue-600 hover:bg-blue-700 text-white">
