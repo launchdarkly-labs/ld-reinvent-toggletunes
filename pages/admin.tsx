@@ -33,28 +33,12 @@ export default function Admin() {
 
 function GameAdminDashboard() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [darkMode, setDarkMode] = useState(true);
   const [resetProgress, setResetProgress] = useState(0);
   const [codeLogs, setCodeLogs] = useState<string[]>([]);
 
-  useEffect(() => {
-    document.documentElement.classList.add("dark");
-  }, []);
 
   const handleReset3 = () => {
-    setResetProgress(0);
-    setCodeLogs([]);
-    const interval = setInterval(() => {
-      setResetProgress((prevProgress) => {
-        if (prevProgress >= 100) {
-          clearInterval(interval);
-          return 100;
-        }
-        const newProgress = prevProgress + 10;
-        setCodeLogs((prevLogs) => [...prevLogs, `Reset progress: ${newProgress}%`]);
-        return newProgress;
-      });
-    }, 500);
+   
   };
 
   const broadcast = useBroadcastEvent();
@@ -70,14 +54,35 @@ function GameAdminDashboard() {
   const handleStop = async () => {
     broadcast({ type: "stopTimer" });
   };
-
+//40 sec and then go to the end when finish 
   const handleReset = async (e: any) => {
     setArchivedMessage("");
     setDisplayErrorMessage(false);
+    setResetProgress(0);
+    setCodeLogs([]);
+
     e.target.disabled = true;
     e.target.innerText = "Resetting...";
     broadcast({ type: "resetTimer" });
+    
+    //TODO: need to show green for success. maybe a change in messaging when reached to 90%? 
+    //TODO: press start to reset counter to 0? 
+    const interval = setInterval(() => {
+      setResetProgress((prevProgress) => {
+        if (prevProgress >= 90) {
+          clearInterval(interval);
+          return 90;
+        }
+        const newProgress = prevProgress + 10;
+        setCodeLogs((prevLogs) => [...prevLogs, `Reset progress: ${newProgress}%`]);
+        return newProgress;
+      });
+    }, 2500);
     const resp = await fetch("/api/apiReset");
+
+    setResetProgress(100);
+    setCodeLogs((prevLogs) => [...prevLogs, `Reset progress: ${100}%`]);
+
     console.log("resp", resp);
     if (resp.ok) {
       console.log("Reset successful");

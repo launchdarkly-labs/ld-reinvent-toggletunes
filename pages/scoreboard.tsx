@@ -170,7 +170,7 @@ const EventListenerComponent = memo(function EventListenerComponent({
     console.log(user);
     console.log(connectionId);
     // type: teamName, complete: "stepThreeComplete", value: 20
-    console.log(event.value);
+    console.log(event);
     async function scoreRequest(event) {
       switch (event.type) {
         case "green":
