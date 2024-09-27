@@ -66,44 +66,51 @@ function GameAdminDashboard() {
     //TODO: need to show green for success. maybe a change in messaging when reached to 90%?
     const interval = setInterval(() => {
       setResetProgress((prevProgress) => {
-        if (prevProgress >= 90) {
+        if (prevProgress === 90) {
           clearInterval(interval);
           return 90;
+        } else if (prevProgress === 100){
+          clearInterval(interval);
+          return 100;
         }
         const newProgress = prevProgress + 10;
-        //setCodeLogs((prevLogs) => [...prevLogs, `Reset progress: ${newProgress}%`]);
-        if(newProgress<=20){
+
+        if (newProgress <= 20) {
           setResetProgressMessage("Resetting Team 1 LD Env");
-        } else if (20<newProgress && newProgress<= 40){
+        } else if (20 < newProgress && newProgress <= 40) {
           setResetProgressMessage("Resetting Team 2 LD Env");
-        } else if (40<newProgress && newProgress<= 60){
+        } else if (40 < newProgress && newProgress <= 60) {
           setResetProgressMessage("Resetting Team 3 LD Env");
-        } else if (60<newProgress && newProgress<= 80){
+        } else if (60 < newProgress && newProgress <= 80) {
           setResetProgressMessage("Resetting Team 4 LD Env");
-        } else{
+        } else {
           setResetProgressMessage("Tying things up");
         }
-        
 
         return newProgress;
       });
-    }, 2500);
+    }, 3000);
+
     const resp = await fetch("/api/apiReset");
     const respJson = await resp.json();
-    setResetProgress(100);
-    setResetProgressMessage("Reset Complete!");
 
     if (resp.status === 200) {
+      handleReload();
       setCodeLogs((prevLogs) => [...prevLogs, `Status: ${resp.status}, body: ${respJson.success}`]);
       setDisplayErrorMessage(false);
-      handleReload();
+      setResetProgressMessage("Reset Complete!");
+      setResetProgress(100);
+      setIsDisabled(false);
+
+
+    
     } else {
       setCodeLogs((prevLogs) => [...prevLogs, `Status: ${resp.status}, error: ${respJson.error}`]);
       setDisplayErrorMessage(true);
+      setIsResetting(false);
     }
 
     setIsDisabled(false);
-    setIsResetting(false);
   };
 
   const handleReload = async () => {
@@ -194,53 +201,58 @@ function GameAdminDashboard() {
             </div> */}
 
             {/* Game Controls */}
-            {!isResetting && (
-              <div className="bg-gray-800 shadow rounded-lg p-4 mb-8">
-                <h2 className="text-xl font-semibold text-white mb-4">Game Controls</h2>
-                <div className="flex flex-wrap gap-8">
-                  <Button
-                    className="flex items-center bg-green-600 hover:bg-green-700 text-white"
-                    onClick={() => handleStart()}
-                    id="admin-start"
-                    disabled={isDisabled}
-                  >
-                    <Play className="mr-2 h-4 w-4" /> Start
-                  </Button>
-                  <Button
-                    className="flex items-center bg-red-600 hover:bg-red-700 text-white"
-                    onClick={() => handleStop()}
-                    id="admin-stop"
-                    disabled={isDisabled}
-                  >
-                    <XIcon className="mr-2 h-4 w-4" /> Stop
-                  </Button>
-                  <Button
-                    className="flex items-center bg-yellow-600 hover:bg-yellow-700 text-white"
-                    onClick={() => handleReset()}
-                    id="admin-reset"
-                    disabled={isDisabled}
-                  >
-                    <RotateCcw className="mr-2 h-4 w-4" /> Reset
-                  </Button>
-                  <Button
-                    className="flex items-center bg-blue-600 hover:bg-blue-700 text-white"
-                    onClick={() => handleReload()}
-                    id="admin-reload"
-                    disabled={isDisabled}
-                  >
-                    <RefreshCw className="mr-2 h-4 w-4" /> Reload
-                  </Button>
-                  <Button
-                    className="flex items-center bg-purple-600 hover:bg-purple-700 text-white"
-                    onClick={() => handleArchived()}
-                    id="admin-archive"
-                    disabled={isDisabled}
-                  >
-                    <Archive className="mr-2 h-4 w-4" /> Archive
-                  </Button>
-                </div>
+
+            <div className="bg-gray-800 shadow rounded-lg p-4 mb-8">
+              <h2 className="text-xl font-semibold text-white mb-4">Game Controls</h2>
+              {!resetProgressMessage.includes("complete") ||
+                (!resetProgressMessage.includes("") && (
+                  <p className="text-base text-white mb-4">
+                    Buttons are disabled due to resetting.
+                  </p>
+                ))}
+              <div className="flex flex-wrap gap-8">
+                <Button
+                  className="flex items-center bg-green-600 hover:bg-green-700 text-white"
+                  onClick={() => handleStart()}
+                  id="admin-start"
+                  disabled={isDisabled}
+                >
+                  <Play className="mr-2 h-4 w-4" /> Start
+                </Button>
+                <Button
+                  className="flex items-center bg-red-600 hover:bg-red-700 text-white"
+                  onClick={() => handleStop()}
+                  id="admin-stop"
+                  disabled={isDisabled}
+                >
+                  <XIcon className="mr-2 h-4 w-4" /> Stop
+                </Button>
+                <Button
+                  className="flex items-center bg-yellow-600 hover:bg-yellow-700 text-white"
+                  onClick={() => handleReset()}
+                  id="admin-reset"
+                  disabled={isDisabled}
+                >
+                  <RotateCcw className="mr-2 h-4 w-4" /> Reset
+                </Button>
+                <Button
+                  className="flex items-center bg-blue-600 hover:bg-blue-700 text-white"
+                  onClick={() => handleReload()}
+                  id="admin-reload"
+                  disabled={isDisabled}
+                >
+                  <RefreshCw className="mr-2 h-4 w-4" /> Reload
+                </Button>
+                <Button
+                  className="flex items-center bg-purple-600 hover:bg-purple-700 text-white"
+                  onClick={() => handleArchived()}
+                  id="admin-archive"
+                  disabled={isDisabled}
+                >
+                  <Archive className="mr-2 h-4 w-4" /> Archive
+                </Button>
               </div>
-            )}
+            </div>
 
             {/* Error Message Bar Card */}
             {displayErrorMessage || archivedMessage !== "" ? (
@@ -277,7 +289,7 @@ function GameAdminDashboard() {
             )}
 
             {/* Code Logs Card */}
-            {isResetting || displayErrorMessage && (
+            {(isResetting || displayErrorMessage) && (
               <div className="bg-gray-800 shadow rounded-lg p-4 mb-8">
                 <h2 className="text-xl font-semibold text-white mb-4">Code Logs</h2>
                 <div className="bg-gray-900 p-4 rounded-lg h-48 overflow-y-auto">
