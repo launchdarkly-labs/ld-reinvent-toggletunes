@@ -32,7 +32,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       // }
     }
   } catch (e: any) {
-    console.log("awefawefawef",e)
     return res.status(500).json({ error: e.message });
   }
   console.log("Reset complete");

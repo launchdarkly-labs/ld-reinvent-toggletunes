@@ -6,7 +6,7 @@ export default TimerContext;
 //THIS WAS NOT USED
 export const TimerProvider = ({ children }: { children: any }) => {
   const [isTimerRunning, setIsTimerRunning] = useState(false);
-  const [timer, setTimer] = useState(300000);
+  const [timer, setTimer] = useState(600000);
   const [openStartModal, setOpenStartModal] = useState(true);
   const [timerIntervalID, setTimerIntervalID] = useState(null);
 
@@ -15,22 +15,24 @@ export const TimerProvider = ({ children }: { children: any }) => {
       setTimer((timer) => timer - 100);
     }
   };
+
   useEffect(() => {
     const timerInterval = setInterval(decreaseMainTimer, 100);
-    setTimerIntervalID(timerInterval);
     return () => {
       clearInterval(timerInterval);
     };
   }, [isTimerRunning]);
 
-  const timerToMinutesSecondsMilliseconds = (timer:number):string => {
-    if (timer <= 0) {
-      setTimer(0);
+  const timerToMinutesSecondsMilliseconds = (timer:number, endGame:any):string => {
+    if (timer <= 0 && isTimerRunning) {
       setIsTimerRunning(false);
+      endGame();
     }
     const minutes = Math.floor(timer / 60000);
     const seconds = Math.floor((timer % 60000) / 1000);
-    return `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+    return `${minutes.toString().padStart(2, "0")}:${seconds
+      .toString()
+      .padStart(2, "0")}`;
   };
 
   return (
