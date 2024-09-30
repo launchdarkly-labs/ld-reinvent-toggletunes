@@ -1,19 +1,22 @@
 import PageHeader from "@/components/PageHeader";
 import { useRouter } from "next/router";
 import { motion, AnimatePresence } from "framer-motion";
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useContext } from "react";
 import { playlists, moreNewPlaylists, songs } from "@/lib/data";
 import { PlayIcon, HeartIcon, CircleEllipsisIcon } from "lucide-react";
 import PlaylistTableSection from "@/components/PlaylistTableSection";
-
+import AIGeneratedPlaylistContext from "@/lib/AIGeneratedPlaylistContext";
 const Item = () => {
   const router = useRouter();
   const { id } = router.query; //string
+  console.log(id);
+  const { aiPlaylists } = useContext(AIGeneratedPlaylistContext);
+  const allPlaylists = [...playlists, ...moreNewPlaylists, ...aiPlaylists];
+  console.log(allPlaylists);
 
-  const allPlaylists = [...playlists, ...moreNewPlaylists];
-
-  const playlist = allPlaylists.find((playlist) => playlist.id === parseInt(id, 10));
-
+  const playlist = allPlaylists.find((playlist) => playlist.id === id);
+  const playlistSongs = playlist.songs ? playlist.songs : songs ;
+  console.log(playlist);
   return (
     <AnimatePresence>
       <motion.div
@@ -57,11 +60,11 @@ const Item = () => {
         <div className="bg-zinc-900/30 mt-6 flex-1 p-6 blur-100 z-10">
           <div className="flex gap-4 px-6 items-center">
             <PlayIcon className="h-14 w-14 rounded-full p-3 bg-ldbackground hover:brightness-125" />
-            <HeartIcon className="h-8 w-8"/>
-            <CircleEllipsisIcon className="h-8 w-8"/>
+            <HeartIcon className="h-8 w-8" />
+            <CircleEllipsisIcon className="h-8 w-8" />
           </div>
           <div className="px-6 py-4  w-full flex flex-col ">
-            <PlaylistTableSection songsAPI={songs} />
+            <PlaylistTableSection songsAPI={playlistSongs} />
           </div>
         </div>
         <motion.div

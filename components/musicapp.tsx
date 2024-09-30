@@ -15,8 +15,8 @@ import { playlists, moreNewPlaylists, moreNewSongs, songs } from "@/lib/data";
 import { wait } from "@/lib/utils";
 import { v4 as uuidv4 } from "uuid";
 import Link from "next/link";
-import { AIPlaylistInterface } from "@/lib/typesInterface";
 import AIGeneratedPlaylistContext from "@/lib/AIGeneratedPlaylistContext";
+import { colors } from "@/lib/color";
 
 import { PulseLoader } from "react-spinners";
 
@@ -67,8 +67,8 @@ export default function MusicApp({ teamName }: { teamName: string }) {
     const y = ` create a upbeat party pop playlist from 2020s. limit to 10 songs. format it as an array of object for javascript. 
       from the album art, provide me 4 hex colors that isn't white, black, or grey that is predominately associated with the album art.
        if two colors look similar to each other in terms of tone, then find another color that isn't similar in tone. follow this object structure: 
-       {"id":"Insert Number", "songName":"Insert Song Name", "artistName": "Insert Artist Name", "albumName":"Insert Album Name", "color":["Insert the 4 Hex colors that isn't white, black, or grey that is predominately associating with the album art here. 
-        if two colors look similar to each other in terms of tone, then find another color that isn't similar in tone."]}. 
+       {"id":"Insert Number", "title":"Insert Song Name", "artists": "Insert Artist Name", "album":"Insert Album Name", "albumColor":["Insert the 4 Hex colors that isn't white, black, or grey that is predominately associating with the album art here. 
+        if two colors look similar to each other in terms of tone, then find another color that isn't similar in tone."], duration: "Insert how long the song is"}. 
        Do not add any additional text before and after the array.`;
 
     const response = await fetch("/api/chat", {
@@ -96,16 +96,18 @@ export default function MusicApp({ teamName }: { teamName: string }) {
     } else {
       aiAnswer = data?.completion; //claude
     }
-console.log("aiAnswer",aiAnswer)
+    console.log("aiAnswer", aiAnswer);
     const firstFormatAnswer = aiAnswer.split("```")[1];
-    console.log("firstFormatAnswer",firstFormatAnswer)
+    console.log("firstFormatAnswer", firstFormatAnswer);
     const aiPlaylistAnswerFormatted = JSON?.parse(firstFormatAnswer.split("json")[1]);
     //TODO: need a backup in case all the answers fail
     console.log(aiPlaylistAnswerFormatted);
 
     const objectFormat = {
-      id: aiPlaylists.length,
-      playlistName: "Top 40s 2020s",
+      id: uuidv4().slice(0, 4),
+      title: "Top 40s 2020s",
+      color: colors.emerald,
+      cover: "/images/heart.png",
       songs: aiPlaylistAnswerFormatted,
     };
 
@@ -404,7 +406,7 @@ console.log("aiAnswer",aiAnswer)
                               ease: [0, 0.71, 0.2, 1.01],
                               delay: 1 * 0.2,
                             }}
-                            key={index}
+                            key={playlist.id}
                             className="place-items-center border-white bg-ldinputback 
                                 rounded-md hover:bg-gray-900/50  inline-block p-4"
                           >
@@ -416,7 +418,7 @@ console.log("aiAnswer",aiAnswer)
                               />
                               <div className="flex flex-col gap-y-2">
                                 <p className="text-lg text-center font-sohne ">
-                                  {playlist.playlistName} {index}
+                                  {playlist.title}
                                 </p>
                                 {/* <p className="text-base text-gray-500  text-center font-sohne font-thin text-wrap w-[50%]">
                                     All kinds of music, picked by your own AI DJ.
