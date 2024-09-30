@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/table";
@@ -191,7 +191,6 @@ function GameAdminDashboard() {
         <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-900">
           <div className="container mx-auto px-6 py-8">
             <h1 className="text-3xl font-semibold text-white mb-6">Dashboard</h1>
-
             {/* Stats Cards */}
             {/* <div className="grid gap-6 mb-8 md:grid-cols-2 xl:grid-cols-4">
               <StatCard title="Total Players" value="10,245" icon={<Users className="h-8 w-8" />} />

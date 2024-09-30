@@ -19,6 +19,7 @@ export default function Scoreboard() {
   const [timer, setTimer] = useState(600000);
   const [openStartModal, setOpenStartModal] = useState(true);
   const [animationStarted, setAnimationStarted] = useState(false);
+  
 
   const decreaseMainTimer = () => {
     if (isTimerRunning) {
