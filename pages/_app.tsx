@@ -9,9 +9,9 @@ if (typeof window !== "undefined") {
   c = ({ Component, pageProps }: AppProps) => {
     return (
       <NoSSRWrapper>
-
+        <TimerProvider>
           <Component {...pageProps} />
-
+        </TimerProvider>
       </NoSSRWrapper>
     );
   };

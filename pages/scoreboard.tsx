@@ -19,6 +19,7 @@ export default function Scoreboard() {
   const [timer, setTimer] = useState(600000);
   const [openStartModal, setOpenStartModal] = useState(true);
   const [animationStarted, setAnimationStarted] = useState(false);
+  
 
   const decreaseMainTimer = () => {
     if (isTimerRunning) {
@@ -170,7 +171,7 @@ const EventListenerComponent = memo(function EventListenerComponent({
     console.log(user);
     console.log(connectionId);
     // type: teamName, complete: "stepThreeComplete", value: 20
-    console.log(event.value);
+    console.log(event);
     async function scoreRequest(event) {
       switch (event.type) {
         case "green":

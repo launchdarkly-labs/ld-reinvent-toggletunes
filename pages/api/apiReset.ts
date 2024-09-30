@@ -115,7 +115,7 @@ async function deleteFlag(projectKey: string, flagKey: string) {
     throw new Error(`Cannot disable flag ${flagKey}: ${disableResp.statusText}`);
   }
 
-  console.log("Running the delete function for the flag " + flagKey);
+  //console.log("Running the delete function for the flag " + flagKey);
   // `https://app.launchdarkly.com/api/v2/flags/${projectKey}/${flagKey}`,
   // const deleteResp = await fetch(
   //   `https://app.launchdarkly.com/api/v2/flags/${projectKey}/${flagKey}`,

@@ -1,104 +1,114 @@
-//@ts-nocheck
-import { Reorder, motion } from "framer-motion";
-import { useState, useEffect } from "react";
+import * as React from "react"
 
-export default function ScoreTable({
-  greenProgress,
-  redProgress,
-  purpleProgress,
-  blueProgress,
-  teamName,
-}: any) {
-  const [tableData, setTableData] = useState<any>([]);
+import { cn } from "@/lib/utils"
 
-  useEffect(() => {
-    setTableData([
-      {
-        teamName: "Green Team",
-        currentScore: `${greenProgress}`,
-        stepsCompleted: 5,
-      },
-      {
-        teamName: "Red Team",
-        currentScore: `${redProgress}`,
-        stepsCompleted: 2,
-      },
-      {
-        teamName: "Purple Team",
-        currentScore: `${purpleProgress}`,
-        stepsCompleted: 3,
-      },
-      {
-        teamName: "Blue Team",
-        currentScore: `${blueProgress}`,
-        stepsCompleted: 4,
-      },
-    ]);
-  }, [greenProgress, redProgress, purpleProgress, blueProgress]);
+const Table = React.forwardRef<
+  HTMLTableElement,
+  React.HTMLAttributes<HTMLTableElement>
+>(({ className, ...props }, ref) => (
+  <div className="relative w-full overflow-auto">
+    <table
+      ref={ref}
+      className={cn("w-full caption-bottom text-sm", className)}
+      {...props}
+    />
+  </div>
+))
+Table.displayName = "Table"
 
-  // Sort the table data based on the current score in descending order
+const TableHeader = React.forwardRef<
+  HTMLTableSectionElement,
+  React.HTMLAttributes<HTMLTableSectionElement>
+>(({ className, ...props }, ref) => (
+  <thead ref={ref} className={cn("[&_tr]:border-b", className)} {...props} />
+))
+TableHeader.displayName = "TableHeader"
 
-  const sortedTableData = tableData.sort(
-    (a, b) => Number(b.currentScore) - Number(a.currentScore)
-  );
+const TableBody = React.forwardRef<
+  HTMLTableSectionElement,
+  React.HTMLAttributes<HTMLTableSectionElement>
+>(({ className, ...props }, ref) => (
+  <tbody
+    ref={ref}
+    className={cn("[&_tr:last-child]:border-0", className)}
+    {...props}
+  />
+))
+TableBody.displayName = "TableBody"
 
-  return (
-    <>
-      <div className="flex flex-col mt-8 overflow-auto-x">
-        <Reorder.Group values={tableData} onReorder={setTableData}>
-          <table className="min-w-full text-white text-sm text-center auto font-sohne">
-            <thead className="px-8 border-b dark:border-neutral-500 text-lddblue">
-              <tr>
-                <th scope="col" className="px-6 py-4 text-6xl sm:text-2xl">
-                  Team Name
-                </th>
-                <th scope="col" className="px-6 px-4 text-6xl sm:text-2xl">
-                  Current Score
-                </th>
-                <th scope="col" className="px-6 px-4 text-6xl sm:text-2xl">
-                  Steps Completed
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {sortedTableData.map((row, index) => (
-                <motion.tr
-                  key={row.teamName}
-                  transition={{
-                    type: "spring",
-                    bounce: 0.25,
-                    restDelta: 0.001,
-                  }}
-                  layout
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  className="border-b px-6 py-4 hover:bg-sky-200 dark:border-neutral-500 dark:hover:bg-neutral-600"
-                >
-                  <Reorder.Item
-                    as="td"
-                    className="whitespace-nowrap px-6 py-4 text-4xl sm:text-lg"
-                  >
-                    {row.teamName}
-                  </Reorder.Item>
-                  <Reorder.Item
-                    as="td"
-                    className="whitespace-nowrap px-6 py-4 text-4xl sm:text-lg"
-                  >
-                    {row.currentScore}
-                  </Reorder.Item>
-                  <Reorder.Item
-                    as="td"
-                    className="whitespace-nowrap px-6 py-4 text-4xl sm:text-lg"
-                  >
-                    {row.stepsCompleted}
-                  </Reorder.Item>
-                </motion.tr>
-              ))}
-            </tbody>
-          </table>
-        </Reorder.Group>
-      </div>
-    </>
-  );
+const TableFooter = React.forwardRef<
+  HTMLTableSectionElement,
+  React.HTMLAttributes<HTMLTableSectionElement>
+>(({ className, ...props }, ref) => (
+  <tfoot
+    ref={ref}
+    className={cn("bg-primary font-medium text-primary-foreground", className)}
+    {...props}
+  />
+))
+TableFooter.displayName = "TableFooter"
+
+const TableRow = React.forwardRef<
+  HTMLTableRowElement,
+  React.HTMLAttributes<HTMLTableRowElement>
+>(({ className, ...props }, ref) => (
+  <tr
+    ref={ref}
+    className={cn(
+      "border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted",
+      className
+    )}
+    {...props}
+  />
+))
+TableRow.displayName = "TableRow"
+
+const TableHead = React.forwardRef<
+  HTMLTableCellElement,
+  React.ThHTMLAttributes<HTMLTableCellElement>
+>(({ className, ...props }, ref) => (
+  <th
+    ref={ref}
+    className={cn(
+      "h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0",
+      className
+    )}
+    {...props}
+  />
+))
+TableHead.displayName = "TableHead"
+
+const TableCell = React.forwardRef<
+  HTMLTableCellElement,
+  React.TdHTMLAttributes<HTMLTableCellElement>
+>(({ className, ...props }, ref) => (
+  <td
+    ref={ref}
+    className={cn("p-4 align-middle [&:has([role=checkbox])]:pr-0", className)}
+    {...props}
+  />
+))
+TableCell.displayName = "TableCell"
+
+const TableCaption = React.forwardRef<
+  HTMLTableCaptionElement,
+  React.HTMLAttributes<HTMLTableCaptionElement>
+>(({ className, ...props }, ref) => (
+  <caption
+    ref={ref}
+    className={cn("mt-4 text-sm text-muted-foreground", className)}
+    {...props}
+  />
+))
+TableCaption.displayName = "TableCaption"
+
+export {
+  Table,
+  TableHeader,
+  TableBody,
+  TableFooter,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableCaption,
 }
