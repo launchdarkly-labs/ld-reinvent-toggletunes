@@ -2,7 +2,7 @@ import ItemCard from "@/components/ItemCard";
 import SideBar from "@/components/Sidebar";
 import { motion } from "framer-motion";
 import { useFlags } from "launchdarkly-react-client-sdk";
-import { memo, useEffect, useState } from "react";
+import { memo, useEffect, useState, useContext } from "react";
 import { useRouter } from "next/router";
 import { IoIosMusicalNotes } from "react-icons/io";
 import { useBroadcastEvent, useEventListener } from "../liveblocks.config";
@@ -14,14 +14,11 @@ import AdSection from "./AdSection";
 import { playlists, moreNewPlaylists, moreNewSongs, songs } from "@/lib/data";
 import { wait } from "@/lib/utils";
 import { v4 as uuidv4 } from "uuid";
+import Link from "next/link";
+import { AIPlaylistInterface } from "@/lib/typesInterface";
+import AIGeneratedPlaylistContext from "@/lib/AIGeneratedPlaylistContext";
 
 import { PulseLoader } from "react-spinners";
-
-interface Message {
-  role: string;
-  content: string;
-  id: string;
-}
 
 //TODO: when you go into playlist 1 /2 or whatever, it should be specific per team1/ team 2 etc
 //TODO: i think release should be a really ugly version of spotify from 2012 and then release a new version
@@ -38,6 +35,8 @@ export default function MusicApp({ teamName }: { teamName: string }) {
     temperature: number;
   } = useFlags()["release-ai-playlist-creator"];
 
+  const { aiPlaylists, setAIPlaylists } = useContext(AIGeneratedPlaylistContext);
+
   const [playlistAPI, setPlaylistAPI] = useState(playlists);
   const [songsAPI, setSongsAPI] = useState(songs);
   // const [setUpgradeAd] = useState(true);
@@ -46,34 +45,24 @@ export default function MusicApp({ teamName }: { teamName: string }) {
   const [flagThree, setFlagThree] = useState(false);
   const [flagFour, setFlagFour] = useState(false);
   const [flagFive, setFlagFive] = useState(false);
-  console.log(playlistAPI);
-  const [isOpen, setIsOpen] = useState(false);
-  const [input, setInput] = useState("");
-  const [messages, setMessages] = useState<Message[]>([]);
+  // const [input, setInput] = useState("");
+  // const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [aiPlaylists, setAIPlaylist] = useState([]);
+  // const [aiPlaylists, setAIPlaylist] = useState<AIPlaylistInterface[]>([]);
 
-  const handleInputChange = (e: any): void => {
-    setInput(e.target.value);
-  };
+  // const handleInputChange = (e: any): void => {
+  //   setInput(e.target.value);
+  // };
 
   async function submitQuery(): Promise<void> {
-    const userInput = input;
-    setInput("");
+    // const userInput = input;
+    // setInput("");
     setIsLoading(true);
-    const userMessage: Message = {
-      role: "user",
-      content: userInput,
-      id: uuidv4().slice(0, 4),
-    };
-
-    const loadingMessage: Message = {
-      role: "loader",
-      content: "loading",
-      id: uuidv4().slice(0, 4),
-    };
-
-    setMessages([...messages, userMessage, loadingMessage]);
+    // const userMessage: Message = {
+    //   role: "user",
+    //   content: userInput,
+    //   id: uuidv4().slice(0, 4),
+    // };
 
     const y = ` create a upbeat party pop playlist from 2020s. limit to 10 songs. format it as an array of object for javascript. 
       from the album art, provide me 4 hex colors that isn't white, black, or grey that is predominately associated with the album art.
@@ -97,7 +86,7 @@ export default function MusicApp({ teamName }: { teamName: string }) {
       prompt_token_count: number;
       prompt: string;
     } = await response.json();
-
+    setIsLoading(false);
     let aiAnswer: string;
 
     if (data?.generation) {
@@ -107,21 +96,22 @@ export default function MusicApp({ teamName }: { teamName: string }) {
     } else {
       aiAnswer = data?.completion; //claude
     }
-    console.log(aiAnswer);
-    let assistantMessage: Message = {
-      role: "assistant",
-      content: aiAnswer,
-      id: uuidv4().slice(0, 4),
+console.log("aiAnswer",aiAnswer)
+    const firstFormatAnswer = aiAnswer.split("```")[1];
+    console.log("firstFormatAnswer",firstFormatAnswer)
+    const aiPlaylistAnswerFormatted = JSON?.parse(firstFormatAnswer.split("json")[1]);
+    //TODO: need a backup in case all the answers fail
+    console.log(aiPlaylistAnswerFormatted);
+
+    const objectFormat = {
+      id: aiPlaylists.length,
+      playlistName: "Top 40s 2020s",
+      songs: aiPlaylistAnswerFormatted,
     };
 
-    if (aiAnswer === undefined) {
-      assistantMessage.content = "I'm sorry. Please try again.";
-      setMessages([...messages, userMessage, assistantMessage]);
-    } else {
-      setMessages([...messages, userMessage, assistantMessage]);
-    }
-
-    setIsLoading(false);
+    setAIPlaylists((prevPlaylists): any => {
+      return [...prevPlaylists, objectFormat];
+    });
   }
 
   const aiModelName = (): string => {
@@ -268,6 +258,8 @@ export default function MusicApp({ teamName }: { teamName: string }) {
     }
   };
 
+  //TODO: need to create a context to save the generated playlist
+
   return (
     <Room>
       <EventListenerComponent reloadPage={reloadPage} />
@@ -352,10 +344,13 @@ export default function MusicApp({ teamName }: { teamName: string }) {
 
                 {true && (
                   <section className={`flex flex-col gap-y-4 `}>
-                    <h2 className="text-2xl  font-bold">
+                    <h2 className="text-2xl font-bold">
                       Made For You{" "}
                       <span className="text-base text-gray-500 ml-2">
-                        Powered by <span style={{ color: aiModelColors() }}>{aiModelName()}</span>
+                        Powered by{" "}
+                        <span style={{ color: aiModelColors() }} className="font-bold">
+                          {aiModelName()}
+                        </span>
                       </span>
                     </h2>
 
@@ -398,6 +393,39 @@ export default function MusicApp({ teamName }: { teamName: string }) {
                           )}
                         </button>
                       </motion.div>
+
+                      {aiPlaylists.map((playlist, index) => {
+                        return (
+                          <motion.div
+                            initial={{ opacity: 0, scale: 0.25 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{
+                              duration: 0.25,
+                              ease: [0, 0.71, 0.2, 1.01],
+                              delay: 1 * 0.2,
+                            }}
+                            key={index}
+                            className="place-items-center border-white bg-ldinputback 
+                                rounded-md hover:bg-gray-900/50  inline-block p-4"
+                          >
+                            <Link key={playlist.id} href={`/playlist/${playlist.id}`}>
+                              <img
+                                className="object-cover transition-all hover:scale-105 h-48 w-48 mb-4"
+                                alt="astronaut"
+                                src={`/images/Casette.png`}
+                              />
+                              <div className="flex flex-col gap-y-2">
+                                <p className="text-lg text-center font-sohne ">
+                                  {playlist.playlistName} {index}
+                                </p>
+                                {/* <p className="text-base text-gray-500  text-center font-sohne font-thin text-wrap w-[50%]">
+                                    All kinds of music, picked by your own AI DJ.
+                                  </p> */}
+                              </div>
+                            </Link>
+                          </motion.div>
+                        );
+                      })}
                     </div>
                   </section>
                 )}

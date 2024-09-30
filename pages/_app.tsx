@@ -2,6 +2,7 @@ import "@/styles/globals.css";
 import type { AppProps } from "next/app";
 import NoSSRWrapper from "@/components/nossr";
 import { TimerProvider } from "@/lib/TimerContext";
+import { AIGeneratedPlaylistProvider } from "@/lib/AIGeneratedPlaylistContext";
 
 let c;
 
@@ -10,7 +11,9 @@ if (typeof window !== "undefined") {
     return (
       <NoSSRWrapper>
         <TimerProvider>
-          <Component {...pageProps} />
+          <AIGeneratedPlaylistProvider>
+            <Component {...pageProps} />
+          </AIGeneratedPlaylistProvider>
         </TimerProvider>
       </NoSSRWrapper>
     );

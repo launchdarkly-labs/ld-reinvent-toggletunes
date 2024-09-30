@@ -16,3 +16,9 @@ export interface Playlist {
     duration: string;
   }
   
+  export interface AIPlaylistInterface {
+    id: number;
+    playlistName: string;
+    songs: any;
+  }
+  
