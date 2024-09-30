@@ -1,8 +1,7 @@
 import { useRouter } from "next/router";
-import type { Playlist } from "../lib/data";
 import Link from "next/link";
 import { PlayIcon } from "lucide-react";
-
+import { Playlist,  } from "@/lib/typesInterface";
 interface Props {
   playlist: Playlist;
 }

@@ -2,9 +2,7 @@ import PageHeader from "@/components/PageHeader";
 import { useRouter } from "next/router";
 import { motion, AnimatePresence } from "framer-motion";
 import { useCallback, useEffect } from "react";
-import PlaylistArtists from "@/components/PlaylistArtists";
 import { playlists, moreNewPlaylists, songs } from "@/lib/data";
-import MusicTable from "@/components/MusicTable";
 import { PlayIcon, HeartIcon, CircleEllipsisIcon } from "lucide-react";
 import PlaylistTableSection from "@/components/PlaylistTableSection";
 
@@ -59,8 +57,6 @@ const Item = () => {
         <div className="bg-zinc-900/30 mt-6 flex-1 p-6 blur-100 z-10">
           <div className="flex gap-4 px-6 items-center">
             <PlayIcon className="h-14 w-14 rounded-full p-3 bg-ldbackground hover:brightness-125" />
-
-        
             <HeartIcon className="h-8 w-8"/>
             <CircleEllipsisIcon className="h-8 w-8"/>
           </div>

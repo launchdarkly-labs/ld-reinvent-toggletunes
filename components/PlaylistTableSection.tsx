@@ -5,7 +5,6 @@ import { RxCounterClockwiseClock } from "react-icons/rx";
 import { songs } from "@/lib/data";
 
 const PlaylistTableSection = ({ songsAPI = songs }: { songsAPI: any }) => {
-  
   const migrateNewSongDBLDFlag: string = useFlags()["migrate-new-song-db"];
   return (
     <table id="songs-bulleted-list" className="mx-4">

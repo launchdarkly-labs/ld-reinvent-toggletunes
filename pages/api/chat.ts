@@ -35,7 +35,7 @@ export default async function chatResponse(req: NextApiRequest, res: NextApiResp
     key: uuidv4().slice(0, 6),
   };
 
-  const model = await ldClient.variation("ai-chatbot", context, {
+  const model = await ldClient.variation("release-ai-playlist-creator", context, {
     modelId: "cohere.command-text-v14",
     temperature: 0.4,
     max_tokens: 400,

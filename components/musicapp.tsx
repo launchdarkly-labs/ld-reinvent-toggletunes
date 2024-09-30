@@ -13,25 +13,126 @@ import PlaylistTableSection from "./PlaylistTableSection";
 import AdSection from "./AdSection";
 import { playlists, moreNewPlaylists, moreNewSongs, songs } from "@/lib/data";
 import { wait } from "@/lib/utils";
+import { v4 as uuidv4 } from "uuid";
+
+import { PulseLoader } from "react-spinners";
+
+interface Message {
+  role: string;
+  content: string;
+  id: string;
+}
 
 //TODO: when you go into playlist 1 /2 or whatever, it should be specific per team1/ team 2 etc
 //TODO: i think release should be a really ugly version of spotify from 2012 and then release a new version
 export default function MusicApp({ teamName }: { teamName: string }) {
-
   const releaseTracklistLDFlag: boolean = useFlags()["release-tracklist"];
   const releaseRecentTunesLDFlag: boolean = useFlags()["release-recent-tunes"];
   const releaseNewUsersPlaylistLDFlag: boolean = useFlags()["release-new-users-playlist"];
   const releaseAdSidebarLDFlag: boolean = useFlags()["release-ad-sidebar"];
   const migrateNewSongDBLDFlag: string = useFlags()["migrate-new-song-db"];
+  const releaseAIPlaylistCreatorLDFlag: {
+    max_tokens: number;
+    modelId: string;
+    p: number;
+    temperature: number;
+  } = useFlags()["release-ai-playlist-creator"];
 
-  const [playlistAPI, setPlaylistAPI] = useState([...playlists]);
-  const [songsAPI, setSongsAPI] = useState([...songs]);
+  const [playlistAPI, setPlaylistAPI] = useState(playlists);
+  const [songsAPI, setSongsAPI] = useState(songs);
   // const [setUpgradeAd] = useState(true);
   const [flagOne, setFlagOne] = useState(false);
   const [flagTwo, setFlagTwo] = useState(false);
   const [flagThree, setFlagThree] = useState(false);
   const [flagFour, setFlagFour] = useState(false);
   const [flagFive, setFlagFive] = useState(false);
+  console.log(playlistAPI);
+  const [isOpen, setIsOpen] = useState(false);
+  const [input, setInput] = useState("");
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [aiPlaylists, setAIPlaylist] = useState([]);
+
+  const handleInputChange = (e: any): void => {
+    setInput(e.target.value);
+  };
+
+  async function submitQuery(): Promise<void> {
+    const userInput = input;
+    setInput("");
+    setIsLoading(true);
+    const userMessage: Message = {
+      role: "user",
+      content: userInput,
+      id: uuidv4().slice(0, 4),
+    };
+
+    const loadingMessage: Message = {
+      role: "loader",
+      content: "loading",
+      id: uuidv4().slice(0, 4),
+    };
+
+    setMessages([...messages, userMessage, loadingMessage]);
+
+    const y = ` create a upbeat party pop playlist from 2020s. limit to 10 songs. format it as an array of object for javascript. 
+      from the album art, provide me 4 hex colors that isn't white, black, or grey that is predominately associated with the album art.
+       if two colors look similar to each other in terms of tone, then find another color that isn't similar in tone. follow this object structure: 
+       {"id":"Insert Number", "songName":"Insert Song Name", "artistName": "Insert Artist Name", "albumName":"Insert Album Name", "color":["Insert the 4 Hex colors that isn't white, black, or grey that is predominately associating with the album art here. 
+        if two colors look similar to each other in terms of tone, then find another color that isn't similar in tone."]}. 
+       Do not add any additional text before and after the array.`;
+
+    const response = await fetch("/api/chat", {
+      method: "POST",
+      body: JSON.stringify(y),
+    });
+
+    const data: {
+      generation: string;
+      generations: [{ text: string }];
+      completion: string;
+      stop: string;
+      type: string;
+      generation_token_count: number;
+      prompt_token_count: number;
+      prompt: string;
+    } = await response.json();
+
+    let aiAnswer: string;
+
+    if (data?.generation) {
+      aiAnswer = data?.generation; //llama
+    } else if (data?.generations?.length > 0) {
+      aiAnswer = data?.generations[0]?.text; //cohere
+    } else {
+      aiAnswer = data?.completion; //claude
+    }
+    console.log(aiAnswer);
+    let assistantMessage: Message = {
+      role: "assistant",
+      content: aiAnswer,
+      id: uuidv4().slice(0, 4),
+    };
+
+    if (aiAnswer === undefined) {
+      assistantMessage.content = "I'm sorry. Please try again.";
+      setMessages([...messages, userMessage, assistantMessage]);
+    } else {
+      setMessages([...messages, userMessage, assistantMessage]);
+    }
+
+    setIsLoading(false);
+  }
+
+  const aiModelName = (): string => {
+    if (releaseAIPlaylistCreatorLDFlag?.modelId?.includes("cohere")) {
+      return "Cohere Coral";
+    } else if (releaseAIPlaylistCreatorLDFlag?.modelId?.includes("meta")) {
+      return "Meta Llama";
+    } else {
+      return "Anthropic Claude";
+    }
+  };
 
   // const ldClient = useLDClient();
 
@@ -127,7 +228,13 @@ export default function MusicApp({ teamName }: { teamName: string }) {
     // };
 
     triggerSteps();
-  }, [releaseTracklistLDFlag, releaseRecentTunesLDFlag, releaseNewUsersPlaylistLDFlag, releaseAdSidebarLDFlag, migrateNewSongDBLDFlag]);
+  }, [
+    releaseTracklistLDFlag,
+    releaseRecentTunesLDFlag,
+    releaseNewUsersPlaylistLDFlag,
+    releaseAdSidebarLDFlag,
+    migrateNewSongDBLDFlag,
+  ]);
 
   useEffect(() => {
     // setPlaylistAPI([]);
@@ -150,6 +257,16 @@ export default function MusicApp({ teamName }: { teamName: string }) {
   //   ldClient?.identify(context);
   //   setUpgradeAd(false);
   // };
+
+  const aiModelColors = (): string => {
+    if (releaseAIPlaylistCreatorLDFlag?.modelId?.includes("cohere")) {
+      return "#39594D";
+    } else if (releaseAIPlaylistCreatorLDFlag?.modelId?.includes("meta")) {
+      return "#0668E1";
+    } else {
+      return "#da7756";
+    }
+  };
 
   return (
     <Room>
@@ -176,7 +293,11 @@ export default function MusicApp({ teamName }: { teamName: string }) {
                 }}
                 className={`rounded-md p-4 bg-ldbackground overflow-y-auto scrollbar-hide w-full flex flex-col gap-6
                  ${
-                   releaseRecentTunesLDFlag && releaseAdSidebarLDFlag ? "sm:w-3/5" : releaseRecentTunesLDFlag ? "sm:w-4/5" : "sm:w-full"
+                   releaseRecentTunesLDFlag && releaseAdSidebarLDFlag
+                     ? "sm:w-3/5"
+                     : releaseRecentTunesLDFlag
+                     ? "sm:w-4/5"
+                     : "sm:w-full"
                  }`}
                 id="music-app-main-center-part"
               >
@@ -229,9 +350,61 @@ export default function MusicApp({ teamName }: { teamName: string }) {
                   </section>
                 )}
 
+                {true && (
+                  <section className={`flex flex-col gap-y-4 `}>
+                    <h2 className="text-2xl  font-bold">
+                      Made For You{" "}
+                      <span className="text-base text-gray-500 ml-2">
+                        Powered by <span style={{ color: aiModelColors() }}>{aiModelName()}</span>
+                      </span>
+                    </h2>
+
+                    <div
+                      className="relative flex-row space-x-6 overflow-x-auto whitespace-nowrap scrollbar-hide"
+                      id="song-cards-list"
+                    >
+                      <motion.div
+                        initial={{ opacity: 0, scale: 0.25 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{
+                          duration: 0.25,
+                          ease: [0, 0.71, 0.2, 1.01],
+                          delay: 1 * 0.2,
+                        }}
+                        className="place-items-center border-white bg-ldinputback 
+                            rounded-md hover:bg-gray-900/50  inline-block p-4"
+                      >
+                        <button onClick={() => submitQuery()}>
+                          {isLoading ? (
+                            <div className="flex w-max max-w-[75%] flex-col gap-2 rounded-lg px-3 py-2 text-sm bg-gray-100 dark:bg-gray-800">
+                              <PulseLoader className="" />
+                            </div>
+                          ) : (
+                            <>
+                              <img
+                                className="object-cover transition-all hover:scale-105 h-48 w-48 mb-4"
+                                alt="astronaut"
+                                src={`/images/Casette.png`}
+                              />
+                              <div className="flex flex-col gap-y-2">
+                                <p className="text-lg text-center font-sohne ">
+                                  Generate Your AI Playlist
+                                </p>
+                                {/* <p className="text-base text-gray-500  text-center font-sohne font-thin text-wrap w-[50%]">
+                                  All kinds of music, picked by your own AI DJ.
+                                </p> */}
+                              </div>
+                            </>
+                          )}
+                        </button>
+                      </motion.div>
+                    </div>
+                  </section>
+                )}
+
                 {releaseNewUsersPlaylistLDFlag && (
                   <section className={`flex flex-col gap-y-4 `}>
-                    <h2 className="text-2xl  font-bold">Trending Hits</h2>
+                    <h2 className="text-2xl  font-bold">Trending Playlists</h2>
                     <div
                       className="relative flex-row space-x-6 overflow-x-auto whitespace-nowrap scrollbar-hide"
                       id="song-cards-list"
@@ -251,14 +424,14 @@ export default function MusicApp({ teamName }: { teamName: string }) {
                         >
                           <img
                             className="object-cover transition-all hover:scale-105 h-48 w-48 mb-4"
-                            alt="astronaut"
+                            alt={song.title}
                             src={song.image}
                           />
                           <div className="flex flex-col gap-y-2">
                             <p className="text-lg text-center font-sohne ">{song.title}</p>
-                            <p className="text-base text-gray-500  text-center font-sohne font-thin">
+                            {/* <p className="text-base text-gray-500  text-center font-sohne font-thin">
                               {song.duration}
-                            </p>
+                            </p> */}
                           </div>
                         </motion.div>
                       ))}

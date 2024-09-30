@@ -37,8 +37,10 @@ const SideBar = ({ songsAPI }: any) => {
 
       <section className="bg-ldbackground rounded-md flex-1 p-4 ">
         <h2 className="flex gap-3 lg:gap-4 text-ldcomplicatedwhite font-semibold text-lg sm:text-lg xl:text-2xl items-center font-extra mb-6 w-full truncate ">
-          <RxCounterClockwiseClock className="h-6 w-6 hidden lg:block" />
-          <span> Recently Played</span>
+          {/* <RxCounterClockwiseClock className="h-6 w-6 hidden lg:block" />
+          <span> Recently Played</span> */}
+     Playlists
+        
         </h2>
         <div className="">
           <ul className="flex flex-col gap-y-4  overflow-y-auto  h-[calc(100vh-21rem)] sm:h-[calc(100vh-25.4rem)] scrollbar-hide">
