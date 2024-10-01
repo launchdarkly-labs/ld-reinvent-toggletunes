@@ -6,17 +6,19 @@ import { playlists, moreNewPlaylists, songs } from "@/lib/data";
 import { PlayIcon, HeartIcon, CircleEllipsisIcon } from "lucide-react";
 import PlaylistTableSection from "@/components/PlaylistTableSection";
 import AIGeneratedPlaylistContext from "@/lib/AIGeneratedPlaylistContext";
+import { PlaylistInterface } from "@/lib/typesInterface";
 const Item = () => {
   const router = useRouter();
   const { id } = router.query; //string
-  console.log(id);
-  const { aiPlaylists } = useContext(AIGeneratedPlaylistContext);
-  const allPlaylists = [...playlists, ...moreNewPlaylists, ...aiPlaylists];
-  console.log(allPlaylists);
 
-  const playlist = allPlaylists.find((playlist) => playlist.id === id);
-  const playlistSongs = playlist.songs ? playlist.songs : songs ;
-  console.log(playlist);
+  const { aiPlaylists } = useContext(AIGeneratedPlaylistContext);
+  const allPlaylists:PlaylistInterface[] = [...playlists, ...moreNewPlaylists, ...aiPlaylists];
+
+
+  const playlist:PlaylistInterface = allPlaylists.find((playlist) => playlist.id === id);
+  console.log(playlist)
+  const playlistSongs = playlist?.songs ? playlist?.songs : songs ;
+
   return (
     <AnimatePresence>
       <motion.div

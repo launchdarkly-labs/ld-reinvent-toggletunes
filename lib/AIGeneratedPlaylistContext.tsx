@@ -1,12 +1,12 @@
 import { createContext, useState } from "react";
-import { AIPlaylistInterface } from "./typesInterface";
+import { PlaylistInterface } from "./typesInterface";
 
 const AIGeneratedPlaylistContext = createContext();
 
 export default AIGeneratedPlaylistContext;
 
 export const AIGeneratedPlaylistProvider = ({ children }: { children: any }) => {
-  const [aiPlaylists, setAIPlaylists] = useState<AIPlaylistInterface[]>([]);
+  const [aiPlaylists, setAIPlaylists] = useState<PlaylistInterface[]>([]);
 
   return (
     <AIGeneratedPlaylistContext.Provider

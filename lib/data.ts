@@ -1,769 +1,389 @@
 import { colors } from "./color";
-import { Playlist, Song } from "./typesInterface";
+import { PlaylistInterface, SongInterface } from "./typesInterface";
+import {v4 as uuidv4} from 'uuid';
 
-export const playlists: Playlist[] = [
+export const songs: SongInterface[] = [
   {
-    id: 1,
+    id: uuidv4().slice(0, 4),
+    title: "I'm a dev 4 you",
+    image: `/images/Casette.png`,
+    artists: "DJ Toggle",
+    album: "Release Beats",
+    duration: "2:56",
+  },
+  {
+    id: uuidv4().slice(0, 4),
+    title: "Code Me Maybe",
+    image: `/images/Code me maybe.png`,
+    artists: "Blast Radius",
+    album: "Targeted Experience",
+    duration: "3:53",
+  },
+  {
+    id: uuidv4().slice(0, 4),
+    title: "Crash and Burn",
+    image: `/images/Spotlight.png`,
+    artists: "The DevOperatos",
+    album: "Instant Recovery",
+    duration: "2:23",
+  },
+  {
+    id: uuidv4().slice(0, 4),
+    title: "MMMbyte",
+    image: `/images/Kill switcher cover.png`,
+    artists: "Terminal Launch",
+    album: "RELEASE",
+    duration: "5:13",
+  },
+  {
+    id: uuidv4().slice(0, 4),
+    title: "Talk Contexts to Me",
+    image: `/images/Used to code me cover.png`,
+    artists: "Lost Weekends",
+    album: "Reclaim",
+    duration: "3:22",
+  },
+];
+
+export const moreNewSongs: SongInterface[] = [
+  {
+    id: uuidv4().slice(0, 4),
+    title: "I'm a dev 4 you",
+    image: `/images/Casette.png`,
+    artists: "DJ Toggle",
+    album: "Release Beats",
+    duration: "2:56",
+  },
+  {
+    id: uuidv4().slice(0, 4),
+    title: "Code Me Maybe",
+    image: `/images/Code me maybe.png`,
+    artists: "Blast Radius",
+    album: "Targeted Experience",
+    duration: "3:53",
+  },
+  {
+    id: uuidv4().slice(0, 4),
+    title: "Crash and Burn",
+    image: `/images/Spotlight.png`,
+    artists: "The DevOperatos",
+    album: "Instant Recovery",
+    duration: "2:23",
+  },
+  {
+    id: uuidv4().slice(0, 4),
+    title: "MMMbyte",
+    image: `/images/Kill switcher cover.png`,
+    artists: "Terminal Launch",
+    album: "RELEASE",
+    duration: "5:13",
+  },
+  {
+    id: uuidv4().slice(0, 4),
+    title: "Talk Contexts to Me",
+    image: `/images/Used to code me cover.png`,
+    artists: "Lost Weekends",
+    album: "Reclaim",
+    duration: "3:22",
+  },
+];
+
+export const playlists: PlaylistInterface[] = [
+  {
+    id: "liked-songs",
     title: "Liked Songs",
     color: colors.emerald,
     cover: "/images/heart.png",
-    artists: "",
+    songs: [...songs,...moreNewSongs]
   },
   {
-    id: 2,
+    id: "shipper-beats",
     title: "Shipper Beats",
     color: colors.pink,
     cover: "/images/Shipper beats cover.png",
-    artists: "Killswitches",
+    songs: [...songs,...moreNewSongs]
   },
   {
-    id: 3,
+    id: "rollback-mix",
     title: "Rollback Mix",
     color: colors.indigo,
     cover: "/images/Rollback Mix cover.png",
-    artists: "Last Pipelines",
+    songs: [...songs,...moreNewSongs]
   },
 ];
 
-export const moreNewPlaylists: Playlist[] = [
+export const moreNewPlaylists: PlaylistInterface[] = [
   {
-    id: 4,
+    id: "launch-party-jams",
     title: "Launch Party Jams",
     color: colors.green,
     cover: "/images/Launch Party Jams cover.png",
-    artists: "",
+    songs: [...songs,...moreNewSongs]
   },
   {
-    id: 5,
+    id:  "cosmic-vibes",
     title: "Cosmic Vibes",
     color: colors.rose,
     cover: "/images/Cosmic vibes cover.png",
-    artists: "Killswitches",
+    songs: [...songs,...moreNewSongs]
   },
   {
-    id: 6,
+    id: "codebreaker-blues",
     title: "Codebreaker Blues",
     color: colors.blue,
     cover: "/images/Codebreaker blues cover.png",
-    artists: "Last Pipelines",
+    songs: [...songs,...moreNewSongs]
   },
 ];
 
-export const songs: Song[] = [
-  {
-    id: 1,
-    title: "I'm a dev 4 you",
-    image: `/images/Casette.png`,
-    artists: "DJ Toggle",
-    album: "Release Beats",
-    duration: "2:56",
-  },
-  {
-    id: 2,
-    title: "Code Me Maybe",
-    image: `/images/Code me maybe.png`,
-    artists: "Blast Radius",
-    album: "Targeted Experience",
-    duration: "3:53",
-  },
-  {
-    id: 3,
-    title: "Crash and Burn",
-    image: `/images/Spotlight.png`,
-    artists: "The DevOperatos",
-    album: "Instant Recovery",
-    duration: "2:23",
-  },
-  {
-    id: 4,
-    title: "MMMbyte",
-    image: `/images/Kill switcher cover.png`,
-    artists: "Terminal Launch",
-    album: "RELEASE",
-    duration: "5:13",
-  },
-  {
-    id: 5,
-    title: "Talk Contexts to Me",
-    image: `/images/Used to code me cover.png`,
-    artists: "Lost Weekends",
-    album: "Reclaim",
-    duration: "3:22",
-  },
-];
 
-export const moreNewSongs: Song[] = [
-  {
-    id: 1,
-    title: "I'm a dev 4 you",
-    image: `/images/Casette.png`,
-    artists: "DJ Toggle",
-    album: "Release Beats",
-    duration: "2:56",
-  },
-  {
-    id: 2,
-    title: "Code Me Maybe",
-    image: `/images/Code me maybe.png`,
-    artists: "Blast Radius",
-    album: "Targeted Experience",
-    duration: "3:53",
-  },
-  {
-    id: 3,
-    title: "Crash and Burn",
-    image: `/images/Spotlight.png`,
-    artists: "The DevOperatos",
-    album: "Instant Recovery",
-    duration: "2:23",
-  },
-  {
-    id: 4,
-    title: "MMMbyte",
-    image: `/images/Kill switcher cover.png`,
-    artists: "Terminal Launch",
-    album: "RELEASE",
-    duration: "5:13",
-  },
-  {
-    id: 5,
-    title: "Talk Contexts to Me",
-    image: `/images/Used to code me cover.png`,
-    artists: "Lost Weekends",
-    album: "Reclaim",
-    duration: "3:22",
-  },
-];
 
-export const songs1985 = [
-  {
-    id: "1",
-    songName: "Careless Whisper",
-    artistName: "Wham!",
-    albumArt: "https://upload.wikimedia.org/wikipedia/en/1/1e/Wham_Careless_Whisper.jpg",
-  },
-  {
-    id: "2",
-    songName: "Like a Virgin",
-    artistName: "Madonna",
-    albumArt: "https://upload.wikimedia.org/wikipedia/en/1/1d/Madonna_-_Like_a_Virgin.png",
-  },
-  {
-    id: "3",
-    songName: "Wake Me Up Before You Go-Go",
-    artistName: "Wham!",
-    albumArt: "https://upload.wikimedia.org/wikipedia/en/4/45/Wham_Wake_Me_Up_Before_You_Go-Go.jpg",
-  },
-  {
-    id: "4",
-    songName: "I Want to Know What Love Is",
-    artistName: "Foreigner",
-    albumArt:
-      "https://upload.wikimedia.org/wikipedia/en/8/8b/Foreigner_-_I_Want_to_Know_What_Love_Is.jpg",
-  },
-  {
-    id: "5",
-    songName: "I Feel for You",
-    artistName: "Chaka Khan",
-    albumArt: "https://upload.wikimedia.org/wikipedia/en/0/0e/Chaka_Khan_I_Feel_for_You.jpg",
-  },
-  {
-    id: "6",
-    songName: "Out of Touch",
-    artistName: "Daryl Hall & John Oates",
-    albumArt: "https://upload.wikimedia.org/wikipedia/en/4/4e/Hall_and_Oates_Out_of_Touch.jpg",
-  },
-  {
-    id: "7",
-    songName: "Everybody Wants to Rule the World",
-    artistName: "Tears for Fears",
-    albumArt:
-      "https://upload.wikimedia.org/wikipedia/en/1/1e/Tears_for_Fears_-_Everybody_Wants_to_Rule_the_World.jpg",
-  },
-  {
-    id: "8",
-    songName: "Money for Nothing",
-    artistName: "Dire Straits",
-    albumArt: "https://upload.wikimedia.org/wikipedia/en/5/5d/Dire_Straits_Money_for_Nothing.jpg",
-  },
-  {
-    id: "9",
-    songName: "Crazy for You",
-    artistName: "Madonna",
-    albumArt: "https://upload.wikimedia.org/wikipedia/en/1/1d/Madonna_-_Crazy_for_You.png",
-  },
-  {
-    id: "10",
-    songName: "Take On Me",
-    artistName: "a-ha",
-    albumArt: "https://upload.wikimedia.org/wikipedia/en/4/4a/A-ha_Take_On_Me.jpg",
-  },
-  {
-    id: "11",
-    songName: "Everytime You Go Away",
-    artistName: "Paul Young",
-    albumArt: "https://upload.wikimedia.org/wikipedia/en/8/8b/Paul_Young_Everytime_You_Go_Away.jpg",
-  },
-  {
-    id: "12",
-    songName: "Easy Lover",
-    artistName: "Philip Bailey and Phil Collins",
-    albumArt: "https://upload.wikimedia.org/wikipedia/en/5/5a/Philip_Bailey_Easy_Lover.jpg",
-  },
-  {
-    id: "13",
-    songName: "Can't Fight This Feeling",
-    artistName: "REO Speedwagon",
-    albumArt:
-      "https://upload.wikimedia.org/wikipedia/en/4/4e/REO_Speedwagon_Can%27t_Fight_This_Feeling.jpg",
-  },
-  {
-    id: "14",
-    songName: "We Built This City",
-    artistName: "Starship",
-    albumArt: "https://upload.wikimedia.org/wikipedia/en/4/4e/Starship_We_Built_This_City.jpg",
-  },
-  {
-    id: "15",
-    songName: "The Power of Love",
-    artistName: "Huey Lewis and the News",
-    albumArt:
-      "https://upload.wikimedia.org/wikipedia/en/4/4e/Huey_Lewis_and_the_News_The_Power_of_Love.jpg",
-  },
-  {
-    id: "16",
-    songName: "Don't You (Forget About Me)",
-    artistName: "Simple Minds",
-    albumArt:
-      "https://upload.wikimedia.org/wikipedia/en/4/4e/Simple_Minds_Don%27t_You_%28Forget_About_Me%29.jpg",
-  },
-  {
-    id: "17",
-    songName: "Cherish",
-    artistName: "Kool & the Gang",
-    albumArt: "https://upload.wikimedia.org/wikipedia/en/4/4e/Kool_%26_the_Gang_Cherish.jpg",
-  },
-  {
-    id: "18",
-    songName: "St. Elmo's Fire (Man in Motion)",
-    artistName: "John Parr",
-    albumArt:
-      "https://upload.wikimedia.org/wikipedia/en/4/4e/John_Parr_St._Elmo%27s_Fire_%28Man_in_Motion%29.jpg",
-  },
-  {
-    id: "19",
-    songName: "The Heat Is On",
-    artistName: "Glenn Frey",
-    albumArt: "https://upload.wikimedia.org/wikipedia/en/4/4e/Glenn_Frey_The_Heat_Is_On.jpg",
-  },
-  {
-    id: "20",
-    songName: "We Are the World",
-    artistName: "USA for Africa",
-    albumArt: "https://upload.wikimedia.org/wikipedia/en/4/4e/USA_for_Africa_We_Are_the_World.jpg",
-  },
-  {
-    id: "21",
-    songName: "Shout",
-    artistName: "Tears for Fears",
-    albumArt: "https://upload.wikimedia.org/wikipedia/en/4/4e/Tears_for_Fears_Shout.jpg",
-  },
-  {
-    id: "22",
-    songName: "Part-Time Lover",
-    artistName: "Stevie Wonder",
-    albumArt: "https://upload.wikimedia.org/wikipedia/en/4/4e/Stevie_Wonder_Part-Time_Lover.jpg",
-  },
-  {
-    id: "23",
-    songName: "Saving All My Love for You",
-    artistName: "Whitney Houston",
-    albumArt:
-      "https://upload.wikimedia.org/wikipedia/en/4/4e/Whitney_Houston_Saving_All_My_Love_for_You.jpg",
-  },
-  {
-    id: "24",
-    songName: "Heaven",
-    artistName: "Bryan Adams",
-    albumArt: "https://upload.wikimedia.org/wikipedia/en/4/4e/Bryan_Adams_Heaven.jpg",
-  },
-  {
-    id: "25",
-    songName: "Everything She Wants",
-    artistName: "Wham!",
-    albumArt: "https://upload.wikimedia.org/wikipedia/en/4/4e/Wham_Everything_She_Wants.jpg",
-  },
-  {
-    id: "26",
-    songName: "Cool It Now",
-    artistName: "New Edition",
-    albumArt: "https://upload.wikimedia.org/wikipedia/en/4/4e/New_Edition_Cool_It_Now.jpg",
-  },
-  {
-    id: "27",
-    songName: "Miami Vice Theme",
-    artistName: "Jan Hammer",
-    albumArt: "https://upload.wikimedia.org/wikipedia/en/4/4e/Jan_Hammer_Miami_Vice_Theme.jpg",
-  },
-  {
-    id: "28",
-    songName: "Loverboy",
-    artistName: "Billy Ocean",
-    albumArt: "https://upload.wikimedia.org/wikipedia/en/4/4e/Billy_Ocean_Loverboy.jpg",
-  },
-  {
-    id: "29",
-    songName: "Lovergirl",
-    artistName: "Teena Marie",
-    albumArt: "https://upload.wikimedia.org/wikipedia/en/4/4e/Teena_Marie_Lovergirl.jpg",
-  },
-  {
-    id: "30",
-    songName: "You Belong to the City",
-    artistName: "Glenn Frey",
-    albumArt:
-      "https://upload.wikimedia.org/wikipedia/en/4/4e/Glenn_Frey_You_Belong_to_the_City.jpg",
-  },
-  {
-    id: "31",
-    songName: "Oh Sheila",
-    artistName: "Ready for the World",
-    albumArt: "https://upload.wikimedia.org/wikipedia/en/4/4e/Ready_for_the_World_Oh_Sheila.jpg",
-  },
-  {
-    id: "32",
-    songName: "Rhythm of the Night",
-    artistName: "DeBarge",
-    albumArt: "https://upload.wikimedia.org/wikipedia/en/4/4e/DeBarge_Rhythm_of_the_Night.jpg",
-  },
-  {
-    id: "33",
-    songName: "One More Night",
-    artistName: "Phil Collins",
-    albumArt: "https://upload.wikimedia.org/wikipedia/en/4/4e/Phil_Collins_One_More_Night.jpg",
-  },
-  {
-    id: "34",
-    songName: "Sea of Love",
-    artistName: "The Honeydrippers",
-    albumArt: "https://upload.wikimedia.org/wikipedia/en/4/4e/The_Honeydrippers_Sea_of_Love.jpg",
-  },
-  {
-    id: "35",
-    songName: "A View to a Kill",
-    artistName: "Duran Duran",
-    albumArt: "https://upload.wikimedia.org/wikipedia/en/4/4e/Duran_Duran_A_View_to_a_Kill.jpg",
-  },
-  {
-    id: "36",
-    songName: "The Wild Boys",
-    artistName: "Duran Duran",
-    albumArt: "https://upload.wikimedia.org/wikipedia/en/4/4e/Duran_Duran_The_Wild_Boys.jpg",
-  },
 
-  {
-    id: "37",
-    songName: "You're the Inspiration",
-    artistName: "Chicago",
-    albumArt: "https://upload.wikimedia.org/wikipedia/en/4/4e/Chicago_You%27re_the_Inspiration.jpg",
-  },
-  {
-    id: "38",
-    songName: "Neutron Dance",
-    artistName: "The Pointer Sisters",
-    albumArt:
-      "https://upload.wikimedia.org/wikipedia/en/4/4e/The_Pointer_Sisters_Neutron_Dance.jpg",
-  },
-  {
-    id: "39",
-    songName: "We Belong",
-    artistName: "Pat Benatar",
-    albumArt: "https://upload.wikimedia.org/wikipedia/en/4/4e/Pat_Benatar_We_Belong.jpg",
-  },
-  {
-    id: "40",
-    songName: "Nightshift",
-    artistName: "Commodores",
-    albumArt: "https://upload.wikimedia.org/wikipedia/en/4/4e/Commodores_Nightshift.jpg",
-  },
-  {
-    id: "41",
-    songName: "Things Can Only Get Better",
-    artistName: "Howard Jones",
-    albumArt:
-      "https://upload.wikimedia.org/wikipedia/en/4/4e/Howard_Jones_Things_Can_Only_Get_Better.jpg",
-  },
-  {
-    id: "42",
-    songName: "All I Need",
-    artistName: "Jack Wagner",
-    albumArt: "https://upload.wikimedia.org/wikipedia/en/4/4e/Jack_Wagner_All_I_Need.jpg",
-  },
-  {
-    id: "43",
-    songName: "Freeway of Love",
-    artistName: "Aretha Franklin",
-    albumArt: "https://upload.wikimedia.org/wikipedia/en/4/4e/Aretha_Franklin_Freeway_of_Love.jpg",
-  },
-  {
-    id: "44",
-    songName: "Never Surrender",
-    artistName: "Corey Hart",
-    albumArt: "https://upload.wikimedia.org/wikipedia/en/4/4e/Corey_Hart_Never_Surrender.jpg",
-  },
-  {
-    id: "45",
-    songName: "Sussudio",
-    artistName: "Phil Collins",
-    albumArt: "https://upload.wikimedia.org/wikipedia/en/4/4e/Phil_Collins_Sussudio.jpg",
-  },
-  {
-    id: "46",
-    songName: "Strut",
-    artistName: "Sheena Easton",
-    albumArt: "https://upload.wikimedia.org/wikipedia/en/4/4e/Sheena_Easton_Strut.jpg",
-  },
-  {
-    id: "47",
-    songName: "You Give Good Love",
-    artistName: "Whitney Houston",
-    albumArt:
-      "https://upload.wikimedia.org/wikipedia/en/4/4e/Whitney_Houston_You_Give_Good_Love.jpg",
-  },
-  {
-    id: "48",
-    songName: "The Search Is Over",
-    artistName: "Survivor",
-    albumArt: "https://upload.wikimedia.org/wikipedia/en/4/4e/Survivor_The_Search_Is_Over.jpg",
-  },
-  {
-    id: "49",
-    songName: "Missing You",
-    artistName: "Diana Ross",
-    albumArt: "https://upload.wikimedia.org/wikipedia/en/4/4e/Diana_Ross_Missing_You.jpg",
-  },
-  {
-    id: "50",
-    songName: "Separate Lives",
-    artistName: "Phil Collins and Marilyn Martin",
-    albumArt:
-      "https://upload.wikimedia.org/wikipedia/en/4/4e/Phil_Collins_and_Marilyn_Martin_Separate_Lives.jpg",
-  },
-  {
-    id: "51",
-    songName: "Raspberry Beret",
-    artistName: "Prince and The Revolution",
-    albumArt:
-      "https://upload.wikimedia.org/wikipedia/en/4/4e/Prince_and_The_Revolution_Raspberry_Beret.jpg",
-  },
-  {
-    id: "52",
-    songName: "Suddenly",
-    artistName: "Billy Ocean",
-    albumArt: "https://upload.wikimedia.org/wikipedia/en/4/4e/Billy_Ocean_Suddenly.jpg",
-  },
-  {
-    id: "53",
-    songName: "The Boys of Summer",
-    artistName: "Don Henley",
-    albumArt: "https://upload.wikimedia.org/wikipedia/en/4/4e/Don_Henley_The_Boys_of_Summer.jpg",
-  },
-  {
-    id: "54",
-    songName: "One Night in Bangkok",
-    artistName: "Murray Head",
-    albumArt: "https://upload.wikimedia.org/wikipedia/en/4/4e/Murray_Head_One_Night_in_Bangkok.jpg",
-  },
-  {
-    id: "55",
-    songName: "If You Love Somebody Set Them Free",
-    artistName: "Sting",
-    albumArt:
-      "https://upload.wikimedia.org/wikipedia/en/4/4e/Sting_If_You_Love_Somebody_Set_Them_Free.jpg",
-  },
-  {
-    id: "56",
-    songName: "Obsession",
-    artistName: "Animotion",
-    albumArt: "https://upload.wikimedia.org/wikipedia/en/4/4e/Animotion_Obsession.jpg",
-  },
-  {
-    id: "57",
-    songName: "We Don't Need Another Hero (Thunderdome)",
-    artistName: "Tina Turner",
-    albumArt:
-      "https://upload.wikimedia.org/wikipedia/en/4/4e/Tina_Turner_We_Don%27t_Need_Another_Hero_%28Thunderdome%29.jpg",
-  },
-  {
-    id: "58",
-    songName: "Material Girl",
-    artistName: "Madonna",
-    albumArt: "https://upload.wikimedia.org/wikipedia/en/4/4e/Madonna_Material_Girl.jpg",
-  },
-  {
-    id: "59",
-    songName: "Better Be Good to Me",
-    artistName: "Tina Turner",
-    albumArt: "https://upload.wikimedia.org/wikipedia/en/4/4e/Tina_Turner_Better_Be_Good_to_Me.jpg",
-  },
-  {
-    id: "60",
-    songName: "Head Over Heels",
-    artistName: "Tears for Fears",
-    albumArt: "https://upload.wikimedia.org/wikipedia/en/4/4e/Tears_for_Fears_Head_Over_Heels.jpg",
-  },
-  {
-    id: "61",
-    songName: "Axel F",
-    artistName: "Harold Faltermeyer",
-    albumArt: "https://upload.wikimedia.org/wikipedia/en/4/4e/Harold_Faltermeyer_Axel_F.jpg",
-  },
-  {
-    id: "62",
-    songName: "Smooth Operator",
-    artistName: "Sade",
-    albumArt: "https://upload.wikimedia.org/wikipedia/en/4/4e/Sade_Smooth_Operator.jpg",
-  },
-  {
-    id: "63",
-    songName: "In My House",
-    artistName: "Mary Jane Girls",
-    albumArt: "https://upload.wikimedia.org/wikipedia/en/4/4e/Mary_Jane_Girls_In_My_House.jpg",
-  },
-  {
-    id: "64",
-    songName: "Don't Lose My Number",
-    artistName: "Phil Collins",
-    albumArt:
-      "https://upload.wikimedia.org/wikipedia/en/4/4e/Phil_Collins_Don%27t_Lose_My_Number.jpg",
-  },
-  {
-    id: "65",
-    songName: "All Through the Night",
-    artistName: "Cyndi Lauper",
-    albumArt:
-      "https://upload.wikimedia.org/wikipedia/en/4/4e/Cyndi_Lauper_All_Through_the_Night.jpg",
-  },
-  {
-    id: "66",
-    songName: "Run to You",
-    artistName: "Bryan Adams",
-    albumArt: "https://upload.wikimedia.org/wikipedia/en/4/4e/Bryan_Adams_Run_to_You.jpg",
-  },
-  {
-    id: "67",
-    songName: "Glory Days",
-    artistName: "Bruce Springsteen",
-    albumArt: "https://upload.wikimedia.org/wikipedia/en/4/4e/Bruce_Springsteen_Glory_Days.jpg",
-  },
-  {
-    id: "68",
-    songName: "Voices Carry",
-    artistName: "'Til Tuesday",
-    albumArt: "https://upload.wikimedia.org/wikipedia/en/4/4e/%27Til_Tuesday_Voices_Carry.jpg",
-  },
-  {
-    id: "69",
-    songName: "Misled",
-    artistName: "Kool & the Gang",
-    albumArt: "https://upload.wikimedia.org/wikipedia/en/4/4e/Kool_%26_the_Gang_Misled.jpg",
-  },
-  {
-    id: "70",
-    songName: "Would I Lie to You?",
-    artistName: "Eurythmics",
-    albumArt: "https://upload.wikimedia.org/wikipedia/en/4/4e/Eurythmics_Would_I_Lie_to_You%3F.jpg",
-  },
-  {
-    id: "71",
-    songName: "Be Near Me",
-    artistName: "ABC",
-    albumArt: "https://upload.wikimedia.org/wikipedia/en/4/4e/ABC_Be_Near_Me.jpg",
-  },
-  {
-    id: "72",
-    songName: "No More Lonely Nights",
-    artistName: "Paul McCartney",
-    albumArt:
-      "https://upload.wikimedia.org/wikipedia/en/4/4e/Paul_McCartney_No_More_Lonely_Nights.jpg",
-  },
-  {
-    id: "73",
-    songName: "I Can't Hold Back",
-    artistName: "Survivor",
-    albumArt: "https://upload.wikimedia.org/wikipedia/en/4/4e/Survivor_I_Can%27t_Hold_Back.jpg",
-  },
-
-  {
-    id: "74",
-    songName: "Summer of '69",
-    artistName: "Bryan Adams",
-    albumArt: "https://upload.wikimedia.org/wikipedia/en/4/4e/Bryan_Adams_Summer_of_%2769.jpg",
-  },
-  {
-    id: "75",
-    songName: "Walking on Sunshine",
-    artistName: "Katrina and the Waves",
-    albumArt:
-      "https://upload.wikimedia.org/wikipedia/en/4/4e/Katrina_and_the_Waves_Walking_on_Sunshine.jpg",
-  },
-  {
-    id: "76",
-    songName: "Freedom",
-    artistName: "Wham!",
-    albumArt: "https://upload.wikimedia.org/wikipedia/en/4/4e/Wham_Freedom.jpg",
-  },
-  {
-    id: "77",
-    songName: "Too Late for Goodbyes",
-    artistName: "Julian Lennon",
-    albumArt:
-      "https://upload.wikimedia.org/wikipedia/en/4/4e/Julian_Lennon_Too_Late_for_Goodbyes.jpg",
-  },
-  {
-    id: "78",
-    songName: "Valotte",
-    artistName: "Julian Lennon",
-    albumArt: "https://upload.wikimedia.org/wikipedia/en/4/4e/Julian_Lennon_Valotte.jpg",
-  },
-  {
-    id: "79",
-    songName: "Some Like It Hot",
-    artistName: "The Power Station",
-    albumArt:
-      "https://upload.wikimedia.org/wikipedia/en/4/4e/The_Power_Station_Some_Like_It_Hot.jpg",
-  },
-  {
-    id: "80",
-    songName: "Solid",
-    artistName: "Ashford & Simpson",
-    albumArt: "https://upload.wikimedia.org/wikipedia/en/4/4e/Ashford_%26_Simpson_Solid.jpg",
-  },
-  {
-    id: "81",
-    songName: "Angel",
-    artistName: "Madonna",
-    albumArt: "https://upload.wikimedia.org/wikipedia/en/4/4e/Madonna_Angel.jpg",
-  },
-  {
-    id: "82",
-    songName: "I'm on Fire",
-    artistName: "Bruce Springsteen",
-    albumArt: "https://upload.wikimedia.org/wikipedia/en/4/4e/Bruce_Springsteen_I%27m_on_Fire.jpg",
-  },
-  {
-    id: "83",
-    songName: "Method of Modern Love",
-    artistName: "Daryl Hall & John Oates",
-    albumArt:
-      "https://upload.wikimedia.org/wikipedia/en/4/4e/Hall_and_Oates_Method_of_Modern_Love.jpg",
-  },
-  {
-    id: "84",
-    songName: "Lay Your Hands on Me",
-    artistName: "Thompson Twins",
-    albumArt:
-      "https://upload.wikimedia.org/wikipedia/en/4/4e/Thompson_Twins_Lay_Your_Hands_on_Me.jpg",
-  },
-  {
-    id: "85",
-    songName: "Who's Holding Donna Now",
-    artistName: "DeBarge",
-    albumArt:
-      "https://upload.wikimedia.org/wikipedia/en/4/4e/DeBarge_Who%27s_Holding_Donna_Now.jpg",
-  },
-  {
-    id: "86",
-    songName: "Lonely Ol' Night",
-    artistName: "John Cougar Mellencamp",
-    albumArt:
-      "https://upload.wikimedia.org/wikipedia/en/4/4e/John_Cougar_Mellencamp_Lonely_Ol%27_Night.jpg",
-  },
-  {
-    id: "87",
-    songName: "What About Love",
-    artistName: "Heart",
-    albumArt: "https://upload.wikimedia.org/wikipedia/en/4/4e/Heart_What_About_Love.jpg",
-  },
-  {
-    id: "88",
-    songName: "California Girls",
-    artistName: "David Lee Roth",
-    albumArt: "https://upload.wikimedia.org/wikipedia/en/4/4e/David_Lee_Roth_California_Girls.jpg",
-  },
-  {
-    id: "89",
-    songName: "Fresh",
-    artistName: "Kool & the Gang",
-    albumArt: "https://upload.wikimedia.org/wikipedia/en/4/4e/Kool_%26_the_Gang_Fresh.jpg",
-  },
-  {
-    id: "90",
-    songName: "Do What You Do",
-    artistName: "Jermaine Jackson",
-    albumArt: "https://upload.wikimedia.org/wikipedia/en/4/4e/Jermaine_Jackson_Do_What_You_Do.jpg",
-  },
-  {
-    id: "91",
-    songName: "Jungle Love",
-    artistName: "The Time",
-    albumArt: "https://upload.wikimedia.org/wikipedia/en/4/4e/The_Time_Jungle_Love.jpg",
-  },
-  {
-    id: "92",
-    songName: "Born in the U.S.A.",
-    artistName: "Bruce Springsteen",
-    albumArt:
-      "https://upload.wikimedia.org/wikipedia/en/4/4e/Bruce_Springsteen_Born_in_the_U.S.A..jpg",
-  },
-  {
-    id: "93",
-    songName: "Private Dancer",
-    artistName: "Tina Turner",
-    albumArt: "https://upload.wikimedia.org/wikipedia/en/4/4e/Tina_Turner_Private_Dancer.jpg",
-  },
-  {
-    id: "94",
-    songName: "Who's Zoomin' Who",
-    artistName: "Aretha Franklin",
-    albumArt:
-      "https://upload.wikimedia.org/wikipedia/en/4/4e/Aretha_Franklin_Who%27s_Zoomin%27_Who.jpg",
-  },
-  {
-    id: "95",
-    songName: "Fortress Around Your Heart",
-    artistName: "Sting",
-    albumArt: "https://upload.wikimedia.org/wikipedia/en/4/4e/Sting_Fortress_Around_Your_Heart.jpg",
-  },
-  {
-    id: "96",
-    songName: "Penny Lover",
-    artistName: "Lionel Richie",
-    albumArt: "https://upload.wikimedia.org/wikipedia/en/4/4e/Lionel_Richie_Penny_Lover.jpg",
-  },
-  {
-    id: "97",
-    songName: "All She Wants to Do Is Dance",
-    artistName: "Don Henley",
-    albumArt:
-      "https://upload.wikimedia.org/wikipedia/en/4/4e/Don_Henley_All_She_Wants_to_Do_Is_Dance.jpg",
-  },
-  {
-    id: "98",
-    songName: "Dress You Up",
-    artistName: "Madonna",
-    albumArt: "https://upload.wikimedia.org/wikipedia/en/4/4e/Madonna_Dress_You_Up.jpg",
-  },
-  {
-    id: "99",
-    songName: "Sentimental Street",
-    artistName: "Night Ranger",
-    albumArt: "https://upload.wikimedia.org/wikipedia/en/4/4e/Night_Ranger_Sentimental_Street.jpg",
-  },
-  {
-    id: "100",
-    songName: "Sugar Walls",
-    artistName: "Sheena Easton",
-    albumArt: "https://upload.wikimedia.org/wikipedia/en/4/4e/Sheena_Easton_Sugar_Walls.jpg",
-  },
+export const defaultListOfPlaylists = [
+  [
+    {
+      id: "1",
+      title: "Good Days",
+      artists: "SZA",
+      album: "Good Days",
+      albumColor: ["#FFB6C1", "#F7727E", "#92C5F2", "#E8AD5C"],
+      duration: "3:53",
+    },
+    {
+      id: "2",
+      title: "Sunflower",
+      artists: "Post Malone ft. Swae Lee",
+      album: "Spider-Man: Into the Spider-Verse soundtrack",
+      albumColor: ["#EDCF62", "#EDE5C6", "#9B9B9B", "#E5E0A7"],
+      duration: "2:38",
+    },
+    {
+      id: "3",
+      title: "Leave the Door Open",
+      artists: "Bruno Mars, Anderson .Paak, Silk Sonic",
+      album: "An Evening With Silk Sonic",
+      albumColor: ["#7B3294", "#5D8AA8", "#4B5D6D", "#CBAAC2"],
+      duration: "3:11",
+    },
+    {
+      id: "4",
+      title: "Physical",
+      artists: "Dua Lipa",
+      album: "Future Nostalgia",
+      albumColor: ["#7B8C98", "#3B47B4", "#283965", "#F4E2D5"],
+      duration: "3:13",
+    },
+    {
+      id: "5",
+      title: "All Of The Lights",
+      artists: "Kanye West",
+      album: "My Beautiful Dark Twisted Fantasy",
+      albumColor: ["#5D5B6B", "#8A3F77", "#3B3A4F", "#B1B1B1"],
+      duration: "5:18",
+    },
+    {
+      id: "6",
+      title: "Waste My Time",
+      artists: " Eleanor  Gross",
+      album: "Urban Stories",
+      albumColor: ["#5D7F7B", "#8C5D5B", "#314737", "#CFD2CA"],
+      duration: "3:08",
+    },
+    {
+      id: "7",
+      title: "Lowkey",
+      artists: "The Weeknd",
+      album: "After Hours",
+      albumColor: ["#651A6F", "#7B5F6F", "#3D2A4F", "#D1BABC"],
+      duration: "3:13",
+    },
+    {
+      id: "8",
+      title: "Don't Go Yet",
+      artists: "Camila Cabello",
+      album: "Camila",
+      albumColor: ["#5D4054", "#7B6D6B", "#8A5D5E", "#D5BAB0"],
+      duration: "2:43",
+    },
+    {
+      id: "9",
+      title: "Telepath",
+      artists: "Bryan Adams",
+      album: "So Happy It Hurts",
+      albumColor: ["#553763", "#6B2855", "#7B3A96", "#6B90CA"],
+      duration: "3:30",
+    },
+    {
+      id: "10",
+      title: "Leave Me Lonely",
+      artists: "Marshmello ft. Anne-Marie",
+      album: "Speak Your Mind",
+      albumColor: ["#FF50E3", "#FF65E3", "#FF9CE4", "#FF29E3"],
+      duration: "3:21",
+    },
+  ],
+  [
+    {
+      id: "1",
+      title: "Dynasty",
+      artists: "San Holo",
+      album: "Stay Vibrant",
+      albumColor: ["#EE1C2B", "#03DAC6", "#F2A05A", "#FC5E5C"],
+      duration: "3:40",
+    },
+    {
+      id: "2",
+      title: "All Of The Girls You Loved Before",
+      artists: "Taylor Swift",
+      album: "Fearless (Taylor's Version)",
+      albumColor: ["#7B16FF", "#7BFF16", "#5E00C3", "#FF2D55"],
+      duration: "3:15",
+    },
+    {
+      id: "3",
+      title: "Leave the Door Open",
+      artists: "Bruno Mars, Anderson .Paak & Silk Sonic",
+      album: "An Evening With Silk Sonic",
+      albumColor: ["#5C8AA3", "#5C50A3", "#3B3984", "#A85C8A"],
+      duration: "3:27",
+    },
+    {
+      id: "4",
+      title: "Daydreaming",
+      artists: "Harry Styles",
+      album: "Fine Line",
+      albumColor: ["#7B3E97", "#1A237E", "#D6643F", "#9B80FF"],
+      duration: "4:05",
+    },
+    {
+      id: "5",
+      title: "All Eyes on Me",
+      artists: "BTS",
+      album: "Map of the Soul: 7",
+      albumColor: ["#2E5894", "#2E-5894", "#25384D", "#7B80BD"],
+      duration: "3:11",
+    },
+    {
+      id: "6",
+      title: "Peaches",
+      artists: "Justin Bieber feat. Daniel Caesar & Giveon",
+      album: "Justice",
+      albumColor: ["#4B1D99", "#2E8B57", "#6D4F68", "#9B4B6D"],
+      duration: "3:09",
+    },
+    {
+      id: "7",
+      title: "Stay",
+      artists: "The Kid Laroi & Justin Bieber",
+      album: "F*CK LOVE (SAVAGE)",
+      albumColor: ["#4A136B", "#2C80BA", "#A99734", "#9B3921"],
+      duration: "3:32",
+    },
+    {
+      id: "8",
+      title: "Mr. Perfectly Fine",
+      artists: "Pink Floyd",
+      album: "The Later Years",
+      albumColor: ["#A8549A", "#505C9A", "#5C2D6D", "#7B686A"],
+      duration: "4:09",
+    },
+    {
+      id: "9",
+      title: "Deja vu",
+      artists: "Olivia Rodrigo",
+      album: "SOUR",
+      albumColor: ["#7B1F71", "#1A0C5C", "#7B6A1A", "#58A5BD"],
+      duration: "3:15",
+    },
+    {
+      id: "10",
+      title: "Good 4 U",
+      artists: "Olivia Rodrigo",
+      album: "SOUR",
+      albumColor: ["#7B0A0C", "#2E4E1A", "#A2685A", "#5C80A0"],
+      duration: "2:58",
+    },
+  ],
+  [
+    {
+      id: "1",
+      title: "About You",
+      artists: "Stray Kids",
+      album: "NO EASY",
+      albumColor: ["#EEB422", "#E1B62C", "#F57D1A", "#EBCB10"],
+      duration: "3:43",
+    },
+    {
+      id: "2",
+      title: "Leave the Door Open",
+      artists: "Anderson .Paak",
+      album: "Venom: Let There Be Carnage (Original Motion Picture Soundtrack)",
+      albumColor: ["#4F2A5A", "#8A64B2", "#B24A6B", "#A349A1"],
+      duration: "3:26",
+    },
+    {
+      id: "3",
+      title: "Peaches",
+      artists: "Justin Bieber feat. Daniel Caesar & Giveon",
+      album: "Justice",
+      albumColor: ["#9B2C1F", "#6F45E6", "#3C3A49", "#1F2529"],
+      duration: "3:16",
+    },
+    {
+      id: "4",
+      title: "Daylight",
+      artists: "Joji",
+      album: "Nectar",
+      albumColor: ["#55411C", "#7B4226", "#6D693B", "#9B5C70"],
+      duration: "2:43",
+    },
+    {
+      id: "5",
+      title: "Pepas",
+      artists: "Farruko",
+      album: "La 167",
+      albumColor: ["#C15B31", "#B7664A", "#F5B7A1", "#9E3E1E"],
+      duration: "2:59",
+    },
+    {
+      id: "6",
+      title: "Deja vu",
+      artists: "Olivia Rodrigo",
+      album: "SOUR",
+      albumColor: ["#3D0C02", "#571F39", "#790F5B", "#1F1B2C"],
+      duration: "3:15",
+    },
+    {
+      id: "7",
+      title: "Good 4 U",
+      artists: "Olivia Rodrigo",
+      album: "SOUR",
+      albumColor: ["#7B1F1B", "#A3372F", "#BC5651", "#4A0C15"],
+      duration: "2:58",
+    },
+    {
+      id: "8",
+      title: "Leave Me Lonely",
+      artists: "Dua Lipa",
+      album: "Future Nostalgia",
+      albumColor: ["#9B6E6A", "#B85C56", "#8C5B5B", "#6C3D3D"],
+      duration: "3:10",
+    },
+    {
+      id: "9",
+      title: "One More Time (feat. Ariana Grande)",
+      artists: "Drake",
+      album: "Certified Lover Boy",
+      albumColor: ["#3D2B1F", "#5B453A", "#7B5B6D", "#2F0A0A"],
+      duration: "3:21",
+    },
+    {
+      id: "10",
+      title: "C'est la vie",
+      artists: "BTS",
+      album: "Map of the Soul: 7",
+      albumColor: ["#7B5B00", "#AD7200", "#E08E00", "#8B0000"],
+      duration: "3:10",
+    },
+  ],
 ];

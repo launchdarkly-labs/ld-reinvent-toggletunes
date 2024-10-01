@@ -19,6 +19,7 @@ import AIGeneratedPlaylistContext from "@/lib/AIGeneratedPlaylistContext";
 import { colors } from "@/lib/color";
 
 import { PulseLoader } from "react-spinners";
+import { PlaylistInterface } from "@/lib/typesInterface";
 
 //TODO: when you go into playlist 1 /2 or whatever, it should be specific per team1/ team 2 etc
 //TODO: i think release should be a really ugly version of spotify from 2012 and then release a new version
@@ -48,7 +49,6 @@ export default function MusicApp({ teamName }: { teamName: string }) {
   // const [input, setInput] = useState("");
   // const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  // const [aiPlaylists, setAIPlaylist] = useState<AIPlaylistInterface[]>([]);
 
   // const handleInputChange = (e: any): void => {
   //   setInput(e.target.value);
@@ -64,7 +64,7 @@ export default function MusicApp({ teamName }: { teamName: string }) {
     //   id: uuidv4().slice(0, 4),
     // };
 
-    const y = ` create a upbeat party pop playlist from 2020s. limit to 10 songs. format it as an array of object for javascript. 
+    const y = ` create a upbeat party pop playlist from 2020s. limit to 10 songs. avoid songs, album name, and artist name with \& and non alphabet letters within the name.  format it as an array of object for javascript. 
       from the album art, provide me 4 hex colors that isn't white, black, or grey that is predominately associated with the album art.
        if two colors look similar to each other in terms of tone, then find another color that isn't similar in tone. follow this object structure: 
        {"id":"Insert Number", "title":"Insert Song Name", "artists": "Insert Artist Name", "album":"Insert Album Name", "albumColor":["Insert the 4 Hex colors that isn't white, black, or grey that is predominately associating with the album art here. 
@@ -96,11 +96,98 @@ export default function MusicApp({ teamName }: { teamName: string }) {
     } else {
       aiAnswer = data?.completion; //claude
     }
-    console.log("aiAnswer", aiAnswer);
-    const firstFormatAnswer = aiAnswer.split("```")[1];
-    console.log("firstFormatAnswer", firstFormatAnswer);
-    const aiPlaylistAnswerFormatted = JSON?.parse(firstFormatAnswer.split("json")[1]);
-    //TODO: need a backup in case all the answers fail
+    let aiPlaylistAnswerFormatted;
+    try {
+      console.log("aiAnswer", aiAnswer);
+      const firstFormatAnswer = aiAnswer.split("```")[1];
+      console.log("firstFormatAnswer", firstFormatAnswer);
+      aiPlaylistAnswerFormatted = JSON?.parse(firstFormatAnswer.split("json")[1]);
+    } catch (e) {
+      aiPlaylistAnswerFormatted = [
+        {
+          id: "1",
+          title: "Dynasty",
+          artists: "San Holo",
+          album: "Stay Vibrant",
+          albumColor: ["#EE1C2B", "#03DAC6", "#F2A05A", "#FC5E5C"],
+          duration: "3:40",
+        },
+        {
+          id: "2",
+          title: "All Of The Girls You Loved Before",
+          artists: "Taylor Swift",
+          album: "Fearless (Taylor's Version)",
+          albumColor: ["#7B16FF", "#7BFF16", "#5E00C3", "#FF2D55"],
+          duration: "3:15",
+        },
+        {
+          id: "3",
+          title: "Leave the Door Open",
+          artists: "Bruno Mars, Anderson .Paak & Silk Sonic",
+          album: "An Evening With Silk Sonic",
+          albumColor: ["#5C8AA3", "#5C50A3", "#3B3984", "#A85C8A"],
+          duration: "3:27",
+        },
+        {
+          id: "4",
+          title: "Daydreaming",
+          artists: "Harry Styles",
+          album: "Fine Line",
+          albumColor: ["#7B3E97", "#1A237E", "#D6643F", "#9B80FF"],
+          duration: "4:05",
+        },
+        {
+          id: "5",
+          title: "All Eyes on Me",
+          artists: "BTS",
+          album: "Map of the Soul: 7",
+          albumColor: ["#2E5894", "#2E-5894", "#25384D", "#7B80BD"],
+          duration: "3:11",
+        },
+        {
+          id: "6",
+          title: "Peaches",
+          artists: "Justin Bieber feat. Daniel Caesar & Giveon",
+          album: "Justice",
+          albumColor: ["#4B1D99", "#2E8B57", "#6D4F68", "#9B4B6D"],
+          duration: "3:09",
+        },
+        {
+          id: "7",
+          title: "Stay",
+          artists: "The Kid Laroi & Justin Bieber",
+          album: "F*CK LOVE (SAVAGE)",
+          albumColor: ["#4A136B", "#2C80BA", "#A99734", "#9B3921"],
+          duration: "3:32",
+        },
+        {
+          id: "8",
+          title: "Mr. Perfectly Fine",
+          artists: "Pink Floyd",
+          album: "The Later Years",
+          albumColor: ["#A8549A", "#505C9A", "#5C2D6D", "#7B686A"],
+          duration: "4:09",
+        },
+        {
+          id: "9",
+          title: "Deja vu",
+          artists: "Olivia Rodrigo",
+          album: "SOUR",
+          albumColor: ["#7B1F71", "#1A0C5C", "#7B6A1A", "#58A5BD"],
+          duration: "3:15",
+        },
+        {
+          id: "10",
+          title: "Good 4 U",
+          artists: "Olivia Rodrigo",
+          album: "SOUR",
+          albumColor: ["#7B0A0C", "#2E4E1A", "#A2685A", "#5C80A0"],
+          duration: "2:58",
+        },
+      ];
+    }
+
+
     console.log(aiPlaylistAnswerFormatted);
 
     const objectFormat = {
@@ -111,7 +198,7 @@ export default function MusicApp({ teamName }: { teamName: string }) {
       songs: aiPlaylistAnswerFormatted,
     };
 
-    setAIPlaylists((prevPlaylists): any => {
+    setAIPlaylists((prevPlaylists): PlaylistInterface[] => {
       return [...prevPlaylists, objectFormat];
     });
   }
@@ -417,9 +504,7 @@ export default function MusicApp({ teamName }: { teamName: string }) {
                                 src={`/images/Casette.png`}
                               />
                               <div className="flex flex-col gap-y-2">
-                                <p className="text-lg text-center font-sohne ">
-                                  {playlist.title}
-                                </p>
+                                <p className="text-lg text-center font-sohne ">{playlist.title}</p>
                                 {/* <p className="text-base text-gray-500  text-center font-sohne font-thin text-wrap w-[50%]">
                                     All kinds of music, picked by your own AI DJ.
                                   </p> */}
