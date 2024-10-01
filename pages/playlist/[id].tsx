@@ -12,12 +12,42 @@ const Item = () => {
   const { id } = router.query; //string
 
   const { aiPlaylists } = useContext(AIGeneratedPlaylistContext);
-  const allPlaylists:PlaylistInterface[] = [...playlists, ...moreNewPlaylists, ...aiPlaylists];
+  const allPlaylists: PlaylistInterface[] = [...playlists, ...moreNewPlaylists, ...aiPlaylists];
 
+  const playlist: PlaylistInterface = allPlaylists.find((playlist) => playlist.id === id);
 
-  const playlist:PlaylistInterface = allPlaylists.find((playlist) => playlist.id === id);
-  console.log(playlist)
-  const playlistSongs = playlist?.songs ? playlist?.songs : songs ;
+  const playlistSongs = playlist?.songs ? playlist?.songs : songs;
+
+  const totalDurationPlaylist = () => {
+    let totalDuration: string = "",
+      totalMinutesDuration: number = 0,
+      totalSecondsDuration: number = 0,
+      totalHoursDuration: number = 0;
+
+    for (const songs of playlistSongs) {
+      const arrSongDuration = songs.duration.split(":");
+      totalMinutesDuration = totalMinutesDuration + parseInt(arrSongDuration[0]);
+      totalSecondsDuration = totalSecondsDuration + parseInt(arrSongDuration[1]);
+    }
+
+    if (totalSecondsDuration >= 60) {
+      const leftoverSecond = totalSecondsDuration % 60;
+      totalMinutesDuration = totalMinutesDuration + (totalSecondsDuration - leftoverSecond) / 60;
+      totalSecondsDuration = leftoverSecond;
+    }
+
+    if (totalMinutesDuration >= 60) {
+      const leftoverMinutes = totalMinutesDuration % 60;
+      totalHoursDuration = (totalSecondsDuration - leftoverMinutes) / 60;
+      totalMinutesDuration = leftoverMinutes;
+    }
+
+    totalDuration = `${
+      totalHoursDuration > 0 ? `${totalHoursDuration} hr` : ""
+    } ${totalMinutesDuration} min ${totalHoursDuration > 0 ? "" : `${totalSecondsDuration} sec`} `;
+
+    return totalDuration;
+  };
 
   return (
     <AnimatePresence>
@@ -29,7 +59,7 @@ const Item = () => {
           duration: 1,
           ease: [0, 0.71, 0.2, 1.01],
         }}
-        className="relative font-sohne bg-zinc-900 min-h-full flex flex-col overflow-x-hidden rounded-lg"
+        className="relative font-sohne bg-zinc-900 min-h-full flex flex-col overflow-x-hidden"
       >
         <PageHeader />
         <div className="flex flex-col items-center md:flex-row md:items-stretch gap-8 px-6 z-10">
@@ -52,8 +82,8 @@ const Item = () => {
               <div className="text-sm">
                 {/* <PlaylistArtists artists={playlist?.artists} /> */}
                 <div className="mt-1">
-                  <span className="font-semibold">58 likes</span>, 83 musics,{" "}
-                  <span className="text-gray-300">about 3h 15min</span>
+                  <span className="font-semibold">{playlist?.songs?.length} songs, </span>
+                  <span className="text-gray-300">about {totalDurationPlaylist()}</span>
                 </div>
               </div>
             </div>
