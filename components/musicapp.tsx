@@ -65,9 +65,9 @@ export default function MusicApp({ teamName }: { teamName: string }) {
     // };
 
     const y = ` create a upbeat party pop playlist from 2020s. limit to 10 songs. avoid songs, album name, and artist name with \& and non alphabet letters within the name.  format it as an array of object for javascript. 
-      from the album art, provide me 4 hex colors that isn't white, black, or grey that is predominately associated with the album art.
+      from the album art, provide me 4 hex colors that isn't white or grey that is predominately associated with the album art.
        if two colors look similar to each other in terms of tone, then find another color that isn't similar in tone. follow this object structure: 
-       {"id":"Insert Number", "title":"Insert Song Name", "artists": "Insert Artist Name", "album":"Insert Album Name", "albumColor":["Insert the 4 Hex colors that isn't white, black, or grey that is predominately associating with the album art here. 
+       {"id":"Insert Number", "title":"Insert Song Name", "artists": "Insert Artist Name", "album":"Insert Album Name", "albumColor":["Insert the 4 Hex colors that isn't white or grey that is predominately associating with the album art here. 
         if two colors look similar to each other in terms of tone, then find another color that isn't similar in tone."], duration: "Insert how long the song is"}. 
        Do not add any additional text before and after the array.`;
 
@@ -186,7 +186,6 @@ export default function MusicApp({ teamName }: { teamName: string }) {
         },
       ];
     }
-
 
     console.log(aiPlaylistAnswerFormatted);
 
@@ -483,7 +482,7 @@ export default function MusicApp({ teamName }: { teamName: string }) {
                         </button>
                       </motion.div>
 
-                      {aiPlaylists.map((playlist, index) => {
+                      {aiPlaylists.map((playlist: PlaylistInterface) => {
                         return (
                           <motion.div
                             initial={{ opacity: 0, scale: 0.25 }}
@@ -498,11 +497,44 @@ export default function MusicApp({ teamName }: { teamName: string }) {
                                 rounded-md hover:bg-gray-900/50  inline-block p-4"
                           >
                             <Link key={playlist.id} href={`/playlist/${playlist.id}`}>
-                              <img
-                                className="object-cover transition-all hover:scale-105 h-48 w-48 mb-4"
-                                alt="astronaut"
-                                src={`/images/Casette.png`}
-                              />
+                              <div className="object-cover transition-all hover:scale-105 h-48 w-48 mb-4 rounded-md grid grid-cols-2 grid-rows-2">
+                                {playlist.songs.map((song, index) => {
+                                  if (index > 3) return;
+                                  let backupBGColor = "";
+                                  let roundedCorner = "";
+
+                                  if (index ===0){
+                                    backupBGColor = "bg-green-500";
+                                    roundedCorner = "rounded-tl-md"
+                                  }
+
+                                  if (index ===1){
+                                    backupBGColor = "bg-blue-500";
+                                    roundedCorner = "rounded-tr-md"
+                                  }
+
+                                  if (index ===2){
+                                    backupBGColor = "bg-purple-500";
+                                    roundedCorner = "rounded-bl-md"
+                                  }
+
+
+                                  if (index ===3){
+                                    backupBGColor = "bg-yellow-500";
+                                    roundedCorner = "rounded-br-md"
+                                  }
+
+                                  return (
+                                    <span
+                                      className={`${backupBGColor} ${roundedCorner} h-full w-full`}
+                                      style={{
+                                        backgroundImage: `conic-gradient(${song?.albumColor[0]}, ${song?.albumColor[1]}, ${song?.albumColor[2]}, ${song?.albumColor[3]})`,
+                                      }}
+                                      key={song.id}
+                                    ></span>
+                                  );
+                                })}
+                              </div>
                               <div className="flex flex-col gap-y-2">
                                 <p className="text-lg text-center font-sohne ">{playlist.title}</p>
                                 {/* <p className="text-base text-gray-500  text-center font-sohne font-thin text-wrap w-[50%]">

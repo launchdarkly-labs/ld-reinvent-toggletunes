@@ -9,6 +9,7 @@ export const songs: SongInterface[] = [
     image: `/images/Casette.png`,
     artists: "DJ Toggle",
     album: "Release Beats",
+    albumColor: ["#FFB6C1", "#F7727E", "#92C5F2", "#E8AD5C"],
     duration: "2:56",
   },
   {
@@ -17,6 +18,7 @@ export const songs: SongInterface[] = [
     image: `/images/Code me maybe.png`,
     artists: "Blast Radius",
     album: "Targeted Experience",
+    albumColor: ["#FFB6C1", "#F7727E", "#92C5F2", "#E8AD5C"],
     duration: "3:53",
   },
   {
@@ -25,6 +27,7 @@ export const songs: SongInterface[] = [
     image: `/images/Spotlight.png`,
     artists: "The DevOperatos",
     album: "Instant Recovery",
+    albumColor: ["#FFB6C1", "#F7727E", "#92C5F2", "#E8AD5C"],
     duration: "2:23",
   },
   {
@@ -33,6 +36,7 @@ export const songs: SongInterface[] = [
     image: `/images/Kill switcher cover.png`,
     artists: "Terminal Launch",
     album: "RELEASE",
+    albumColor: ["#FFB6C1", "#F7727E", "#92C5F2", "#E8AD5C"],
     duration: "5:13",
   },
   {
@@ -41,6 +45,7 @@ export const songs: SongInterface[] = [
     image: `/images/Used to code me cover.png`,
     artists: "Lost Weekends",
     album: "Reclaim",
+    albumColor: ["#FFB6C1", "#F7727E", "#92C5F2", "#E8AD5C"],
     duration: "3:22",
   },
 ];
@@ -52,6 +57,7 @@ export const moreNewSongs: SongInterface[] = [
     image: `/images/Casette.png`,
     artists: "DJ Toggle",
     album: "Release Beats",
+    albumColor: ["#FFB6C1", "#F7727E", "#92C5F2", "#E8AD5C"],
     duration: "2:56",
   },
   {
@@ -60,6 +66,7 @@ export const moreNewSongs: SongInterface[] = [
     image: `/images/Code me maybe.png`,
     artists: "Blast Radius",
     album: "Targeted Experience",
+    albumColor: ["#FFB6C1", "#F7727E", "#92C5F2", "#E8AD5C"],
     duration: "3:53",
   },
   {
@@ -68,6 +75,7 @@ export const moreNewSongs: SongInterface[] = [
     image: `/images/Spotlight.png`,
     artists: "The DevOperatos",
     album: "Instant Recovery",
+    albumColor: ["#FFB6C1", "#F7727E", "#92C5F2", "#E8AD5C"],
     duration: "2:23",
   },
   {
@@ -76,6 +84,7 @@ export const moreNewSongs: SongInterface[] = [
     image: `/images/Kill switcher cover.png`,
     artists: "Terminal Launch",
     album: "RELEASE",
+    albumColor: ["#FFB6C1", "#F7727E", "#92C5F2", "#E8AD5C"],
     duration: "5:13",
   },
   {
@@ -84,6 +93,7 @@ export const moreNewSongs: SongInterface[] = [
     image: `/images/Used to code me cover.png`,
     artists: "Lost Weekends",
     album: "Reclaim",
+    albumColor: ["#FFB6C1", "#F7727E", "#92C5F2", "#E8AD5C"],
     duration: "3:22",
   },
 ];

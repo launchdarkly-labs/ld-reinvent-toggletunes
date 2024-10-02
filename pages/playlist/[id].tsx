@@ -96,7 +96,7 @@ const Item = () => {
             <CircleEllipsisIcon className="h-8 w-8" />
           </div>
           <div className="px-6 py-4  w-full flex flex-col ">
-            <PlaylistTableSection songsAPI={playlistSongs} />
+            <PlaylistTableSection playlistSongs={playlistSongs} />
           </div>
         </div>
         <motion.div

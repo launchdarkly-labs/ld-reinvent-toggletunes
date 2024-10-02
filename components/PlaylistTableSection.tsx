@@ -4,8 +4,9 @@ import { Music2Icon } from "lucide-react";
 import { RxCounterClockwiseClock } from "react-icons/rx";
 import { songs } from "@/lib/data";
 
-const PlaylistTableSection = ({ songsAPI = songs }: { songsAPI?: any }) => {
+const PlaylistTableSection = ({ playlistSongs = songs }: { playlistSongs?: any }) => {
   const migrateNewSongDBLDFlag: string = useFlags()["migrate-new-song-db"];
+  console.log(playlistSongs);
   return (
     <table id="songs-bulleted-list" className="mx-4">
       <thead>
@@ -22,7 +23,7 @@ const PlaylistTableSection = ({ songsAPI = songs }: { songsAPI?: any }) => {
         </tr>
       </thead>
       <tbody className=" ">
-        {songsAPI.map((song: any, index: number) => (
+        {playlistSongs.map((song: any, index: number) => (
           <motion.tr
             initial={{ opacity: 0, scale: 0.25 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -37,11 +38,19 @@ const PlaylistTableSection = ({ songsAPI = songs }: { songsAPI?: any }) => {
           >
             <td className="">{index + 1}</td>
             <td className="flex gap-x-4 items-center">
-              {migrateNewSongDBLDFlag?.includes("off") ? (
+              {/* {migrateNewSongDBLDFlag?.includes("off") ? (
                 <Music2Icon className="h-10 w-10" />
               ) : (
                 <img src={song.image} className="h-10 w-10" />
-              )}
+              )} */}
+
+              <div
+                className={`h-10 w-10`}
+                style={{
+                  backgroundImage: `conic-gradient(${song.albumColor[0]}, ${song.albumColor[1]}, ${song.albumColor[2]}, ${song.albumColor[3]})`,
+                }}
+              />
+
               <span className="flex flex-col">
                 <p>{song.title}</p>
                 <p className="text-base text-gray-500">{song.artists}</p>

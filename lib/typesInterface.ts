@@ -4,16 +4,16 @@ export interface PlaylistInterface {
     title: string;
     color?: (typeof colors)[keyof typeof colors];
     cover: string;
-    songs: SongInterface[]
+    songs: SongInterface[],
   }
   
   export interface SongInterface {
     id: string;
     title: string;
     image?: string;
-    albumColor?: string,
     artists: string;
     album: string;
+    albumColor?: string[],
     duration: string;
   }
   
