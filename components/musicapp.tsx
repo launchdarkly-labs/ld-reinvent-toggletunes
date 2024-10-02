@@ -12,15 +12,16 @@ import MusicPlayingBar from "./MusicPlayingBar";
 import PlaylistTableSection from "./PlaylistTableSection";
 import AdSection from "./AdSection";
 import { playlists, moreNewPlaylists, moreNewSongs, songs } from "@/lib/data";
-import { wait } from "@/lib/utils";
+import { aiModelColors } from "@/lib/utils";
 import { v4 as uuidv4 } from "uuid";
 import Link from "next/link";
 import AIGeneratedPlaylistContext from "@/lib/AIGeneratedPlaylistContext";
 import { colors } from "@/lib/color";
 import FourAlbumArtCard from "./FourAlbumArtCard";
-
 import { PulseLoader } from "react-spinners";
-import { PlaylistInterface } from "@/lib/typesInterface";
+import { PlaylistInterface, AIModelInterface, SongInterface } from "@/lib/typesInterface";
+import parseJson from "parse-json";
+import { defaultListOfAIGeneratedSongs } from "@/lib/data";
 
 //TODO: when you go into playlist 1 /2 or whatever, it should be specific per team1/ team 2 etc
 //TODO: i think release should be a really ugly version of spotify from 2012 and then release a new version
@@ -30,12 +31,8 @@ export default function MusicApp({ teamName }: { teamName: string }) {
   const releaseNewUsersPlaylistLDFlag: boolean = useFlags()["release-new-users-playlist"];
   const releaseAdSidebarLDFlag: boolean = useFlags()["release-ad-sidebar"];
   const migrateNewSongDBLDFlag: string = useFlags()["migrate-new-song-db"];
-  const releaseAIPlaylistCreatorLDFlag: {
-    max_tokens: number;
-    modelId: string;
-    p: number;
-    temperature: number;
-  } = useFlags()["release-ai-playlist-creator"];
+  const releaseAIPlaylistCreatorLDFlag: AIModelInterface =
+    useFlags()["release-ai-playlist-creator"];
 
   const { aiPlaylists, setAIPlaylists } = useContext(AIGeneratedPlaylistContext);
 
@@ -55,6 +52,16 @@ export default function MusicApp({ teamName }: { teamName: string }) {
   //   setInput(e.target.value);
   // };
 
+  let aiModelName: string = "";
+
+  if (releaseAIPlaylistCreatorLDFlag?.modelId?.includes("cohere")) {
+    aiModelName = "Cohere Coral";
+  } else if (releaseAIPlaylistCreatorLDFlag?.modelId?.includes("meta")) {
+    aiModelName = "Meta Llama";
+  } else {
+    aiModelName = "Anthropic Claude";
+  }
+
   async function submitQuery(): Promise<void> {
     // const userInput = input;
     // setInput("");
@@ -65,11 +72,11 @@ export default function MusicApp({ teamName }: { teamName: string }) {
     //   id: uuidv4().slice(0, 4),
     // };
 
-    const y = ` create a upbeat party pop playlist from 2020s. limit to 10 songs. avoid songs, album name, and artist name with \& and non alphabet letters within the name.  format it as an array of object for javascript. 
+    const y = ` create a upbeat party pop playlist from 2020s. limit to 10 songs. make it JSON.parse() friendly within javascript with no errors. no backslash, forward slash, or double quotes. format it as an array of object for javascript. 
       from the album art, provide me 4 hex colors that isn't white or grey that is predominately associated with the album art.
        if two colors look similar to each other in terms of tone, then find another color that isn't similar in tone. follow this object structure: 
        {"id":"Insert Number", "title":"Insert Song Name", "artists": "Insert Artist Name", "album":"Insert Album Name", "albumColor":["Insert the 4 Hex colors that isn't white or grey that is predominately associating with the album art here. 
-        if two colors look similar to each other in terms of tone, then find another color that isn't similar in tone."], duration: "Insert how long the song is"}. 
+        if two colors look similar to each other in terms of tone, then find another color that isn't similar in tone."], duration: "Insert how long the song is", playlistName: "Insert the name of cool playlist name that this song should belong in. make it 5 words long. be creative."}. 
        Do not add any additional text before and after the array.`;
 
     const response = await fetch("/api/chat", {
@@ -97,120 +104,39 @@ export default function MusicApp({ teamName }: { teamName: string }) {
     } else {
       aiAnswer = data?.completion; //claude
     }
-    let aiPlaylistAnswerFormatted;
+
+    let aiGeneratedSonglistAnswerFormatted: SongInterface[];
+    const randomThreeNumIndex = Math.floor(Math.random() * 3); //0 to 2 index
+    const randomFiveNumIndex = Math.floor(Math.random() * 5); //0 to 4 index
+
     try {
       console.log("aiAnswer", aiAnswer);
       const firstFormatAnswer = aiAnswer.split("```")[1];
       console.log("firstFormatAnswer", firstFormatAnswer);
-      aiPlaylistAnswerFormatted = JSON?.parse(firstFormatAnswer.split("json")[1]);
+      aiGeneratedSonglistAnswerFormatted = parseJson(firstFormatAnswer.split("json")[1]);
     } catch (e) {
-      aiPlaylistAnswerFormatted = [
-        {
-          id: "1",
-          title: "Dynasty",
-          artists: "San Holo",
-          album: "Stay Vibrant",
-          albumColor: ["#EE1C2B", "#03DAC6", "#F2A05A", "#FC5E5C"],
-          duration: "3:40",
-        },
-        {
-          id: "2",
-          title: "All Of The Girls You Loved Before",
-          artists: "Taylor Swift",
-          album: "Fearless (Taylor's Version)",
-          albumColor: ["#7B16FF", "#7BFF16", "#5E00C3", "#FF2D55"],
-          duration: "3:15",
-        },
-        {
-          id: "3",
-          title: "Leave the Door Open",
-          artists: "Bruno Mars, Anderson .Paak & Silk Sonic",
-          album: "An Evening With Silk Sonic",
-          albumColor: ["#5C8AA3", "#5C50A3", "#3B3984", "#A85C8A"],
-          duration: "3:27",
-        },
-        {
-          id: "4",
-          title: "Daydreaming",
-          artists: "Harry Styles",
-          album: "Fine Line",
-          albumColor: ["#7B3E97", "#1A237E", "#D6643F", "#9B80FF"],
-          duration: "4:05",
-        },
-        {
-          id: "5",
-          title: "All Eyes on Me",
-          artists: "BTS",
-          album: "Map of the Soul: 7",
-          albumColor: ["#2E5894", "#2E-5894", "#25384D", "#7B80BD"],
-          duration: "3:11",
-        },
-        {
-          id: "6",
-          title: "Peaches",
-          artists: "Justin Bieber feat. Daniel Caesar & Giveon",
-          album: "Justice",
-          albumColor: ["#4B1D99", "#2E8B57", "#6D4F68", "#9B4B6D"],
-          duration: "3:09",
-        },
-        {
-          id: "7",
-          title: "Stay",
-          artists: "The Kid Laroi & Justin Bieber",
-          album: "F*CK LOVE (SAVAGE)",
-          albumColor: ["#4A136B", "#2C80BA", "#A99734", "#9B3921"],
-          duration: "3:32",
-        },
-        {
-          id: "8",
-          title: "Mr. Perfectly Fine",
-          artists: "Pink Floyd",
-          album: "The Later Years",
-          albumColor: ["#A8549A", "#505C9A", "#5C2D6D", "#7B686A"],
-          duration: "4:09",
-        },
-        {
-          id: "9",
-          title: "Deja vu",
-          artists: "Olivia Rodrigo",
-          album: "SOUR",
-          albumColor: ["#7B1F71", "#1A0C5C", "#7B6A1A", "#58A5BD"],
-          duration: "3:15",
-        },
-        {
-          id: "10",
-          title: "Good 4 U",
-          artists: "Olivia Rodrigo",
-          album: "SOUR",
-          albumColor: ["#7B0A0C", "#2E4E1A", "#A2685A", "#5C80A0"],
-          duration: "2:58",
-        },
-      ];
+      aiGeneratedSonglistAnswerFormatted = defaultListOfAIGeneratedSongs[randomThreeNumIndex];
     }
 
-    console.log(aiPlaylistAnswerFormatted);
+    console.log(aiGeneratedSonglistAnswerFormatted);
 
     const objectFormat = {
       id: uuidv4().slice(0, 4),
-      title: "Top 40s 2020s",
-      color: colors.emerald,
-      songs: aiPlaylistAnswerFormatted,
+      title: aiGeneratedSonglistAnswerFormatted[randomFiveNumIndex].playlistName,
+      color:
+        randomThreeNumIndex === 0
+          ? colors.emerald
+          : randomThreeNumIndex === 1
+          ? colors.indigo
+          : colors.orange,
+      songs: aiGeneratedSonglistAnswerFormatted,
+      createdBy: `${aiModelName}`,
     };
 
     setAIPlaylists((prevPlaylists): PlaylistInterface[] => {
       return [...prevPlaylists, objectFormat];
     });
   }
-
-  const aiModelName = (): string => {
-    if (releaseAIPlaylistCreatorLDFlag?.modelId?.includes("cohere")) {
-      return "Cohere Coral";
-    } else if (releaseAIPlaylistCreatorLDFlag?.modelId?.includes("meta")) {
-      return "Meta Llama";
-    } else {
-      return "Anthropic Claude";
-    }
-  };
 
   // const ldClient = useLDClient();
 
@@ -336,18 +262,6 @@ export default function MusicApp({ teamName }: { teamName: string }) {
   //   setUpgradeAd(false);
   // };
 
-  const aiModelColors = (): string => {
-    if (releaseAIPlaylistCreatorLDFlag?.modelId?.includes("cohere")) {
-      return "#39594D";
-    } else if (releaseAIPlaylistCreatorLDFlag?.modelId?.includes("meta")) {
-      return "#0668E1";
-    } else {
-      return "#da7756";
-    }
-  };
-
-  //TODO: need to create a context to save the generated playlist
-
   return (
     <Room>
       <EventListenerComponent reloadPage={reloadPage} />
@@ -436,8 +350,11 @@ export default function MusicApp({ teamName }: { teamName: string }) {
                       Made For You{" "}
                       <span className="text-base text-gray-500 ml-2">
                         Powered by{" "}
-                        <span style={{ color: aiModelColors() }} className="font-bold">
-                          {aiModelName()}
+                        <span
+                          style={{ color: aiModelColors(releaseAIPlaylistCreatorLDFlag?.modelId) }}
+                          className="font-bold"
+                        >
+                          {aiModelName}
                         </span>
                       </span>
                     </h2>
@@ -446,18 +363,18 @@ export default function MusicApp({ teamName }: { teamName: string }) {
                       className="relative flex-row space-x-6 overflow-x-auto whitespace-nowrap scrollbar-hide"
                       id="song-cards-list"
                     >
-                      <motion.div
-                        initial={{ opacity: 0, scale: 0.25 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{
-                          duration: 0.25,
-                          ease: [0, 0.71, 0.2, 1.01],
-                          delay: 1 * 0.2,
-                        }}
-                        className="place-items-center border-white bg-ldinputback 
+                      <button onClick={() => submitQuery()}>
+                        <motion.div
+                          initial={{ opacity: 0, scale: 0.25 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          transition={{
+                            duration: 0.25,
+                            ease: [0, 0.71, 0.2, 1.01],
+                            delay: 1 * 0.2,
+                          }}
+                          className="place-items-center border-white bg-ldinputback 
                             rounded-md hover:bg-gray-900/50  inline-block p-4"
-                      >
-                        <button onClick={() => submitQuery()}>
+                        >
                           {isLoading ? (
                             <div className="flex w-max max-w-[75%] flex-col gap-2 rounded-lg px-3 py-2 text-sm bg-gray-100 dark:bg-gray-800">
                               <PulseLoader className="" />
@@ -473,41 +390,50 @@ export default function MusicApp({ teamName }: { teamName: string }) {
                                 <p className="text-lg text-center font-sohne ">
                                   Generate Your AI Playlist
                                 </p>
-                                {/* <p className="text-base text-gray-500  text-center font-sohne font-thin text-wrap w-[50%]">
-                                  All kinds of music, picked by your own AI DJ.
-                                </p> */}
+                                <p className="text-base text-gray-500  text-center font-sohne font-thin text-wrap truncate">
+                                  Picked by your own AI DJ.
+                                </p>
                               </div>
                             </>
                           )}
-                        </button>
-                      </motion.div>
+                        </motion.div>
+                      </button>
 
                       {aiPlaylists.map((playlist: PlaylistInterface) => {
                         return (
-                          <motion.div
-                            initial={{ opacity: 0, scale: 0.25 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            transition={{
-                              duration: 0.25,
-                              ease: [0, 0.71, 0.2, 1.01],
-                              delay: 1 * 0.2,
-                            }}
-                            key={playlist.id}
-                            className="place-items-center border-white bg-ldinputback 
+                          <Link key={playlist.id} href={`/playlist/${playlist.id}`}>
+                            <motion.div
+                              initial={{ opacity: 0, scale: 0.25 }}
+                              animate={{ opacity: 1, scale: 1 }}
+                              transition={{
+                                duration: 0.25,
+                                ease: [0, 0.71, 0.2, 1.01],
+                                delay: 1 * 0.2,
+                              }}
+                              key={playlist.id}
+                              className="place-items-center border-white bg-ldinputback 
                                 rounded-md hover:bg-gray-900/50  inline-block p-4"
-                          >
-                            <Link key={playlist.id} href={`/playlist/${playlist.id}`}>
+                            >
                               <div className="object-cover transition-all hover:scale-105 h-48 w-48 mb-4 rounded-md grid grid-cols-2 grid-rows-2">
                                 <FourAlbumArtCard playlist={playlist} />
                               </div>
-                              <div className="flex flex-col gap-y-2">
+                              <div className="flex flex-col gap-y-2 items-center">
                                 <p className="text-lg text-center font-sohne ">{playlist.title}</p>
-                                {/* <p className="text-base text-gray-500  text-center font-sohne font-thin text-wrap w-[50%]">
-                                    All kinds of music, picked by your own AI DJ.
-                                  </p> */}
+                                <p className="text-base text-gray-500  text-center font-sohne font-thin text-wrap ">
+                                  Created by:{" "}
+                                  <span
+                                    style={{
+                                      color: aiModelColors(playlist.createdBy),
+                                      fontWeight: "900",
+                                    }}
+                                    className=""
+                                  >
+                                    {playlist.createdBy}
+                                  </span>
+                                </p>
                               </div>
-                            </Link>
-                          </motion.div>
+                            </motion.div>
+                          </Link>
                         );
                       })}
                     </div>

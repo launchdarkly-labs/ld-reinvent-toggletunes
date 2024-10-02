@@ -4,7 +4,7 @@ import React from "react";
 const FourAlbumArtCard = ({ playlist }: { playlist: PlaylistInterface }) => {
   return (
     <>
-      {playlist.songs.map((song: SongInterface, index: number) => {
+      {playlist?.songs?.map((song: SongInterface, index: number) => {
         if (index > 3) return;
         let backupBGColor = "";
         let roundedCorner = "";

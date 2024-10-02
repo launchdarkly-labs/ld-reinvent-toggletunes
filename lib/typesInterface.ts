@@ -5,6 +5,7 @@ export interface PlaylistInterface {
     color?: (typeof colors)[keyof typeof colors];
     cover: string;
     songs: SongInterface[],
+    createdBy: string
   }
   
   export interface SongInterface {
@@ -15,5 +16,12 @@ export interface PlaylistInterface {
     album: string;
     albumColor?: string[],
     duration: string;
+    playlistName?: string
   }
   
+  export interface AIModelInterface{
+    max_tokens: number;
+    modelId: string;
+    p: number;
+    temperature: number;
+  }

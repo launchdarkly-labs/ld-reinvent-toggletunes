@@ -2,22 +2,27 @@ import PageHeader from "@/components/PageHeader";
 import { useRouter } from "next/router";
 import { motion, AnimatePresence } from "framer-motion";
 import { useCallback, useEffect, useContext } from "react";
-import { playlists, moreNewPlaylists, songs } from "@/lib/data";
+import { playlists, moreNewPlaylists, songs, defaultListOfAIGeneratedSongs } from "@/lib/data";
 import { PlayIcon, HeartIcon, CircleEllipsisIcon } from "lucide-react";
 import PlaylistTableSection from "@/components/PlaylistTableSection";
 import AIGeneratedPlaylistContext from "@/lib/AIGeneratedPlaylistContext";
-import { PlaylistInterface } from "@/lib/typesInterface";
+import { PlaylistInterface, AIModelInterface } from "@/lib/typesInterface";
 import FourAlbumArtCard from "@/components/FourAlbumArtCard";
+import { aiModelColors } from "@/lib/utils";
 
 const Item = () => {
   const router = useRouter();
   const { id } = router.query; //string
 
   const { aiPlaylists } = useContext(AIGeneratedPlaylistContext);
+
   const allPlaylists: PlaylistInterface[] = [...playlists, ...moreNewPlaylists, ...aiPlaylists];
 
-  const playlist: PlaylistInterface = allPlaylists.find((playlist) => playlist.id === id);
+  let playlist: PlaylistInterface = allPlaylists.find((playlist) => playlist.id === id);
 
+  if (playlist === undefined) {
+    playlist = playlists[0];
+  }
   const playlistSongs = playlist?.songs ? playlist?.songs : songs;
 
   const totalDurationPlaylist = () => {
@@ -89,8 +94,16 @@ const Item = () => {
               </h1>
             </div>
             <div className="flex-1 flex items-end">
-              <div className="text-sm">
-                {/* <PlaylistArtists artists={playlist?.artists} /> */}
+              <div className="text-base">
+                <p className="">
+                  Created by:{" "}
+                  <span
+                    style={{ color: aiModelColors(playlist.createdBy), fontWeight: "900" }}
+                    className="px-[4px] rounded-full bg-slate-50 bg-opacity-40 brightness-125"
+                  >
+                    {playlist.createdBy}
+                  </span>
+                </p>
                 <div className="mt-1">
                   <span className="font-semibold">{playlist?.songs?.length} songs, </span>
                   <span className="text-gray-300">about {totalDurationPlaylist()}</span>
@@ -119,7 +132,7 @@ const Item = () => {
           className="absolute h-screen inset-0 z-0 bg-gradient-to-b from-context"
           style={
             {
-              "--context-color": playlist?.color.accent,
+              "--context-color": playlist?.color?.accent,
             } as React.CSSProperties
           }
         >

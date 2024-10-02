@@ -6,7 +6,7 @@ import { songs } from "@/lib/data";
 
 const PlaylistTableSection = ({ playlistSongs = songs }: { playlistSongs?: any }) => {
   const migrateNewSongDBLDFlag: string = useFlags()["migrate-new-song-db"];
-  console.log(playlistSongs);
+
   return (
     <table id="songs-bulleted-list" className="mx-4">
       <thead>
@@ -38,18 +38,18 @@ const PlaylistTableSection = ({ playlistSongs = songs }: { playlistSongs?: any }
           >
             <td className="">{index + 1}</td>
             <td className="flex gap-x-4 items-center">
-              {/* {migrateNewSongDBLDFlag?.includes("off") ? (
+              {migrateNewSongDBLDFlag?.includes("off") ? (
                 <Music2Icon className="h-10 w-10" />
-              ) : (
+              ) : song.image ? (
                 <img src={song.image} className="h-10 w-10" />
-              )} */}
-
-              <div
-                className={`h-10 w-10`}
-                style={{
-                  backgroundImage: `conic-gradient(${song.albumColor[0]}, ${song.albumColor[1]}, ${song.albumColor[2]}, ${song.albumColor[3]})`,
-                }}
-              />
+              ) : (
+                <div
+                  className={`h-10 w-10`}
+                  style={{
+                    backgroundImage: `conic-gradient(${song.albumColor[0]}, ${song.albumColor[1]}, ${song.albumColor[2]}, ${song.albumColor[3]})`,
+                  }}
+                />
+              )}
 
               <span className="flex flex-col">
                 <p>{song.title}</p>
