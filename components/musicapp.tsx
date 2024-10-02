@@ -17,6 +17,7 @@ import { v4 as uuidv4 } from "uuid";
 import Link from "next/link";
 import AIGeneratedPlaylistContext from "@/lib/AIGeneratedPlaylistContext";
 import { colors } from "@/lib/color";
+import FourAlbumArtCard from "./FourAlbumArtCard";
 
 import { PulseLoader } from "react-spinners";
 import { PlaylistInterface } from "@/lib/typesInterface";
@@ -193,7 +194,6 @@ export default function MusicApp({ teamName }: { teamName: string }) {
       id: uuidv4().slice(0, 4),
       title: "Top 40s 2020s",
       color: colors.emerald,
-      cover: "/images/heart.png",
       songs: aiPlaylistAnswerFormatted,
     };
 
@@ -498,42 +498,7 @@ export default function MusicApp({ teamName }: { teamName: string }) {
                           >
                             <Link key={playlist.id} href={`/playlist/${playlist.id}`}>
                               <div className="object-cover transition-all hover:scale-105 h-48 w-48 mb-4 rounded-md grid grid-cols-2 grid-rows-2">
-                                {playlist.songs.map((song, index) => {
-                                  if (index > 3) return;
-                                  let backupBGColor = "";
-                                  let roundedCorner = "";
-
-                                  if (index ===0){
-                                    backupBGColor = "bg-green-500";
-                                    roundedCorner = "rounded-tl-md"
-                                  }
-
-                                  if (index ===1){
-                                    backupBGColor = "bg-blue-500";
-                                    roundedCorner = "rounded-tr-md"
-                                  }
-
-                                  if (index ===2){
-                                    backupBGColor = "bg-purple-500";
-                                    roundedCorner = "rounded-bl-md"
-                                  }
-
-
-                                  if (index ===3){
-                                    backupBGColor = "bg-yellow-500";
-                                    roundedCorner = "rounded-br-md"
-                                  }
-
-                                  return (
-                                    <span
-                                      className={`${backupBGColor} ${roundedCorner} h-full w-full`}
-                                      style={{
-                                        backgroundImage: `conic-gradient(${song?.albumColor[0]}, ${song?.albumColor[1]}, ${song?.albumColor[2]}, ${song?.albumColor[3]})`,
-                                      }}
-                                      key={song.id}
-                                    ></span>
-                                  );
-                                })}
+                                <FourAlbumArtCard playlist={playlist} />
                               </div>
                               <div className="flex flex-col gap-y-2">
                                 <p className="text-lg text-center font-sohne ">{playlist.title}</p>

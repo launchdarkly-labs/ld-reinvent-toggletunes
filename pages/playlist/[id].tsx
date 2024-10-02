@@ -7,6 +7,8 @@ import { PlayIcon, HeartIcon, CircleEllipsisIcon } from "lucide-react";
 import PlaylistTableSection from "@/components/PlaylistTableSection";
 import AIGeneratedPlaylistContext from "@/lib/AIGeneratedPlaylistContext";
 import { PlaylistInterface } from "@/lib/typesInterface";
+import FourAlbumArtCard from "@/components/FourAlbumArtCard";
+
 const Item = () => {
   const router = useRouter();
   const { id } = router.query; //string
@@ -63,12 +65,20 @@ const Item = () => {
       >
         <PageHeader />
         <div className="flex flex-col items-center md:flex-row md:items-stretch gap-8 px-6 z-10">
-          <div className="h-52 w-52 flex-none">
-            <img
-              src={playlist?.cover}
-              alt={playlist?.title}
-              className="object-cover h-full w-full shadow-[5px_0_30px_0px_rgba(0,0,0,0.3)]"
-            />
+          <div
+            className={`h-52 w-52  ${
+              playlist?.cover ? "flex-none" : "grid grid-cols-2 grid-rows-2"
+            }`}
+          >
+            {playlist?.cover ? (
+              <img
+                src={playlist?.cover}
+                alt={playlist?.title}
+                className="object-cover h-full w-full shadow-[5px_0_30px_0px_rgba(0,0,0,0.3)]"
+              />
+            ) : (
+              <FourAlbumArtCard playlist={playlist} />
+            )}
           </div>
           <div className="flex flex-col justify-between">
             <div className="flex flex-1 items-end">Playlist</div>
