@@ -17,7 +17,7 @@ const Item = () => {
   const { aiPlaylists } = useContext(AIGeneratedPlaylistContext);
 
   const allPlaylists: PlaylistInterface[] = [...playlists, ...moreNewPlaylists, ...aiPlaylists];
-
+// @ts-ignore
   let playlist: PlaylistInterface = allPlaylists.find((playlist) => playlist.id === id);
 
   if (playlist === undefined) {
