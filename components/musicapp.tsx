@@ -20,11 +20,7 @@ import AIGeneratedPlaylistContext from "@/lib/AIGeneratedPlaylistContext";
 import { colors } from "@/lib/color";
 import FourAlbumArtCard from "./FourAlbumArtCard";
 import { BotIcon } from "lucide-react";
-import {
-
-  RingLoader,
-
-} from "react-spinners";
+import { RingLoader } from "react-spinners";
 import { PlaylistInterface, AIModelInterface, SongInterface } from "@/lib/typesInterface";
 import { defaultListOfCohereGeneratedSongs, defaultListOfClaudeGeneratedSongs } from "@/lib/data";
 import { parseJSONArray } from "parse-json-object";
@@ -76,7 +72,7 @@ export default function MusicApp({ teamName }: { teamName?: string }) {
   async function submitQuery(): Promise<void> {
     // const userInput = input;
     // setInput("");
-    console.log("triggered")
+    console.log("triggered");
     setIsLoading(true);
     // const userMessage: Message = {
     //   role: "user",
@@ -330,8 +326,15 @@ export default function MusicApp({ teamName }: { teamName?: string }) {
       <main className="flex flex-col gap-2 font-sohne bg-black overflow-y-visible h-screen lg:overflow-y-hidden">
         {releaseTracklistLDFlag && (
           <section className="w-full flex flex-col ">
+            <section className="bg-red-500 h-16 w-full"></section>
             <section
-              className="flex flex-col sm:flex-row gap-2 my-2 mx-2  h-[calc(100vh-19rem)] sm:h-[calc(100vh-10rem)] relative overflow-y-visible"
+              className={`flex flex-col sm:flex-row gap-2 ${
+                (releaseTracklistLDFlag && releaseNewUsersPlaylistLDFlag == false && releaseRecentTunesLDFlag==false) && "m-0 my-2"
+              } ${
+                (releaseTracklistLDFlag && releaseNewUsersPlaylistLDFlag == false && releaseRecentTunesLDFlag== true) && "m-2"
+              } ${
+                releaseNewUsersPlaylistLDFlag && "m-2 "
+              }  h-[calc(100vh-19rem)] sm:h-[calc(100vh-10rem)] relative overflow-y-visible`}
               id="music-app-main-cards-wrapper"
             >
               {(releaseRecentTunesLDFlag || releaseNewUsersPlaylistLDFlag) && (
@@ -347,13 +350,13 @@ export default function MusicApp({ teamName }: { teamName?: string }) {
                   duration: 0.5,
                   ease: [0, 0.71, 0.2, 1.01],
                 }}
-                className={`rounded-md p-4 bg-ldbackground overflow-y-auto scrollbar-hide w-full flex flex-col gap-6
+                className={` p-4 bg-ldbackground overflow-y-auto scrollbar-hide w-full flex flex-col gap-6
                  ${
                    releaseRecentTunesLDFlag && releaseAdSidebarLDFlag
-                     ? "sm:w-3/5"
-                     : releaseRecentTunesLDFlag
-                     ? "sm:w-4/5"
-                     : "sm:w-full"
+                     ? "sm:w-3/5 rounded-md"
+                     : releaseRecentTunesLDFlag || releaseNewUsersPlaylistLDFlag
+                     ? "sm:w-4/5 rounded-md"
+                     : "sm:w-full "
                  }`}
                 id="music-app-main-center-part"
               >
@@ -364,7 +367,7 @@ export default function MusicApp({ teamName }: { teamName?: string }) {
                       <p className="text-2xl font-bold">Track List</p>
                       <img src="/images/tunes.png" className="ml-auto mr-5" />
                     </h2>
-{/* TODO: need transfrom this to playlist lines - not organized and mismosh */}
+                    {/* TODO: need transfrom this to playlist lines - not organized and mismosh */}
                     <PlaylistTableSection playlistSongs={songsAPI} />
                   </>
                 )}
@@ -429,7 +432,7 @@ export default function MusicApp({ teamName }: { teamName?: string }) {
                       <button
                         onClick={() => submitQuery()}
                         className={`${isLoading ? "cursor-auto" : "cursor-pointer"}`}
-                        disabled = {isLoading ? true: false}
+                        disabled={isLoading ? true : false}
                       >
                         <motion.div
                           initial={{ opacity: 0, scale: 0.25 }}
@@ -445,7 +448,7 @@ export default function MusicApp({ teamName }: { teamName?: string }) {
                           {isLoading ? (
                             <>
                               <div className="flex items-center justify-center object-cover transition-all hover:scale-105 mb-4 h-48 w-48 rounded-lg px-3 py-2 text-sm bg-gray-100 dark:bg-blue-700">
-                                <RingLoader  size={125} color={"#22c55e"} />
+                                <RingLoader size={125} color={"#22c55e"} />
                               </div>
                               <div className="flex flex-col gap-y-2 items-center break-words max-w-[200px]">
                                 <p className="text-lg text-center font-sohne  break-words truncate w-full">
@@ -458,8 +461,8 @@ export default function MusicApp({ teamName }: { teamName?: string }) {
                             </>
                           ) : (
                             <>
-                               <div className="flex items-center justify-center object-cover transition-all hover:scale-105 mb-4 h-48 w-48 rounded-lg px-3 py-2 text-sm bg-gray-100 dark:bg-blue-700">
-                                <BotIcon className="h-24 w-24 text-green-500"/>
+                              <div className="flex items-center justify-center object-cover transition-all hover:scale-105 mb-4 h-48 w-48 rounded-lg px-3 py-2 text-sm bg-gray-100 dark:bg-blue-700">
+                                <BotIcon className="h-24 w-24 text-green-500" />
                               </div>
                               <div className="flex flex-col gap-y-2 items-center align-center break-words  max-w-[180px]">
                                 <p className="text-lg text-center font-sohne  break-words  w-full">
