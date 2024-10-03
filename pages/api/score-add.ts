@@ -1,9 +1,9 @@
 import Redis from "ioredis";
 import type { NextApiRequest, NextApiResponse } from "next";
-let greenStepsArray = [];
-let redStepsArray = [];
-let purpleStepsArray = [];
-let blueStepsArray = [];
+let greenStepsArray:string[] = [];
+let redStepsArray:string[]  = [];
+let purpleStepsArray:string[]  = [];
+let blueStepsArray:string[]  = [];
 const redis = new Redis(process.env.NEXT_PUBLIC_REDIS_URL || "");
 
 //I GUESS THIS IS NOT USED TOO
@@ -29,14 +29,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
         updateEventData(req.body.team.name, req.body.team.stepCompleted);
         break;
       case "Reset":
-        updateEventData(0);
+        updateEventData("","");
         break;
     }
+    // @ts-ignore
     res.status(200).send();
   }
 }
 
-async function updateEventData(team, stepCompleted) {
+async function updateEventData(team:string, stepCompleted:string) {
   switch (team) {
     case "green":
       if (!greenStepsArray.includes(stepCompleted)) {

@@ -362,25 +362,25 @@ function GameAdminDashboard() {
   );
 }
 
-function StatCard({ title, value, icon }) {
-  return (
-    <div className="bg-gray-800 rounded-lg shadow p-4 flex items-center">
-      <div className="p-3 rounded-full bg-purple-600 bg-opacity-75">{icon}</div>
-      <div className="ml-4">
-        <p className="mb-2 text-sm font-medium text-gray-400">{title}</p>
-        <p className="text-lg font-semibold text-white">{value}</p>
-      </div>
-    </div>
-  );
-}
+// function StatCard({ title, value, icon }) {
+//   return (
+//     <div className="bg-gray-800 rounded-lg shadow p-4 flex items-center">
+//       <div className="p-3 rounded-full bg-purple-600 bg-opacity-75">{icon}</div>
+//       <div className="ml-4">
+//         <p className="mb-2 text-sm font-medium text-gray-400">{title}</p>
+//         <p className="text-lg font-semibold text-white">{value}</p>
+//       </div>
+//     </div>
+//   );
+// }
 
-function ServerStatusCard({ name, status, players }) {
-  const statusColor = status === "Online" ? "text-green-400" : "text-red-400";
-  return (
-    <div className="bg-gray-700 rounded-lg p-4">
-      <h3 className="text-lg font-semibold text-white mb-2">{name}</h3>
-      <p className={`text-sm font-medium ${statusColor}`}>{status}</p>
-      <p className="text-sm text-gray-300">Active Players: {players}</p>
-    </div>
-  );
-}
+// function ServerStatusCard({ name, status, players }) {
+//   const statusColor = status === "Online" ? "text-green-400" : "text-red-400";
+//   return (
+//     <div className="bg-gray-700 rounded-lg p-4">
+//       <h3 className="text-lg font-semibold text-white mb-2">{name}</h3>
+//       <p className={`text-sm font-medium ${statusColor}`}>{status}</p>
+//       <p className="text-sm text-gray-300">Active Players: {players}</p>
+//     </div>
+//   );
+// }

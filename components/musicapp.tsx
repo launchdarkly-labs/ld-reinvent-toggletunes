@@ -1,8 +1,9 @@
+// @ts-ignore
 import ItemCard from "@/components/ItemCard";
 import SideBar from "@/components/Sidebar";
 import { motion } from "framer-motion";
 import { useFlags } from "launchdarkly-react-client-sdk";
-import { memo, useEffect, useState } from "react";
+import { memo, useEffect, useState, useContext } from "react";
 import { useRouter } from "next/router";
 import { IoIosMusicalNotes } from "react-icons/io";
 import { useBroadcastEvent, useEventListener } from "../liveblocks.config";
@@ -12,26 +13,190 @@ import MusicPlayingBar from "./MusicPlayingBar";
 import PlaylistTableSection from "./PlaylistTableSection";
 import AdSection from "./AdSection";
 import { playlists, moreNewPlaylists, moreNewSongs, songs } from "@/lib/data";
-import { wait } from "@/lib/utils";
+import { aiModelColors, formatForJSON } from "@/lib/utils";
+import { v4 as uuidv4 } from "uuid";
+import Link from "next/link";
+import AIGeneratedPlaylistContext from "@/lib/AIGeneratedPlaylistContext";
+import { colors } from "@/lib/color";
+import FourAlbumArtCard from "./FourAlbumArtCard";
+import { BotIcon } from "lucide-react";
+import {
+
+  RingLoader,
+
+} from "react-spinners";
+import { PlaylistInterface, AIModelInterface, SongInterface } from "@/lib/typesInterface";
+import { defaultListOfCohereGeneratedSongs, defaultListOfClaudeGeneratedSongs } from "@/lib/data";
+import { parseJSONArray } from "parse-json-object";
+import { META, COHERE, CLAUDE } from "@/lib/constant";
 
 //TODO: when you go into playlist 1 /2 or whatever, it should be specific per team1/ team 2 etc
 //TODO: i think release should be a really ugly version of spotify from 2012 and then release a new version
-export default function MusicApp({ teamName }: { teamName: string }) {
-
+export default function MusicApp({ teamName }: { teamName?: string }) {
   const releaseTracklistLDFlag: boolean = useFlags()["release-tracklist"];
   const releaseRecentTunesLDFlag: boolean = useFlags()["release-recent-tunes"];
   const releaseNewUsersPlaylistLDFlag: boolean = useFlags()["release-new-users-playlist"];
   const releaseAdSidebarLDFlag: boolean = useFlags()["release-ad-sidebar"];
   const migrateNewSongDBLDFlag: string = useFlags()["migrate-new-song-db"];
+  const releaseAIPlaylistCreatorLDFlag: AIModelInterface =
+    useFlags()["release-ai-playlist-creator"];
 
-  const [playlistAPI, setPlaylistAPI] = useState([...playlists]);
-  const [songsAPI, setSongsAPI] = useState([...songs]);
+  const { aiPlaylists, setAIPlaylists } = useContext(AIGeneratedPlaylistContext);
+
+  const [playlistAPI, setPlaylistAPI] = useState(playlists);
+  const [songsAPI, setSongsAPI] = useState(songs);
   // const [setUpgradeAd] = useState(true);
   const [flagOne, setFlagOne] = useState(false);
   const [flagTwo, setFlagTwo] = useState(false);
   const [flagThree, setFlagThree] = useState(false);
   const [flagFour, setFlagFour] = useState(false);
   const [flagFive, setFlagFive] = useState(false);
+  // const [input, setInput] = useState("");
+  // const [messages, setMessages] = useState<Message[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  // const handleInputChange = (e: any): void => {
+  //   setInput(e.target.value);
+  // };
+
+  const randomNumberGen = (array: SongInterface[] | SongInterface[][]): number => {
+    return Math.floor(Math.random() * array.length); //0 to 2 index
+  };
+
+  let aiModelName: string = "";
+
+  if (releaseAIPlaylistCreatorLDFlag?.modelId?.includes("cohere")) {
+    aiModelName = "Cohere Coral";
+  } else if (releaseAIPlaylistCreatorLDFlag?.modelId?.includes("meta")) {
+    aiModelName = "Meta Llama";
+  } else {
+    aiModelName = "Anthropic Claude";
+  }
+
+  async function submitQuery(): Promise<void> {
+    // const userInput = input;
+    // setInput("");
+    console.log("triggered")
+    setIsLoading(true);
+    // const userMessage: Message = {
+    //   role: "user",
+    //   content: userInput,
+    //   id: uuidv4().slice(0, 4),
+    // };
+
+    let defaultListOfGeneratedSongs: SongInterface[] = [];
+    let randomNumDefaultListOfGeneratedSongs = 0;
+
+    if (aiModelName.includes(COHERE)) {
+      defaultListOfGeneratedSongs =
+        defaultListOfCohereGeneratedSongs[randomNumberGen(defaultListOfCohereGeneratedSongs)];
+      randomNumDefaultListOfGeneratedSongs = randomNumberGen(defaultListOfCohereGeneratedSongs);
+    }
+
+    if (aiModelName.includes(CLAUDE) || aiModelName.includes(META)) {
+      defaultListOfGeneratedSongs =
+        defaultListOfClaudeGeneratedSongs[randomNumberGen(defaultListOfClaudeGeneratedSongs)];
+      randomNumDefaultListOfGeneratedSongs = randomNumberGen(defaultListOfClaudeGeneratedSongs);
+    }
+
+    const aiPromptSonglistGenerate = `create a upbeat party pop playlist. limit to 10 songs. format it so you can use JSON.parse() within javascript without any errors. no backslash or forward slash. format it as an array of object for javascript. 
+      from the album art, provide me 4 hex colors that isn't white or grey that is predominately associated with the album art.
+       if two colors look similar to each other in terms of tone, then find another color that isn't similar in tone. follow this object structure: 
+       {id:"Insert Number", title:"Insert Song Name", artists: "Insert Artist Name", album:"Insert Album Name", albumColor:["Insert the 4 Hex colors that isn't white or grey that is predominately associating with the album art here. 
+        if two colors look similar to each other in terms of tone, then find another color that isn't similar in tone."], duration: "Insert how long the song is. Format MINUTE:SECONDS", 
+        playlistName: "Insert the name of cool playlist name that this song should belong in. make it 5 words long. be creative."}. 
+       Do not add any additional text before and after the array.`;
+
+    const response = await fetch("/api/ai-songlist", {
+      method: "POST",
+      body: JSON.stringify(aiPromptSonglistGenerate),
+    });
+
+    const data: {
+      generation: string;
+      generations: [{ text: string }];
+      completion: string;
+      stop: string;
+      type: string;
+      generation_token_count: number;
+      prompt_token_count: number;
+      prompt: string;
+    } = await response.json();
+
+    setIsLoading(false);
+    let aiAnswer: string;
+
+    if (data?.generation) {
+      aiAnswer = data?.generation; //llama
+    } else if (data?.generations?.length > 0) {
+      aiAnswer = data?.generations[0]?.text; //cohere
+    } else {
+      aiAnswer = data?.completion; //claude
+    }
+
+    let aiGeneratedSonglistAnswerFormatted: SongInterface[];
+
+    aiAnswer = formatForJSON(aiAnswer);
+
+    try {
+      console.log("aiAnswer", aiAnswer);
+
+      if (aiModelName?.includes(COHERE)) {
+        const firstFormatAnswer = aiAnswer.split("```")[1];
+        // @ts-ignore
+        aiGeneratedSonglistAnswerFormatted = parseJSONArray(firstFormatAnswer.split("json")[1]);
+        console.log(aiGeneratedSonglistAnswerFormatted);
+      } else if (aiModelName?.includes(CLAUDE)) {
+        let claudeFormatAnswer: string = aiAnswer;
+
+        if (aiAnswer.includes("partyPopPlaylist = ")) {
+          claudeFormatAnswer = aiAnswer.split("partyPopPlaylist = ")[1];
+        }
+        // @ts-ignore
+        aiGeneratedSonglistAnswerFormatted = parseJSONArray(claudeFormatAnswer);
+      } else if (aiModelName?.includes(META)) {
+        //TODO: META DOESN'T REALLY WORK BUT WE ARE USING DEFAULT ANSWERS FROM CLAUDE
+        let metaFormatAnswer: string = aiAnswer;
+        if (aiAnswer.includes("```")) {
+          metaFormatAnswer = aiAnswer.split("```")[1];
+          console.log(metaFormatAnswer);
+        } else if (aiAnswer.includes("[{")) {
+          metaFormatAnswer = aiAnswer.split("[{")[1];
+          console.log(aiAnswer.split("[{"));
+        }
+        // @ts-ignore
+        aiGeneratedSonglistAnswerFormatted = parseJSONArray(metaFormatAnswer);
+        console.log(aiGeneratedSonglistAnswerFormatted);
+      }
+    } catch (e) {
+      aiGeneratedSonglistAnswerFormatted = defaultListOfGeneratedSongs;
+    }
+    // @ts-ignore
+    if (aiGeneratedSonglistAnswerFormatted === undefined) {
+      aiGeneratedSonglistAnswerFormatted = defaultListOfGeneratedSongs;
+    }
+
+    console.log(aiGeneratedSonglistAnswerFormatted);
+
+    const objectFormat = {
+      id: uuidv4().slice(0, 4),
+      title:
+        aiGeneratedSonglistAnswerFormatted[randomNumberGen(aiGeneratedSonglistAnswerFormatted)]
+          .playlistName,
+      color:
+        randomNumDefaultListOfGeneratedSongs === 0
+          ? colors.emerald
+          : randomNumDefaultListOfGeneratedSongs === 1
+          ? colors.indigo
+          : colors.orange,
+      songs: aiGeneratedSonglistAnswerFormatted,
+      createdBy: `${aiModelName}`,
+    };
+    // @ts-ignore
+    setAIPlaylists((prevPlaylists): PlaylistInterface[] => {
+      return [objectFormat, ...prevPlaylists];
+    });
+  }
 
   // const ldClient = useLDClient();
 
@@ -127,7 +292,13 @@ export default function MusicApp({ teamName }: { teamName: string }) {
     // };
 
     triggerSteps();
-  }, [releaseTracklistLDFlag, releaseRecentTunesLDFlag, releaseNewUsersPlaylistLDFlag, releaseAdSidebarLDFlag, migrateNewSongDBLDFlag]);
+  }, [
+    releaseTracklistLDFlag,
+    releaseRecentTunesLDFlag,
+    releaseNewUsersPlaylistLDFlag,
+    releaseAdSidebarLDFlag,
+    migrateNewSongDBLDFlag,
+  ]);
 
   useEffect(() => {
     // setPlaylistAPI([]);
@@ -153,6 +324,8 @@ export default function MusicApp({ teamName }: { teamName: string }) {
 
   return (
     <Room>
+      {/* 
+// @ts-ignore */}
       <EventListenerComponent reloadPage={reloadPage} />
       <main className="flex flex-col gap-2 font-sohne bg-black overflow-y-visible h-screen lg:overflow-y-hidden">
         {releaseTracklistLDFlag && (
@@ -176,7 +349,11 @@ export default function MusicApp({ teamName }: { teamName: string }) {
                 }}
                 className={`rounded-md p-4 bg-ldbackground overflow-y-auto scrollbar-hide w-full flex flex-col gap-6
                  ${
-                   releaseRecentTunesLDFlag && releaseAdSidebarLDFlag ? "sm:w-3/5" : releaseRecentTunesLDFlag ? "sm:w-4/5" : "sm:w-full"
+                   releaseRecentTunesLDFlag && releaseAdSidebarLDFlag
+                     ? "sm:w-3/5"
+                     : releaseRecentTunesLDFlag
+                     ? "sm:w-4/5"
+                     : "sm:w-full"
                  }`}
                 id="music-app-main-center-part"
               >
@@ -187,7 +364,8 @@ export default function MusicApp({ teamName }: { teamName: string }) {
                       <p className="text-2xl font-bold">Track List</p>
                       <img src="/images/tunes.png" className="ml-auto mr-5" />
                     </h2>
-                    <PlaylistTableSection songsAPI={songsAPI} />
+
+                    <PlaylistTableSection playlistSongs={songsAPI} />
                   </>
                 )}
 
@@ -208,7 +386,7 @@ export default function MusicApp({ teamName }: { teamName: string }) {
                      )} */}
                     </div>
 
-                    <h2 className="text-2xl font-bold items-center">Recommended Playlist</h2>
+                    <h2 className="text-2xl font-bold items-center">Recommended Playlists</h2>
 
                     <div className="relative grid gap-y-4 gap-x-6 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3">
                       {playlistAPI.map((playlist, index) => (
@@ -231,7 +409,117 @@ export default function MusicApp({ teamName }: { teamName: string }) {
 
                 {releaseNewUsersPlaylistLDFlag && (
                   <section className={`flex flex-col gap-y-4 `}>
-                    <h2 className="text-2xl  font-bold">Trending Hits</h2>
+                    <h2 className="text-2xl font-bold">
+                      Made For You{" "}
+                      <span className="text-base text-gray-500 ml-2">
+                        Powered by{" "}
+                        <span
+                          style={{ color: aiModelColors(releaseAIPlaylistCreatorLDFlag?.modelId) }}
+                          className="font-bold"
+                        >
+                          {aiModelName}
+                        </span>
+                      </span>
+                    </h2>
+
+                    <div
+                      className="relative flex-row space-x-6 overflow-x-auto whitespace-nowrap scrollbar-hide"
+                      id="song-cards-list"
+                    >
+                      <button
+                        onClick={() => submitQuery()}
+                        className={`${isLoading ? "cursor-auto" : "cursor-pointer"}`}
+                        disabled = {isLoading ? true: false}
+                      >
+                        <motion.div
+                          initial={{ opacity: 0, scale: 0.25 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          transition={{
+                            duration: 0.25,
+                            ease: [0, 0.71, 0.2, 1.01],
+                            delay: 1 * 0.2,
+                          }}
+                          className="place-items-center border-white bg-ldinputback 
+                            rounded-md hover:bg-gray-900/50  inline-block p-4"
+                        >
+                          {isLoading ? (
+                            <>
+                              <div className="flex items-center justify-center object-cover transition-all hover:scale-105 mb-4 h-48 w-48 rounded-lg px-3 py-2 text-sm bg-gray-100 dark:bg-blue-700">
+                                <RingLoader  size={125} color={"#22c55e"} />
+                              </div>
+                              <div className="flex flex-col gap-y-2 items-center break-words max-w-[200px]">
+                                <p className="text-lg text-center font-sohne  break-words truncate w-full">
+                                  Generating...
+                                </p>
+                                <p className="text-base text-gray-500  text-center font-sohne font-thin truncate break-words w-full">
+                                  Your AI Playlist
+                                </p>
+                              </div>
+                            </>
+                          ) : (
+                            <>
+                               <div className="flex items-center justify-center object-cover transition-all hover:scale-105 mb-4 h-48 w-48 rounded-lg px-3 py-2 text-sm bg-gray-100 dark:bg-blue-700">
+                                <BotIcon className="h-24 w-24 text-green-500"/>
+                              </div>
+                              <div className="flex flex-col gap-y-2 items-center align-center break-words  max-w-[180px]">
+                                <p className="text-lg text-center font-sohne  break-words  w-full">
+                                  Generate Your Playlist
+                                </p>
+                                <p className="text-base text-gray-500  text-center font-sohne font-thin truncate break-words w-full">
+                                  Picked by your own AI DJ
+                                </p>
+                              </div>
+                            </>
+                          )}
+                        </motion.div>
+                      </button>
+
+                      {aiPlaylists.map((playlist: PlaylistInterface) => {
+                        return (
+                          <Link key={playlist.id} href={`/playlist/${playlist.id}`}>
+                            <motion.div
+                              initial={{ opacity: 0, scale: 0.25 }}
+                              animate={{ opacity: 1, scale: 1 }}
+                              transition={{
+                                duration: 0.25,
+                                ease: [0, 0.71, 0.2, 1.01],
+                                delay: 1 * 0.2,
+                              }}
+                              key={playlist.id}
+                              className="place-items-center border-white bg-ldinputback 
+                                rounded-md hover:bg-gray-900/50  inline-block p-4"
+                            >
+                              <div className="object-cover transition-all hover:scale-105 h-48 w-48 mb-4 rounded-md grid grid-cols-2 grid-rows-2">
+                                <FourAlbumArtCard playlist={playlist} />
+                              </div>
+                              <div className="flex flex-col gap-y-2 items-center break-words max-w-[180px]">
+                                <p className="text-lg text-center font-sohne  break-words truncate w-full">
+                                  {playlist.title}
+                                </p>
+                                <p className="text-base text-gray-500  text-center font-sohne font-thin truncate break-words w-full">
+                                  Created by:{" "}
+                                  <span
+                                    style={{
+                                      color: aiModelColors(playlist.createdBy),
+                                      fontWeight: "900",
+                                    }}
+                                    className=""
+                                  >
+                                    {playlist.createdBy}
+                                  </span>
+                                </p>
+                              </div>
+                            </motion.div>
+                          </Link>
+                        );
+                      })}
+                    </div>
+                  </section>
+                )}
+
+                {releaseNewUsersPlaylistLDFlag && (
+                  <section className={`flex flex-col gap-y-4 `}>
+                    <h2 className="text-2xl  font-bold">Trending Playlists</h2>
                     <div
                       className="relative flex-row space-x-6 overflow-x-auto whitespace-nowrap scrollbar-hide"
                       id="song-cards-list"
@@ -251,13 +539,13 @@ export default function MusicApp({ teamName }: { teamName: string }) {
                         >
                           <img
                             className="object-cover transition-all hover:scale-105 h-48 w-48 mb-4"
-                            alt="astronaut"
+                            alt={song.title}
                             src={song.image}
                           />
                           <div className="flex flex-col gap-y-2">
                             <p className="text-lg text-center font-sohne ">{song.title}</p>
                             <p className="text-base text-gray-500  text-center font-sohne font-thin">
-                              {song.duration}
+                              Created by: User
                             </p>
                           </div>
                         </motion.div>
@@ -278,11 +566,14 @@ export default function MusicApp({ teamName }: { teamName: string }) {
     </Room>
   );
 }
-
-const EventListenerComponent = memo(function EventListenerComponent({ reloadPage }) {
+// @ts-ignore
+const EventListenerComponent = memo(function EventListenerComponent({
+  // @ts-ignore
+  reloadPage,
+}) {
   console.log("Event listener online");
   useEventListener(({ event, user, connectionId }) => {
-    async function resetFlagSteps(event) {
+    async function resetFlagSteps(event: any) {
       console.log(event);
       switch (event.type) {
         case "resetTimer":

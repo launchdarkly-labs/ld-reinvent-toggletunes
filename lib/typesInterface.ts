@@ -1,18 +1,27 @@
 import { colors } from "./color";
-export interface Playlist {
-    id: number;
+export interface PlaylistInterface {
+    id: string;
     title: string;
-    color: (typeof colors)[keyof typeof colors];
+    color?: (typeof colors)[keyof typeof colors];
     cover: string;
-    artists: string;
+    songs: SongInterface[],
+    createdBy: string
   }
   
-  export interface Song {
-    id: number;
+  export interface SongInterface {
+    id: string;
     title: string;
-    image: string;
+    image?: string;
     artists: string;
     album: string;
+    albumColor?: string[],
     duration: string;
+    playlistName?: string
   }
   
+  export interface AIModelInterface{
+    max_tokens: number;
+    modelId: string;
+    p: number;
+    temperature: number;
+  }

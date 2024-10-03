@@ -1,10 +1,9 @@
 import { useRouter } from "next/router";
-import type { Playlist } from "../lib/data";
 import Link from "next/link";
 import { PlayIcon } from "lucide-react";
-
+import { PlaylistInterface,  } from "@/lib/typesInterface";
 interface Props {
-  playlist: Playlist;
+  playlist: PlaylistInterface;
 }
 
 const ItemCard = ({ playlist }: Props) => {
