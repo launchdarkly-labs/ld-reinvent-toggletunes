@@ -12,7 +12,7 @@ import MusicPlayingBar from "./MusicPlayingBar";
 import PlaylistTableSection from "./PlaylistTableSection";
 import AdSection from "./AdSection";
 import { playlists, moreNewPlaylists, moreNewSongs, songs } from "@/lib/data";
-import { aiModelColors } from "@/lib/utils";
+import { aiModelColors, formatForJSON } from "@/lib/utils";
 import { v4 as uuidv4 } from "uuid";
 import Link from "next/link";
 import AIGeneratedPlaylistContext from "@/lib/AIGeneratedPlaylistContext";
@@ -20,8 +20,9 @@ import { colors } from "@/lib/color";
 import FourAlbumArtCard from "./FourAlbumArtCard";
 import { PulseLoader } from "react-spinners";
 import { PlaylistInterface, AIModelInterface, SongInterface } from "@/lib/typesInterface";
-import { defaultListOfCohereGeneratedSongs } from "@/lib/data";
+import { defaultListOfCohereGeneratedSongs, defaultListOfClaudeGeneratedSongs } from "@/lib/data";
 import { parseJSONArray } from "parse-json-object";
+import { META, COHERE, CLAUDE } from "@/lib/constant";
 
 //TODO: when you go into playlist 1 /2 or whatever, it should be specific per team1/ team 2 etc
 //TODO: i think release should be a really ugly version of spotify from 2012 and then release a new version
@@ -52,6 +53,10 @@ export default function MusicApp({ teamName }: { teamName: string }) {
   //   setInput(e.target.value);
   // };
 
+  const randomNumberGen = (array: SongInterface[] | SongInterface[][]): number => {
+    return Math.floor(Math.random() * array.length); //0 to 2 index
+  };
+
   let aiModelName: string = "";
 
   if (releaseAIPlaylistCreatorLDFlag?.modelId?.includes("cohere")) {
@@ -61,22 +66,6 @@ export default function MusicApp({ teamName }: { teamName: string }) {
   } else {
     aiModelName = "Anthropic Claude";
   }
-
-  const formatForJSON = (unformattedJson: string) => {
-    let formattedJson = unformattedJson
-      .replace(/\\n/g, "\\n")
-      .replace(/\\'/g, "\\'")
-      .replace(/\\"/g, '\\"')
-      .replace(/\\&/g, "\\&")
-      .replace(/\\r/g, "\\r")
-      .replace(/\\t/g, "\\t")
-      .replace(/\\b/g, "\\b")
-      .replace(/\\f/g, "\\f");
-    // Remove non-printable and other non-valid JSON characters
-    formattedJson = formattedJson.replace(/[\u0000-\u001F]+/g, "");
-
-    return formattedJson;
-  };
 
   async function submitQuery(): Promise<void> {
     // const userInput = input;
@@ -88,7 +77,22 @@ export default function MusicApp({ teamName }: { teamName: string }) {
     //   id: uuidv4().slice(0, 4),
     // };
 
-    const y = ` create a upbeat party pop playlist from 2020s. limit to 10 songs. format it so you can use JSON.parse() within javascript without any errors. no backslash or forward slash. format it as an array of object for javascript. 
+    let defaultListOfGeneratedSongs: SongInterface[] = [];
+    let randomNumDefaultListOfGeneratedSongs = 0;
+
+    if (aiModelName.includes(COHERE)) {
+      defaultListOfGeneratedSongs =
+        defaultListOfCohereGeneratedSongs[randomNumberGen(defaultListOfCohereGeneratedSongs)];
+      randomNumDefaultListOfGeneratedSongs = randomNumberGen(defaultListOfCohereGeneratedSongs);
+    }
+
+    if (aiModelName.includes(CLAUDE) || aiModelName.includes(META)) {
+      defaultListOfGeneratedSongs =
+        defaultListOfClaudeGeneratedSongs[randomNumberGen(defaultListOfClaudeGeneratedSongs)];
+      randomNumDefaultListOfGeneratedSongs = randomNumberGen(defaultListOfClaudeGeneratedSongs);
+    }
+
+    const aiPromptSonglistGenerate = `create a upbeat party pop playlist from 2020s. limit to 10 songs. format it so you can use JSON.parse() within javascript without any errors. no backslash or forward slash. format it as an array of object for javascript. 
       from the album art, provide me 4 hex colors that isn't white or grey that is predominately associated with the album art.
        if two colors look similar to each other in terms of tone, then find another color that isn't similar in tone. follow this object structure: 
        {id:"Insert Number", title:"Insert Song Name", artists: "Insert Artist Name", album:"Insert Album Name", albumColor:["Insert the 4 Hex colors that isn't white or grey that is predominately associating with the album art here. 
@@ -98,7 +102,7 @@ export default function MusicApp({ teamName }: { teamName: string }) {
 
     const response = await fetch("/api/chat", {
       method: "POST",
-      body: JSON.stringify(y),
+      body: JSON.stringify(aiPromptSonglistGenerate),
     });
 
     const data: {
@@ -111,6 +115,7 @@ export default function MusicApp({ teamName }: { teamName: string }) {
       prompt_token_count: number;
       prompt: string;
     } = await response.json();
+
     setIsLoading(false);
     let aiAnswer: string;
 
@@ -123,46 +128,56 @@ export default function MusicApp({ teamName }: { teamName: string }) {
     }
 
     let aiGeneratedSonglistAnswerFormatted: SongInterface[];
-    const randomThreeNumIndex = Math.floor(Math.random() * 3); //0 to 2 index
-    aiAnswer = formatForJSON(aiAnswer)
+
+    aiAnswer = formatForJSON(aiAnswer);
 
     try {
       console.log("aiAnswer", aiAnswer);
 
-      if (aiModelName?.includes("cohere") || aiModelName?.includes("Cohere")) {
+      if (aiModelName?.includes(COHERE)) {
         const firstFormatAnswer = aiAnswer.split("```")[1];
-        console.log("firstFormatAnswer", firstFormatAnswer);
         aiGeneratedSonglistAnswerFormatted = parseJSONArray(firstFormatAnswer.split("json")[1]);
-        console.log(firstFormatAnswer.split("json"));
         console.log(aiGeneratedSonglistAnswerFormatted);
-      } else if (aiModelName?.includes("claude") || aiModelName?.includes("Claude")) {
+      } else if (aiModelName?.includes(CLAUDE)) {
         let claudeFormatAnswer: string = aiAnswer;
 
         if (aiAnswer.includes("partyPopPlaylist = ")) {
           claudeFormatAnswer = aiAnswer.split("partyPopPlaylist = ")[1];
         }
+
         aiGeneratedSonglistAnswerFormatted = parseJSONArray(claudeFormatAnswer);
+      } else if (aiModelName?.includes(META)) {
+        //TODO: META DOESN'T REALLY WORK BUT WE ARE USING DEFAULT ANSWERS FROM CLAUDE
+        let metaFormatAnswer: string = aiAnswer;
+        if (aiAnswer.includes("```")) {
+          metaFormatAnswer = aiAnswer.split("```")[1];
+          console.log(metaFormatAnswer);
+        } else if (aiAnswer.includes("[{")) {
+          metaFormatAnswer = aiAnswer.split("[{")[1];
+          console.log(aiAnswer.split("[{"));
+        }
+        aiGeneratedSonglistAnswerFormatted = parseJSONArray(metaFormatAnswer);
         console.log(aiGeneratedSonglistAnswerFormatted);
       }
     } catch (e) {
-      aiGeneratedSonglistAnswerFormatted = defaultListOfCohereGeneratedSongs[randomThreeNumIndex];
+      aiGeneratedSonglistAnswerFormatted = defaultListOfGeneratedSongs;
     }
 
     if (aiGeneratedSonglistAnswerFormatted === undefined) {
-      aiGeneratedSonglistAnswerFormatted = defaultListOfCohereGeneratedSongs[randomThreeNumIndex];
+      aiGeneratedSonglistAnswerFormatted = defaultListOfGeneratedSongs;
     }
 
     console.log(aiGeneratedSonglistAnswerFormatted);
-    const randomFiveNumIndex = Math.floor(
-      Math.random() * aiGeneratedSonglistAnswerFormatted?.length + 1
-    ); //0 to 4 index
+
     const objectFormat = {
       id: uuidv4().slice(0, 4),
-      title: aiGeneratedSonglistAnswerFormatted[randomFiveNumIndex].playlistName,
+      title:
+        aiGeneratedSonglistAnswerFormatted[randomNumberGen(aiGeneratedSonglistAnswerFormatted)]
+          .playlistName,
       color:
-        randomThreeNumIndex === 0
+        randomNumDefaultListOfGeneratedSongs === 0
           ? colors.emerald
-          : randomThreeNumIndex === 1
+          : randomNumDefaultListOfGeneratedSongs === 1
           ? colors.indigo
           : colors.orange,
       songs: aiGeneratedSonglistAnswerFormatted,
