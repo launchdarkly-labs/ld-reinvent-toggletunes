@@ -92,7 +92,7 @@ export default function MusicApp({ teamName }: { teamName: string }) {
       randomNumDefaultListOfGeneratedSongs = randomNumberGen(defaultListOfClaudeGeneratedSongs);
     }
 
-    const aiPromptSonglistGenerate = `create a upbeat party pop playlist from 2020s. limit to 10 songs. format it so you can use JSON.parse() within javascript without any errors. no backslash or forward slash. format it as an array of object for javascript. 
+    const aiPromptSonglistGenerate = `create a upbeat party pop playlist. limit to 10 songs. format it so you can use JSON.parse() within javascript without any errors. no backslash or forward slash. format it as an array of object for javascript. 
       from the album art, provide me 4 hex colors that isn't white or grey that is predominately associated with the album art.
        if two colors look similar to each other in terms of tone, then find another color that isn't similar in tone. follow this object structure: 
        {id:"Insert Number", title:"Insert Song Name", artists: "Insert Artist Name", album:"Insert Album Name", albumColor:["Insert the 4 Hex colors that isn't white or grey that is predominately associating with the album art here. 
@@ -437,12 +437,12 @@ export default function MusicApp({ teamName }: { teamName: string }) {
                                 alt="astronaut"
                                 src={`/images/Casette.png`}
                               />
-                              <div className="flex flex-col gap-y-2">
-                                <p className="text-lg text-center font-sohne ">
+                              <div className="flex flex-col gap-y-2 items-center break-words w-[200px]">
+                                <p className="text-lg text-center font-sohne  break-words truncate w-full">
                                   Generate Your AI Playlist
                                 </p>
-                                <p className="text-base text-gray-500  text-center font-sohne font-thin text-wrap truncate">
-                                  Picked by your own AI DJ.
+                                <p className="text-base text-gray-500  text-center font-sohne font-thin truncate break-words w-full">
+                                  Picked by your own AI DJ
                                 </p>
                               </div>
                             </>
@@ -468,9 +468,11 @@ export default function MusicApp({ teamName }: { teamName: string }) {
                               <div className="object-cover transition-all hover:scale-105 h-48 w-48 mb-4 rounded-md grid grid-cols-2 grid-rows-2">
                                 <FourAlbumArtCard playlist={playlist} />
                               </div>
-                              <div className="flex flex-col gap-y-2 items-center">
-                                <p className="text-lg text-center font-sohne ">{playlist.title}</p>
-                                <p className="text-base text-gray-500  text-center font-sohne font-thin text-wrap ">
+                              <div className="flex flex-col gap-y-2 items-center break-words w-[200px]">
+                                <p className="text-lg text-center font-sohne  break-words truncate w-full">
+                                  {playlist.title}
+                                </p>
+                                <p className="text-base text-gray-500  text-center font-sohne font-thin truncate break-words w-full">
                                   Created by:{" "}
                                   <span
                                     style={{
@@ -518,9 +520,9 @@ export default function MusicApp({ teamName }: { teamName: string }) {
                           />
                           <div className="flex flex-col gap-y-2">
                             <p className="text-lg text-center font-sohne ">{song.title}</p>
-                            {/* <p className="text-base text-gray-500  text-center font-sohne font-thin">
-                              {song.duration}
-                            </p> */}
+                            <p className="text-base text-gray-500  text-center font-sohne font-thin">
+                              Created by: User
+                            </p>
                           </div>
                         </motion.div>
                       ))}
