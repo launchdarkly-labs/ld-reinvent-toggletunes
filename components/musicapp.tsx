@@ -417,7 +417,7 @@ export default function MusicApp({ teamName }: { teamName?: string }) {
                   </section>
                 )}
 
-                {releaseNewUsersPlaylistLDFlag && (
+                {releaseNewUsersPlaylistLDFlag && releaseAIPlaylistCreatorLDFlag ? (
                   <section className={`flex flex-col gap-y-4 `}>
                     <h2 className="text-2xl font-bold">
                       Made For You{" "}
@@ -525,7 +525,7 @@ export default function MusicApp({ teamName }: { teamName?: string }) {
                       })}
                     </div>
                   </section>
-                )}
+                ) : null}
 
                 {releaseNewUsersPlaylistLDFlag && (
                   <section className={`flex flex-col gap-y-4 `}>

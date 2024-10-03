@@ -13,10 +13,11 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Label } from "./ui/label";
-import { User } from "lucide-react";
+
 import LoginContext from "@/lib/LoginContext";
 import { PERSONA_ROLE_USER, PERSONA_ROLE_DEVELOPER } from "@/lib/constant";
 import { Persona } from "@/lib/typesInterface";
+import { Search, User } from "lucide-react"
 
 export default function Navbar() {
   const { loginUser, userObject, allUsers } = useContext(LoginContext);
@@ -39,11 +40,34 @@ export default function Navbar() {
     }
   };
 
+  const [searchQuery, setSearchQuery] = useState("")
+
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault()
+    // Implement your search logic here
+    console.log("Searching for:", searchQuery)
+  }
+
   return (
-    <nav className="flex items-center justify-end px-4 py-1 ">
+    <nav className="flex items-center justify-between px-4 pt-2 pb-1 ">
       {/* <Link href="/" className="text-2xl font-bold">
         Logo
       </Link> */}
+      <div className="empty"></div>
+      <form onSubmit={handleSearch} className="flex-1 max-w-md mx-4 ml-[14rem]">
+        <div className="relative">
+          <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
+          <Input
+            type="search"
+            placeholder="Search..."
+            className="pl-10 pr-4 rounded-full"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </div>
+      </form>
+      <div className="flex items-center">
       <h3 className="mr-3">
         {userObject.personatier}, {userObject.personarole}
       </h3>
@@ -80,6 +104,8 @@ export default function Navbar() {
           )}
         </DropdownMenuContent> */}
       </DropdownMenu>
+      </div>
+  
     </nav>
   );
 }
