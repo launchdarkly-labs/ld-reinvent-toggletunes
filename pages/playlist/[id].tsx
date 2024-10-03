@@ -115,7 +115,7 @@ const Item = () => {
             <HeartIcon className="h-8 w-8" />
             <CircleEllipsisIcon className="h-8 w-8" />
           </div>
-          <div className="px-6 py-4  w-full flex flex-col ">
+          <div className="px-0 py-0 sm:px-6 sm:py-4  w-full flex flex-col ">
             <PlaylistTableSection playlistSongs={playlistSongs} />
           </div>
         </div>

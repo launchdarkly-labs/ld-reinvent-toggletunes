@@ -19,7 +19,12 @@ import Link from "next/link";
 import AIGeneratedPlaylistContext from "@/lib/AIGeneratedPlaylistContext";
 import { colors } from "@/lib/color";
 import FourAlbumArtCard from "./FourAlbumArtCard";
-import { PulseLoader } from "react-spinners";
+import { BotIcon } from "lucide-react";
+import {
+
+  RingLoader,
+
+} from "react-spinners";
 import { PlaylistInterface, AIModelInterface, SongInterface } from "@/lib/typesInterface";
 import { defaultListOfCohereGeneratedSongs, defaultListOfClaudeGeneratedSongs } from "@/lib/data";
 import { parseJSONArray } from "parse-json-object";
@@ -71,6 +76,7 @@ export default function MusicApp({ teamName }: { teamName?: string }) {
   async function submitQuery(): Promise<void> {
     // const userInput = input;
     // setInput("");
+    console.log("triggered")
     setIsLoading(true);
     // const userMessage: Message = {
     //   role: "user",
@@ -101,7 +107,7 @@ export default function MusicApp({ teamName }: { teamName?: string }) {
         playlistName: "Insert the name of cool playlist name that this song should belong in. make it 5 words long. be creative."}. 
        Do not add any additional text before and after the array.`;
 
-    const response = await fetch("/api/chat", {
+    const response = await fetch("/api/ai-songlist", {
       method: "POST",
       body: JSON.stringify(aiPromptSonglistGenerate),
     });
@@ -401,7 +407,7 @@ export default function MusicApp({ teamName }: { teamName?: string }) {
                   </section>
                 )}
 
-                {true && (
+                {releaseNewUsersPlaylistLDFlag && (
                   <section className={`flex flex-col gap-y-4 `}>
                     <h2 className="text-2xl font-bold">
                       Made For You{" "}
@@ -420,7 +426,11 @@ export default function MusicApp({ teamName }: { teamName?: string }) {
                       className="relative flex-row space-x-6 overflow-x-auto whitespace-nowrap scrollbar-hide"
                       id="song-cards-list"
                     >
-                      <button onClick={() => submitQuery()}>
+                      <button
+                        onClick={() => submitQuery()}
+                        className={`${isLoading ? "cursor-auto" : "cursor-pointer"}`}
+                        disabled = {isLoading ? true: false}
+                      >
                         <motion.div
                           initial={{ opacity: 0, scale: 0.25 }}
                           animate={{ opacity: 1, scale: 1 }}
@@ -433,19 +443,27 @@ export default function MusicApp({ teamName }: { teamName?: string }) {
                             rounded-md hover:bg-gray-900/50  inline-block p-4"
                         >
                           {isLoading ? (
-                            <div className="flex w-max max-w-[75%] flex-col gap-2 rounded-lg px-3 py-2 text-sm bg-gray-100 dark:bg-gray-800">
-                              <PulseLoader className="" />
-                            </div>
+                            <>
+                              <div className="flex items-center justify-center object-cover transition-all hover:scale-105 mb-4 h-48 w-48 rounded-lg px-3 py-2 text-sm bg-gray-100 dark:bg-blue-700">
+                                <RingLoader  size={125} color={"#22c55e"} />
+                              </div>
+                              <div className="flex flex-col gap-y-2 items-center break-words max-w-[200px]">
+                                <p className="text-lg text-center font-sohne  break-words truncate w-full">
+                                  Generating...
+                                </p>
+                                <p className="text-base text-gray-500  text-center font-sohne font-thin truncate break-words w-full">
+                                  Your AI Playlist
+                                </p>
+                              </div>
+                            </>
                           ) : (
                             <>
-                              <img
-                                className="object-cover transition-all hover:scale-105 h-48 w-48 mb-4"
-                                alt="astronaut"
-                                src={`/images/Casette.png`}
-                              />
-                              <div className="flex flex-col gap-y-2 items-center break-words w-[200px]">
-                                <p className="text-lg text-center font-sohne  break-words truncate w-full">
-                                  Generate Your AI Playlist
+                               <div className="flex items-center justify-center object-cover transition-all hover:scale-105 mb-4 h-48 w-48 rounded-lg px-3 py-2 text-sm bg-gray-100 dark:bg-blue-700">
+                                <BotIcon className="h-24 w-24 text-green-500"/>
+                              </div>
+                              <div className="flex flex-col gap-y-2 items-center align-center break-words  max-w-[180px]">
+                                <p className="text-lg text-center font-sohne  break-words  w-full">
+                                  Generate Your Playlist
                                 </p>
                                 <p className="text-base text-gray-500  text-center font-sohne font-thin truncate break-words w-full">
                                   Picked by your own AI DJ
@@ -474,7 +492,7 @@ export default function MusicApp({ teamName }: { teamName?: string }) {
                               <div className="object-cover transition-all hover:scale-105 h-48 w-48 mb-4 rounded-md grid grid-cols-2 grid-rows-2">
                                 <FourAlbumArtCard playlist={playlist} />
                               </div>
-                              <div className="flex flex-col gap-y-2 items-center break-words w-[200px]">
+                              <div className="flex flex-col gap-y-2 items-center break-words max-w-[180px]">
                                 <p className="text-lg text-center font-sohne  break-words truncate w-full">
                                   {playlist.title}
                                 </p>
@@ -549,7 +567,7 @@ export default function MusicApp({ teamName }: { teamName?: string }) {
   );
 }
 // @ts-ignore
-const EventListenerComponent = memo( function EventListenerComponent({
+const EventListenerComponent = memo(function EventListenerComponent({
   // @ts-ignore
   reloadPage,
 }) {

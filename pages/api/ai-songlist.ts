@@ -12,6 +12,8 @@ const LD_CONTEXT_COOKIE_KEY =  "ld-context"
 
 //https://sdk.vercel.ai/providers/legacy-providers/aws-bedrock
 export default async function chatResponse(req: NextApiRequest, res: NextApiResponse) {
+
+  //const result = require('dotenv').config({ processEnv: {}, DOTENV_KEY: process.env.DOTENV_KEY})
   const bedrockClient = new BedrockRuntimeClient({
     region: process.env.AMAZON_AWS_DEFAULT_REGION ?? "us-west-2",
     credentials: {

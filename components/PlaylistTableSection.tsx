@@ -9,7 +9,7 @@ const PlaylistTableSection = ({ playlistSongs = songs }: { playlistSongs: SongIn
   const migrateNewSongDBLDFlag: string = useFlags()["migrate-new-song-db"];
 
   return (
-    <table id="songs-bulleted-list" className="mx-4">
+    <table id="songs-bulleted-list" >
       <thead>
         <tr
           className="grid grid-cols-[minmax(0,_0.1fr)_minmax(0,_1.5fr)__minmax(0,_1fr)_minmax(0,_0.2fr)] items-center 

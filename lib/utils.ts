@@ -23,7 +23,7 @@ export const aiModelColors = (aiModelFlag: string): string => {
   } else if (aiModelFlag?.includes("claude") || aiModelFlag?.includes(CLAUDE)) {
     return "#da7756";
   } else {
-    return "rgb(107 114 128 )";
+    return "black";
   }
 };
 
