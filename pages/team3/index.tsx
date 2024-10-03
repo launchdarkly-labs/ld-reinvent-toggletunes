@@ -4,6 +4,7 @@ import { asyncWithLDProvider } from "launchdarkly-react-client-sdk";
 import { Room } from "@/components/room";
 import { setCookie } from "cookies-next";
 import { PERSONA_TIER_STANARD, PERSONA_ROLE_USER } from "@/lib/constant";
+import { LoginProvider } from "@/lib/LoginContext";
 
 let Team3;
 
@@ -49,7 +50,9 @@ if (typeof window !== "undefined") {
       <LDProviderT3>
         {isConfigured && (
           <Room>
-            <MusicApp teamName={teamName} />
+            <LoginProvider>
+              <MusicApp teamName={teamName} />
+            </LoginProvider>
           </Room>
         )}
       </LDProviderT3>

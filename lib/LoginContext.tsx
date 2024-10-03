@@ -4,7 +4,7 @@ import { createContext, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 // import CryptoJS from "crypto-js";
 import { setCookie, getCookie } from "cookies-next";
-import { LD_CONTEXT_COOKIE_KEY, LAUNCH_CLUB_PLATINUM } from "@/lib/constant";
+import { LD_CONTEXT_COOKIE_KEY } from "@/lib/constant";
 import { STARTER_PERSONAS } from "@/lib/StarterUserPersonas";
 import { Persona } from "@/lib/typesInterface";
 import type { LoginContextType } from "@/lib/typesInterface";
@@ -23,9 +23,6 @@ const startingUserObject = {
 const LoginContext = createContext<LoginContextType>({
   userObject: startingUserObject,
   isLoggedIn: false,
-  async upgradeLaunchClubStatus() {},
-  // async setPlaneContext(),
-  async enrollInLaunchClub() {},
   async updateAudienceContext() {},
   async loginUser() {},
   async logoutUser() {},
@@ -40,14 +37,13 @@ export default LoginContext;
 export const LoginProvider = ({ children }: { children: any }) => {
   const client = useLDClient();
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
-  const [userObject, setUserObject] = useState<Persona | {}>(STARTER_PERSONAS[0]);
+  const [userObject, setUserObject] = useState<Persona>(STARTER_PERSONAS[0]);
   const [allUsers, setAllUsers] = useState<Persona[]>(STARTER_PERSONAS);
 
   const hashEmail = async (email: string): Promise<string> => {
     // return CryptoJS.SHA256(email).toString();
     return email;
   };
-
 
   const loginUser = async (email: string): Promise<void> => {
     //need to keep this here in order to pull getcookie and get same audience key as you initialized it
@@ -57,26 +53,30 @@ export const LoginProvider = ({ children }: { children: any }) => {
 
     if (Object.keys(userObject).length > 0) {
       //to update the all personas array with the changes
-
       setAllUsers((prevObj) => [
         ...prevObj.filter((persona) => persona?.personaemail !== userObject?.personaemail),
         userObject,
       ]);
     }
-
-
-    const context: LDContext  = await client?.getContext();
-    console.log(client)
+    // @ts-ignore
+    const context: LDContext = await client?.getContext();
+    console.log(client);
     //don't know how to fix this without using undefined
+    // @ts-ignore
     const foundPersona: Persona = allUsers?.find((persona) =>
       persona?.personaemail?.includes(email)
     );
     await setUserObject(foundPersona);
+    // @ts-ignore
     context.user.name = foundPersona?.personaname;
+    // @ts-ignore
     context.user.email = foundPersona?.personaemail;
     const hashedEmail = await hashEmail(email);
+    // @ts-ignore
     context.user.anonymous = false;
+    // @ts-ignore
     context.user.key = hashedEmail;
+    // @ts-ignore
     context.user.role = foundPersona?.personarole;
     // context.user.tier = foundPersona?.personatier;
     // context.audience.key = existingAudienceKey;
@@ -139,11 +139,10 @@ export const LoginProvider = ({ children }: { children: any }) => {
 
   return (
     <LoginContext.Provider
+      // @ts-ignore
       value={{
-        //@ts-ignore
         userObject,
         isLoggedIn,
-
         // updateAudienceContext,
         loginUser,
         // logoutUser,

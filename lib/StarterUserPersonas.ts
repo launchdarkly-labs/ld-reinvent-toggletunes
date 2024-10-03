@@ -4,8 +4,6 @@ import {
   PERSONA_ROLE_DEVELOPER,
   PERSONA_TIER_PLATINUM,
   PERSONA_ROLE_USER,
-  LAUNCH_CLUB_STANDARD,
-  LAUNCH_CLUB_PLATINUM,
 } from "@/lib/constant";
 
 import { Persona } from "./typesInterface";
@@ -17,8 +15,6 @@ export const STARTER_PERSONAS: Persona[] = [
     personaimage: "/images/personas/persona3.png",
     personaemail: "user@launchmail.io",
     personarole: PERSONA_ROLE_USER,
-    personalaunchclubstatus: LAUNCH_CLUB_STANDARD,
-    personaEnrolledInLaunchClub: false,
   },
   {
     personaname: "Jenn",
@@ -26,8 +22,6 @@ export const STARTER_PERSONAS: Persona[] = [
     personaimage: "/images/personas/woman.png",
     personaemail: "jenn@launchmail.io",
     personarole: PERSONA_ROLE_DEVELOPER,
-    personalaunchclubstatus: LAUNCH_CLUB_STANDARD,
-    personaEnrolledInLaunchClub: false,
   },
   // {
   //   personaname: "Angela",

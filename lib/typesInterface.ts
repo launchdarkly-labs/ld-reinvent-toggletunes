@@ -33,16 +33,11 @@ export interface Persona {
   personaimage: string;
   personaemail: string;
   personarole: string;
-  personalaunchclubstatus: string;
-  personaEnrolledInLaunchClub: boolean;
 }
 
 export type LoginContextType = {
   userObject: Persona;
   isLoggedIn: boolean;
-  upgradeLaunchClubStatus: () => Promise<void>;
-  // setPlaneContext:()=> Promise<void>;
-  enrollInLaunchClub: () => void;
   updateAudienceContext: () => Promise<void>;
   loginUser: LoginUserFunctionType;
   logoutUser: () => Promise<void>;

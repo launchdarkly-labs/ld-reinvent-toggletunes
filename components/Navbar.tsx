@@ -23,6 +23,7 @@ export default function Navbar() {
 
   const personaClicked = (): void => {
     if (userObject.personarole === PERSONA_ROLE_USER) {
+      // @ts-ignore
       const foundPersona: Persona = allUsers?.find((persona) =>
         persona?.personarole?.includes(PERSONA_ROLE_DEVELOPER)
       );
@@ -30,6 +31,7 @@ export default function Navbar() {
     }
 
     if (userObject.personarole === PERSONA_ROLE_DEVELOPER) {
+      // @ts-ignore
       const foundPersona: Persona = allUsers?.find((persona) =>
         persona?.personarole?.includes(PERSONA_ROLE_USER)
       );
@@ -38,7 +40,7 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="flex items-center justify-end px-4 py-2 bg-red-500">
+    <nav className="flex items-center justify-end px-4 py-1 ">
       {/* <Link href="/" className="text-2xl font-bold">
         Logo
       </Link> */}
