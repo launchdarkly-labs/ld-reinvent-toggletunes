@@ -46,7 +46,7 @@ const PlaylistTableSection = ({ playlistSongs = songs }: { playlistSongs?: any }
                 <div
                   className={`h-10 w-10`}
                   style={{
-                    backgroundImage: `conic-gradient(${song.albumColor[0]}, ${song.albumColor[1]}, ${song.albumColor[2]}, ${song.albumColor[3]})`,
+                    backgroundImage: `conic-gradient(${song?.albumColor[0]}, ${song?.albumColor[1]}, ${song?.albumColor[2]}, ${song?.albumColor[3]})`,
                   }}
                 />
               )}
