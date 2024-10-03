@@ -549,10 +549,10 @@ export default function MusicApp({ teamName }: { teamName?: string }) {
   );
 }
 // @ts-ignore
-const EventListenerComponent = memo(async function EventListenerComponent({
+const EventListenerComponent = memo( function EventListenerComponent({
   // @ts-ignore
   reloadPage,
-}): Promise<void> {
+}) {
   console.log("Event listener online");
   useEventListener(({ event, user, connectionId }) => {
     async function resetFlagSteps(event: any) {
