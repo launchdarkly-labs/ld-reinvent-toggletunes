@@ -2,7 +2,7 @@ import PageHeader from "@/components/PageHeader";
 import { useRouter } from "next/router";
 import { motion, AnimatePresence } from "framer-motion";
 import { useCallback, useEffect, useContext } from "react";
-import { playlists, moreNewPlaylists, songs, defaultListOfAIGeneratedSongs } from "@/lib/data";
+import { playlists, moreNewPlaylists, songs, defaultListOfCohereGeneratedSongs } from "@/lib/data";
 import { PlayIcon, HeartIcon, CircleEllipsisIcon } from "lucide-react";
 import PlaylistTableSection from "@/components/PlaylistTableSection";
 import AIGeneratedPlaylistContext from "@/lib/AIGeneratedPlaylistContext";
@@ -86,13 +86,10 @@ const Item = () => {
             )}
           </div>
           <div className="flex flex-col justify-between">
-            <div className="flex flex-1 items-end">Playlist</div>
-            <div>
-              <h1 className="text-8xl font-bold block">
-                {playlist?.title}
-                <span></span>
-              </h1>
-            </div>
+            <h3 className="flex flex-1 items-end mb-2">Playlist</h3>
+
+            <h1 className="text-8xl font-bold  mb-4">{playlist?.title}</h1>
+
             <div className="flex-1 flex items-end">
               <div className="text-base">
                 <p className="">

@@ -20,8 +20,8 @@ import { colors } from "@/lib/color";
 import FourAlbumArtCard from "./FourAlbumArtCard";
 import { PulseLoader } from "react-spinners";
 import { PlaylistInterface, AIModelInterface, SongInterface } from "@/lib/typesInterface";
-import parseJson from "parse-json";
-import { defaultListOfAIGeneratedSongs } from "@/lib/data";
+import { defaultListOfCohereGeneratedSongs } from "@/lib/data";
+import { parseJSONArray } from "parse-json-object";
 
 //TODO: when you go into playlist 1 /2 or whatever, it should be specific per team1/ team 2 etc
 //TODO: i think release should be a really ugly version of spotify from 2012 and then release a new version
@@ -62,6 +62,22 @@ export default function MusicApp({ teamName }: { teamName: string }) {
     aiModelName = "Anthropic Claude";
   }
 
+  const formatForJSON = (unformattedJson: string) => {
+    let formattedJson = unformattedJson
+      .replace(/\\n/g, "\\n")
+      .replace(/\\'/g, "\\'")
+      .replace(/\\"/g, '\\"')
+      .replace(/\\&/g, "\\&")
+      .replace(/\\r/g, "\\r")
+      .replace(/\\t/g, "\\t")
+      .replace(/\\b/g, "\\b")
+      .replace(/\\f/g, "\\f");
+    // Remove non-printable and other non-valid JSON characters
+    formattedJson = formattedJson.replace(/[\u0000-\u001F]+/g, "");
+
+    return formattedJson;
+  };
+
   async function submitQuery(): Promise<void> {
     // const userInput = input;
     // setInput("");
@@ -72,11 +88,12 @@ export default function MusicApp({ teamName }: { teamName: string }) {
     //   id: uuidv4().slice(0, 4),
     // };
 
-    const y = ` create a upbeat party pop playlist from 2020s. limit to 10 songs. make it JSON.parse() friendly within javascript with no errors. no backslash, forward slash, or double quotes. format it as an array of object for javascript. 
+    const y = ` create a upbeat party pop playlist from 2020s. limit to 10 songs. format it so you can use JSON.parse() within javascript without any errors. no backslash or forward slash. format it as an array of object for javascript. 
       from the album art, provide me 4 hex colors that isn't white or grey that is predominately associated with the album art.
        if two colors look similar to each other in terms of tone, then find another color that isn't similar in tone. follow this object structure: 
-       {"id":"Insert Number", "title":"Insert Song Name", "artists": "Insert Artist Name", "album":"Insert Album Name", "albumColor":["Insert the 4 Hex colors that isn't white or grey that is predominately associating with the album art here. 
-        if two colors look similar to each other in terms of tone, then find another color that isn't similar in tone."], duration: "Insert how long the song is", playlistName: "Insert the name of cool playlist name that this song should belong in. make it 5 words long. be creative."}. 
+       {id:"Insert Number", title:"Insert Song Name", artists: "Insert Artist Name", album:"Insert Album Name", albumColor:["Insert the 4 Hex colors that isn't white or grey that is predominately associating with the album art here. 
+        if two colors look similar to each other in terms of tone, then find another color that isn't similar in tone."], duration: "Insert how long the song is. Format MINUTE:SECONDS", 
+        playlistName: "Insert the name of cool playlist name that this song should belong in. make it 5 words long. be creative."}. 
        Do not add any additional text before and after the array.`;
 
     const response = await fetch("/api/chat", {
@@ -107,19 +124,38 @@ export default function MusicApp({ teamName }: { teamName: string }) {
 
     let aiGeneratedSonglistAnswerFormatted: SongInterface[];
     const randomThreeNumIndex = Math.floor(Math.random() * 3); //0 to 2 index
-    const randomFiveNumIndex = Math.floor(Math.random() * 5); //0 to 4 index
+    aiAnswer = formatForJSON(aiAnswer)
 
     try {
       console.log("aiAnswer", aiAnswer);
-      const firstFormatAnswer = aiAnswer.split("```")[1];
-      console.log("firstFormatAnswer", firstFormatAnswer);
-      aiGeneratedSonglistAnswerFormatted = parseJson(firstFormatAnswer.split("json")[1]);
+
+      if (aiModelName?.includes("cohere") || aiModelName?.includes("Cohere")) {
+        const firstFormatAnswer = aiAnswer.split("```")[1];
+        console.log("firstFormatAnswer", firstFormatAnswer);
+        aiGeneratedSonglistAnswerFormatted = parseJSONArray(firstFormatAnswer.split("json")[1]);
+        console.log(firstFormatAnswer.split("json"));
+        console.log(aiGeneratedSonglistAnswerFormatted);
+      } else if (aiModelName?.includes("claude") || aiModelName?.includes("Claude")) {
+        let claudeFormatAnswer: string = aiAnswer;
+
+        if (aiAnswer.includes("partyPopPlaylist = ")) {
+          claudeFormatAnswer = aiAnswer.split("partyPopPlaylist = ")[1];
+        }
+        aiGeneratedSonglistAnswerFormatted = parseJSONArray(claudeFormatAnswer);
+        console.log(aiGeneratedSonglistAnswerFormatted);
+      }
     } catch (e) {
-      aiGeneratedSonglistAnswerFormatted = defaultListOfAIGeneratedSongs[randomThreeNumIndex];
+      aiGeneratedSonglistAnswerFormatted = defaultListOfCohereGeneratedSongs[randomThreeNumIndex];
+    }
+
+    if (aiGeneratedSonglistAnswerFormatted === undefined) {
+      aiGeneratedSonglistAnswerFormatted = defaultListOfCohereGeneratedSongs[randomThreeNumIndex];
     }
 
     console.log(aiGeneratedSonglistAnswerFormatted);
-
+    const randomFiveNumIndex = Math.floor(
+      Math.random() * aiGeneratedSonglistAnswerFormatted?.length + 1
+    ); //0 to 4 index
     const objectFormat = {
       id: uuidv4().slice(0, 4),
       title: aiGeneratedSonglistAnswerFormatted[randomFiveNumIndex].playlistName,
@@ -134,7 +170,7 @@ export default function MusicApp({ teamName }: { teamName: string }) {
     };
 
     setAIPlaylists((prevPlaylists): PlaylistInterface[] => {
-      return [...prevPlaylists, objectFormat];
+      return [objectFormat, ...prevPlaylists];
     });
   }
 
@@ -323,7 +359,7 @@ export default function MusicApp({ teamName }: { teamName: string }) {
                      )} */}
                     </div>
 
-                    <h2 className="text-2xl font-bold items-center">Recommended Playlist</h2>
+                    <h2 className="text-2xl font-bold items-center">Recommended Playlists</h2>
 
                     <div className="relative grid gap-y-4 gap-x-6 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3">
                       {playlistAPI.map((playlist, index) => (
