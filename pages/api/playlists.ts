@@ -70,5 +70,6 @@ export default async function handler(
   }
 
   ldClient.close();
+  // @ts-ignore
   res.status(200).json(lists);
 }
