@@ -1,5 +1,5 @@
 import { createContext, useState, useEffect } from "react";
-
+// @ts-ignore
 const TimerContext = createContext();
 
 export default TimerContext;
