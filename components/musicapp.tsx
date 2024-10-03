@@ -27,7 +27,7 @@ import { META, COHERE, CLAUDE } from "@/lib/constant";
 
 //TODO: when you go into playlist 1 /2 or whatever, it should be specific per team1/ team 2 etc
 //TODO: i think release should be a really ugly version of spotify from 2012 and then release a new version
-export default function MusicApp({ teamName }: { teamName: string }) {
+export default function MusicApp({ teamName }: { teamName?: string }) {
   const releaseTracklistLDFlag: boolean = useFlags()["release-tracklist"];
   const releaseRecentTunesLDFlag: boolean = useFlags()["release-recent-tunes"];
   const releaseNewUsersPlaylistLDFlag: boolean = useFlags()["release-new-users-playlist"];
