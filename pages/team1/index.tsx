@@ -3,10 +3,11 @@ import MusicApp from "@/components/musicapp";
 import { asyncWithLDProvider } from "launchdarkly-react-client-sdk";
 import { Room } from "@/components/room";
 // import { setCookie } from "cookies-next";
+import { PERSONA_TIER_SILVER, PERSONA_ROLE_USER } from "@/lib/constant";
 
 let Team1: () => JSX.Element | null;
 
-//TODO: make reuseable page 
+//TODO: make reuseable page
 if (typeof window !== "undefined") {
   const uniqueKey = 1;
 
@@ -21,7 +22,8 @@ if (typeof window !== "undefined") {
         key: uniqueKey,
         name: "Team1",
         appName: "ToggleTunes",
-        tier: "Platinum",
+        tier: PERSONA_TIER_SILVER,
+        role: PERSONA_ROLE_USER,
       },
       device: {
         key: uniqueKey,

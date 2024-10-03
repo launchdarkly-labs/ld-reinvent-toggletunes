@@ -25,6 +25,7 @@ import { PlaylistInterface, AIModelInterface, SongInterface } from "@/lib/typesI
 import { defaultListOfCohereGeneratedSongs, defaultListOfClaudeGeneratedSongs } from "@/lib/data";
 import { parseJSONArray } from "parse-json-object";
 import { META, COHERE, CLAUDE } from "@/lib/constant";
+import Navbar from "./Navbar";
 
 //TODO: when you go into playlist 1 /2 or whatever, it should be specific per team1/ team 2 etc
 //TODO: i think release should be a really ugly version of spotify from 2012 and then release a new version
@@ -326,12 +327,18 @@ export default function MusicApp({ teamName }: { teamName?: string }) {
       <main className="flex flex-col gap-2 font-sohne bg-black overflow-y-visible h-screen lg:overflow-y-hidden">
         {releaseTracklistLDFlag && (
           <section className="w-full flex flex-col ">
-            <section className="bg-red-500 h-16 w-full"></section>
+            <Navbar />
             <section
               className={`flex flex-col sm:flex-row gap-2 ${
-                (releaseTracklistLDFlag && releaseNewUsersPlaylistLDFlag == false && releaseRecentTunesLDFlag==false) && "m-0 my-2"
+                releaseTracklistLDFlag &&
+                releaseNewUsersPlaylistLDFlag == false &&
+                releaseRecentTunesLDFlag == false &&
+                "m-0 my-2"
               } ${
-                (releaseTracklistLDFlag && releaseNewUsersPlaylistLDFlag == false && releaseRecentTunesLDFlag== true) && "m-2"
+                releaseTracklistLDFlag &&
+                releaseNewUsersPlaylistLDFlag == false &&
+                releaseRecentTunesLDFlag == true &&
+                "m-2"
               } ${
                 releaseNewUsersPlaylistLDFlag && "m-2 "
               }  h-[calc(100vh-19rem)] sm:h-[calc(100vh-10rem)] relative overflow-y-visible`}

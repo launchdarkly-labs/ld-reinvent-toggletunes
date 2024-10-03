@@ -1,10 +1,9 @@
-
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import MusicApp from "@/components/musicapp";
-import { asyncWithLDProvider } from 'launchdarkly-react-client-sdk';
-import { Room } from '@/components/room';
-import { setCookie } from 'cookies-next';
-
+import { asyncWithLDProvider } from "launchdarkly-react-client-sdk";
+import { Room } from "@/components/room";
+import { setCookie } from "cookies-next";
+import { PERSONA_TIER_SILVER, PERSONA_ROLE_USER } from "@/lib/constant";
 let c;
 
 if (typeof window !== "undefined") {
@@ -13,15 +12,16 @@ if (typeof window !== "undefined") {
   const LDProvider = await asyncWithLDProvider({
     clientSideID: process.env.NEXT_PUBLIC_LD_CLIENT_KEY || "",
     reactOptions: {
-      useCamelCaseFlagKeys: false
+      useCamelCaseFlagKeys: false,
     },
     context: {
       kind: "multi",
       user: {
-        key: uniqueKey, 
+        key: uniqueKey,
         name: "anonymous",
         appName: "ToggleTunes",
-        tier: "Platinum"
+        tier: PERSONA_TIER_SILVER,
+        role: PERSONA_ROLE_USER,
       },
       device: {
         key: uniqueKey,
@@ -30,7 +30,6 @@ if (typeof window !== "undefined") {
       },
     },
   });
-
 
   c = () => {
     const [isConfigured, setIsConfigured] = useState(false);
