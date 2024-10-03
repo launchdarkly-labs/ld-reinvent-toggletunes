@@ -1,7 +1,7 @@
 import { createContext, useState } from "react";
 import { PlaylistInterface } from "./typesInterface";
 
-const AIGeneratedPlaylistContext = createContext();
+const AIGeneratedPlaylistContext = createContext({aiPlaylists: [],setAIPlaylists: ()=>{}});
 
 export default AIGeneratedPlaylistContext;
 
