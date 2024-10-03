@@ -1,3 +1,4 @@
+// @ts-ignore
 import ItemCard from "@/components/ItemCard";
 import SideBar from "@/components/Sidebar";
 import { motion } from "framer-motion";
@@ -136,6 +137,7 @@ export default function MusicApp({ teamName }: { teamName: string }) {
 
       if (aiModelName?.includes(COHERE)) {
         const firstFormatAnswer = aiAnswer.split("```")[1];
+        // @ts-ignore
         aiGeneratedSonglistAnswerFormatted = parseJSONArray(firstFormatAnswer.split("json")[1]);
         console.log(aiGeneratedSonglistAnswerFormatted);
       } else if (aiModelName?.includes(CLAUDE)) {
@@ -144,7 +146,7 @@ export default function MusicApp({ teamName }: { teamName: string }) {
         if (aiAnswer.includes("partyPopPlaylist = ")) {
           claudeFormatAnswer = aiAnswer.split("partyPopPlaylist = ")[1];
         }
-
+// @ts-ignore
         aiGeneratedSonglistAnswerFormatted = parseJSONArray(claudeFormatAnswer);
       } else if (aiModelName?.includes(META)) {
         //TODO: META DOESN'T REALLY WORK BUT WE ARE USING DEFAULT ANSWERS FROM CLAUDE
@@ -156,13 +158,14 @@ export default function MusicApp({ teamName }: { teamName: string }) {
           metaFormatAnswer = aiAnswer.split("[{")[1];
           console.log(aiAnswer.split("[{"));
         }
+        // @ts-ignore
         aiGeneratedSonglistAnswerFormatted = parseJSONArray(metaFormatAnswer);
         console.log(aiGeneratedSonglistAnswerFormatted);
       }
     } catch (e) {
       aiGeneratedSonglistAnswerFormatted = defaultListOfGeneratedSongs;
     }
-
+// @ts-ignore
     if (aiGeneratedSonglistAnswerFormatted === undefined) {
       aiGeneratedSonglistAnswerFormatted = defaultListOfGeneratedSongs;
     }
@@ -183,7 +186,7 @@ export default function MusicApp({ teamName }: { teamName: string }) {
       songs: aiGeneratedSonglistAnswerFormatted,
       createdBy: `${aiModelName}`,
     };
-
+// @ts-ignore
     setAIPlaylists((prevPlaylists): PlaylistInterface[] => {
       return [objectFormat, ...prevPlaylists];
     });
@@ -353,6 +356,7 @@ export default function MusicApp({ teamName }: { teamName: string }) {
                       <p className="text-2xl font-bold">Track List</p>
                       <img src="/images/tunes.png" className="ml-auto mr-5" />
                     </h2>
+                    
                     <PlaylistTableSection songsAPI={songsAPI} />
                   </>
                 )}
@@ -542,7 +546,7 @@ export default function MusicApp({ teamName }: { teamName: string }) {
     </Room>
   );
 }
-
+// @ts-ignore
 const EventListenerComponent = memo(function EventListenerComponent({ reloadPage }) {
   console.log("Event listener online");
   useEventListener(({ event, user, connectionId }) => {

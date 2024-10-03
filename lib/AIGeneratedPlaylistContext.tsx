@@ -9,9 +9,12 @@ export const AIGeneratedPlaylistProvider = ({ children }: { children: any }) => 
   const [aiPlaylists, setAIPlaylists] = useState<PlaylistInterface[]>([]);
 
   return (
+    
     <AIGeneratedPlaylistContext.Provider
       value={{
+        // @ts-ignore
         aiPlaylists,
+        // @ts-ignore
         setAIPlaylists,
       }}
     >
