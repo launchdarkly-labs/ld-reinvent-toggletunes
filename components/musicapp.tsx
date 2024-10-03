@@ -334,7 +334,7 @@ export default function MusicApp({ teamName }: { teamName?: string }) {
               className="flex flex-col sm:flex-row gap-2 my-2 mx-2  h-[calc(100vh-19rem)] sm:h-[calc(100vh-10rem)] relative overflow-y-visible"
               id="music-app-main-cards-wrapper"
             >
-              {releaseRecentTunesLDFlag && (
+              {(releaseRecentTunesLDFlag || releaseNewUsersPlaylistLDFlag) && (
                 <section className="w-1/5 hidden sm:block">
                   <SideBar songsAPI={songsAPI} />
                 </section>
@@ -364,7 +364,7 @@ export default function MusicApp({ teamName }: { teamName?: string }) {
                       <p className="text-2xl font-bold">Track List</p>
                       <img src="/images/tunes.png" className="ml-auto mr-5" />
                     </h2>
-
+{/* TODO: need transfrom this to playlist lines - not organized and mismosh */}
                     <PlaylistTableSection playlistSongs={songsAPI} />
                   </>
                 )}
