@@ -30,13 +30,14 @@ const FourAlbumArtCard = ({ playlist }: { playlist: PlaylistInterface }) => {
         }
 
         return (
-          <span
-            className={`${backupBGColor} ${roundedCorner} h-full w-full`}
-            style={{
-              backgroundImage: `conic-gradient(${song?.albumColor[0]}, ${song?.albumColor[1]}, ${song?.albumColor[2]}, ${song?.albumColor[3]})`,
-            }}
-            key={song.id}
-          ></span>
+          // <span
+          //   className={`${backupBGColor} ${roundedCorner} h-full w-full`}
+          //   style={{
+          //     backgroundImage: `conic-gradient(${song?.albumColor[0]}, ${song?.albumColor[1]}, ${song?.albumColor[2]}, ${song?.albumColor[3]})`,
+          //   }}
+          //   key={song.id}
+          // ></span>
+          null
         );
       })}
     </>
