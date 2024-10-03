@@ -40,8 +40,8 @@ const PlaylistTableSection = ({ playlistSongs = songs }: { playlistSongs?: any }
             <td className="flex gap-x-4 items-center">
               {migrateNewSongDBLDFlag?.includes("off") ? (
                 <Music2Icon className="h-10 w-10" />
-              ) : song.image ? (
-                <img src={song.image} className="h-10 w-10" />
+              ) : song?.image ? (
+                <img src={song?.image} className="h-10 w-10" />
               ) : (
                 <div
                   className={`h-10 w-10`}
@@ -52,16 +52,16 @@ const PlaylistTableSection = ({ playlistSongs = songs }: { playlistSongs?: any }
               )}
 
               <span className="flex flex-col">
-                <p>{song.title}</p>
-                <p className="text-base text-gray-500">{song.artists}</p>
+                <p>{song?.title}</p>
+                <p className="text-base text-gray-500">{song?.artists}</p>
               </span>
             </td>
 
             <td className="">
-              <p>{song.album}</p>
+              <p>{song?.album}</p>
             </td>
             <td className=" text-gray-500 mx-auto">
-              <p>{song.duration}</p>
+              <p>{song?.duration}</p>
             </td>
           </motion.tr>
         ))}
