@@ -5,7 +5,7 @@ import { RxCounterClockwiseClock } from "react-icons/rx";
 import { songs } from "@/lib/data";
 import { SongInterface } from "@/lib/typesInterface";
 
-const PlaylistTableSection = ({ playlistSongs = songs }: { playlistSongs?: SongInterface[] }) => {
+const PlaylistTableSection = ({ playlistSongs = songs }: { playlistSongs: SongInterface[] }) => {
   const migrateNewSongDBLDFlag: string = useFlags()["migrate-new-song-db"];
 
   return (

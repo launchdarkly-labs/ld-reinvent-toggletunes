@@ -146,7 +146,7 @@ export default function MusicApp({ teamName }: { teamName: string }) {
         if (aiAnswer.includes("partyPopPlaylist = ")) {
           claudeFormatAnswer = aiAnswer.split("partyPopPlaylist = ")[1];
         }
-// @ts-ignore
+        // @ts-ignore
         aiGeneratedSonglistAnswerFormatted = parseJSONArray(claudeFormatAnswer);
       } else if (aiModelName?.includes(META)) {
         //TODO: META DOESN'T REALLY WORK BUT WE ARE USING DEFAULT ANSWERS FROM CLAUDE
@@ -165,7 +165,7 @@ export default function MusicApp({ teamName }: { teamName: string }) {
     } catch (e) {
       aiGeneratedSonglistAnswerFormatted = defaultListOfGeneratedSongs;
     }
-// @ts-ignore
+    // @ts-ignore
     if (aiGeneratedSonglistAnswerFormatted === undefined) {
       aiGeneratedSonglistAnswerFormatted = defaultListOfGeneratedSongs;
     }
@@ -186,7 +186,7 @@ export default function MusicApp({ teamName }: { teamName: string }) {
       songs: aiGeneratedSonglistAnswerFormatted,
       createdBy: `${aiModelName}`,
     };
-// @ts-ignore
+    // @ts-ignore
     setAIPlaylists((prevPlaylists): PlaylistInterface[] => {
       return [objectFormat, ...prevPlaylists];
     });
@@ -318,6 +318,8 @@ export default function MusicApp({ teamName }: { teamName: string }) {
 
   return (
     <Room>
+      {/* 
+// @ts-ignore */}
       <EventListenerComponent reloadPage={reloadPage} />
       <main className="flex flex-col gap-2 font-sohne bg-black overflow-y-visible h-screen lg:overflow-y-hidden">
         {releaseTracklistLDFlag && (
@@ -356,8 +358,8 @@ export default function MusicApp({ teamName }: { teamName: string }) {
                       <p className="text-2xl font-bold">Track List</p>
                       <img src="/images/tunes.png" className="ml-auto mr-5" />
                     </h2>
-                    
-                    <PlaylistTableSection songsAPI={songsAPI} />
+
+                    <PlaylistTableSection playlistSongs={songsAPI} />
                   </>
                 )}
 
@@ -547,10 +549,13 @@ export default function MusicApp({ teamName }: { teamName: string }) {
   );
 }
 // @ts-ignore
-const EventListenerComponent = memo(function EventListenerComponent({ reloadPage }) {
+const EventListenerComponent = memo(async function EventListenerComponent({
+  // @ts-ignore
+  reloadPage,
+}): Promise<void> {
   console.log("Event listener online");
   useEventListener(({ event, user, connectionId }) => {
-    async function resetFlagSteps(event) {
+    async function resetFlagSteps(event: any) {
       console.log(event);
       switch (event.type) {
         case "resetTimer":
