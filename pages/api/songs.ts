@@ -3,20 +3,13 @@ import { drizzle } from "drizzle-orm/node-postgres";
 import { Pool } from "pg";
 import { songs } from "@/schema/schema";
 import { songs as usersongs } from "@/lib/data";
+import { SongInterface } from "@/lib/typesInterface";
 import { init, LDClient, LDOptions } from "launchdarkly-node-server-sdk";
 
-type Data = {
-  id: number;
-  title: string | null;
-  image: string | null;
-  artists: string | null;
-  album: string | null;
-  duration: string | null;
-};
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<Data[]>
+  res: NextApiResponse<SongInterface[]>
 ) {
   let ldClient: LDClient;
 
@@ -79,5 +72,6 @@ export default async function handler(
     // console.log(songList)
   }
   ldClient.close();
+   // @ts-ignore
   res.status(200).json(songList);
 }
