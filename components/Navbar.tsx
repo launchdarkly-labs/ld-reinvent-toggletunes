@@ -1,9 +1,9 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import Link from "next/link"
-import { Avatar, AvatarFallback } from "./ui/avatar"
-import { Button } from "@/components/ui/button"
+import { useState, useContext } from "react";
+import Link from "next/link";
+import { Avatar, AvatarFallback } from "./ui/avatar";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,39 +11,49 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input"
-import { Label } from "./ui/label"
-import { User } from "lucide-react"
+import { Input } from "@/components/ui/input";
+import { Label } from "./ui/label";
+import { User } from "lucide-react";
+import LoginContext from "@/lib/LoginContext";
+import { PERSONA_ROLE_USER, PERSONA_ROLE_DEVELOPER } from "@/lib/constant";
+import { Persona } from "@/lib/typesInterface";
 
 export default function Navbar() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const { loginUser, userObject, allUsers } = useContext(LoginContext);
 
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault()
-    // Implement your login logic here
-    setIsLoggedIn(true)
-  }
+  const personaClicked = (): void => {
+    if (userObject.personarole === PERSONA_ROLE_USER) {
+      const foundPersona: Persona = allUsers?.find((persona) =>
+        persona?.personarole?.includes(PERSONA_ROLE_DEVELOPER)
+      );
+      loginUser(foundPersona.personaemail);
+    }
 
-  const handleLogout = () => {
-    // Implement your logout logic here
-    setIsLoggedIn(false)
-  }
+    if (userObject.personarole === PERSONA_ROLE_DEVELOPER) {
+      const foundPersona: Persona = allUsers?.find((persona) =>
+        persona?.personarole?.includes(PERSONA_ROLE_USER)
+      );
+      loginUser(foundPersona.personaemail);
+    }
+  };
 
   return (
     <nav className="flex items-center justify-end px-4 py-2 bg-red-500">
       {/* <Link href="/" className="text-2xl font-bold">
         Logo
       </Link> */}
-      <h3 className="mr-3">User</h3>
-      <DropdownMenu >
-        <DropdownMenuTrigger asChild >
+      <h3 className="mr-3">
+        {userObject.personatier}, {userObject.personarole}
+      </h3>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild onClick={() => personaClicked()}>
           <Avatar className="cursor-pointer">
             <AvatarFallback>
-              <User className="w-8 h-8 bg-blue-500 rounded-full p-2" />
+              <img src={userObject.personaimage} className="w-8 h-8 bg-blue-500 rounded-full" />
             </AvatarFallback>
           </Avatar>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="w-56 bg-red-500">
+        {/* <DropdownMenuContent align="end" className="w-56 bg-red-500">
           {isLoggedIn ? (
             <>
               <DropdownMenuItem>Profile</DropdownMenuItem>
@@ -66,8 +76,8 @@ export default function Navbar() {
               </Button>
             </form>
           )}
-        </DropdownMenuContent>
+        </DropdownMenuContent> */}
       </DropdownMenu>
     </nav>
-  )
+  );
 }

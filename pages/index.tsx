@@ -3,7 +3,8 @@ import MusicApp from "@/components/musicapp";
 import { asyncWithLDProvider } from "launchdarkly-react-client-sdk";
 import { Room } from "@/components/room";
 import { setCookie } from "cookies-next";
-import { PERSONA_TIER_SILVER, PERSONA_ROLE_USER } from "@/lib/constant";
+import { PERSONA_TIER_STANARD, PERSONA_ROLE_USER } from "@/lib/constant";
+import { LoginProvider } from "@/lib/LoginContext";
 let c;
 
 if (typeof window !== "undefined") {
@@ -20,7 +21,7 @@ if (typeof window !== "undefined") {
         key: uniqueKey,
         name: "anonymous",
         appName: "ToggleTunes",
-        tier: PERSONA_TIER_SILVER,
+        tier: PERSONA_TIER_STANARD,
         role: PERSONA_ROLE_USER,
       },
       device: {
@@ -46,7 +47,9 @@ if (typeof window !== "undefined") {
       <LDProvider>
         {isConfigured && (
           <Room>
-            <MusicApp />
+            <LoginProvider>
+              <MusicApp />
+            </LoginProvider>
           </Room>
         )}
       </LDProvider>

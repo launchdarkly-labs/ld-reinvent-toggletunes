@@ -34,13 +34,13 @@ const LoginContext = createContext<LoginContextType>({
 
 export default LoginContext;
 
-const operatingSystem = "macOS";
-const device = "Desktop";
+// const operatingSystem = "macOS";
+// const device = "Desktop";
 
 export const LoginProvider = ({ children }: { children: any }) => {
   const client = useLDClient();
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
-  const [userObject, setUserObject] = useState<Persona | {}>({});
+  const [userObject, setUserObject] = useState<Persona | {}>(STARTER_PERSONAS[0]);
   const [allUsers, setAllUsers] = useState<Persona[]>(STARTER_PERSONAS);
 
   const hashEmail = async (email: string): Promise<string> => {
@@ -64,7 +64,9 @@ export const LoginProvider = ({ children }: { children: any }) => {
       ]);
     }
 
-    const context: LDContext | undefined = await client?.getContext();
+
+    const context: LDContext  = await client?.getContext();
+    console.log(client)
     //don't know how to fix this without using undefined
     const foundPersona: Persona = allUsers?.find((persona) =>
       persona?.personaemail?.includes(email)
@@ -76,10 +78,9 @@ export const LoginProvider = ({ children }: { children: any }) => {
     context.user.anonymous = false;
     context.user.key = hashedEmail;
     context.user.role = foundPersona?.personarole;
-    context.user.tier = foundPersona?.personatier;
-    context.audience.key = existingAudienceKey;
+    // context.user.tier = foundPersona?.personatier;
+    // context.audience.key = existingAudienceKey;
 
-    context.user.launchclub = foundPersona?.personalaunchclubstatus;
     await client?.identify(context);
     console.log("loginUser", context);
     console.log(foundPersona?.personaname, foundPersona?.personaemail, foundPersona?.personarole);
@@ -88,12 +89,12 @@ export const LoginProvider = ({ children }: { children: any }) => {
     setIsLoggedIn(true);
   };
 
-  const updateAudienceContext = async (): Promise<void> => {
-    const context = await client?.getContext();
-    console.log("updateAudienceContext", context);
-    context.audience.key = uuidv4().slice(0, 10);
-    await client?.identify(context);
-  };
+  // const updateAudienceContext = async (): Promise<void> => {
+  //   const context = await client?.getContext();
+  //   console.log("updateAudienceContext", context);
+  //   context.audience.key = uuidv4().slice(0, 10);
+  //   await client?.identify(context);
+  // };
 
   // const logoutUser = async (): Promise<void> => {
   //   const ldContextCookieKey: string | undefined = getCookie(LD_CONTEXT_COOKIE_KEY);
@@ -143,7 +144,7 @@ export const LoginProvider = ({ children }: { children: any }) => {
         userObject,
         isLoggedIn,
 
-        updateAudienceContext,
+        // updateAudienceContext,
         loginUser,
         // logoutUser,
         allUsers,
