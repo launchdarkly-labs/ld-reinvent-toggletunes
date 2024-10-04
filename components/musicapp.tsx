@@ -341,11 +341,11 @@ export default function MusicApp({ teamName }: { teamName?: string }) {
                 "m-2"
               } ${
                 releaseNewUsersPlaylistLDFlag && "m-2 "
-              }  h-[calc(100vh-19rem)] sm:h-[calc(100vh-10rem)] relative overflow-y-visible`}
+              }  h-[calc(100vh-19rem)] sm:h-[calc(100vh-13rem)] relative overflow-y-visible`}
               id="music-app-main-cards-wrapper"
             >
               {(releaseRecentTunesLDFlag || releaseNewUsersPlaylistLDFlag) && (
-                <section className="w-1/5 hidden sm:block">
+                <section className="w-1/5 hidden sm:block overflow-y-auto scrollbar-hide ">
                   <SideBar songsAPI={songsAPI} />
                 </section>
               )}

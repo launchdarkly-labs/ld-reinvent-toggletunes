@@ -39,7 +39,7 @@ export default function Navbar() {
       loginUser(foundPersona.personaemail);
     }
   };
-
+//TODO: the search result here could also be fed into AI
   const [searchQuery, setSearchQuery] = useState("")
 
 
@@ -60,7 +60,7 @@ export default function Navbar() {
           <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
           <Input
             type="search"
-            placeholder="Search..."
+            placeholder="What do you want to play?"
             className="pl-10 pr-4 rounded-full"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
