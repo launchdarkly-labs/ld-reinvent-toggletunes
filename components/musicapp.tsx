@@ -307,7 +307,7 @@ export default function MusicApp({ teamName }: { teamName?: string }) {
       // await wait(1);
       setSongsAPI((prevState) => [...prevState, ...moreNewSongs, ...moreNewSongs]);
     };
-    if (migrateNewSongDBLDFlag.includes("off")) return;
+    if (migrateNewSongDBLDFlag?.includes("off")) return;
     fetchPlaylists();
     fetchSongs();
   }, [migrateNewSongDBLDFlag]);

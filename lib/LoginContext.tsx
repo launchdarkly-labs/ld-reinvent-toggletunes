@@ -60,7 +60,6 @@ export const LoginProvider = ({ children }: { children: any }) => {
     }
     // @ts-ignore
     const context: LDContext = await client?.getContext();
-    console.log(client);
     //don't know how to fix this without using undefined
     // @ts-ignore
     const foundPersona: Persona = allUsers?.find((persona) =>
