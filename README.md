@@ -38,7 +38,7 @@ LD_SDK_KEY_TEAM4 = '<sdk-444868cc-cbfb-4ada-965b-66acf28aa48a'
 
 LD_API_KEY='<LD API Key>'
 
-LIVEBLOCKS_KEY = '<Liveblocks Secret Key>'
+NEXT_PUBLIC_LIVEBLOCKS_KEY = '<Liveblocks Secret Key>'
 
 DATABASE_URL = '<external postgres connection string>'
 NEXT_PUBLIC_REDIS_URL = '<external Redis instance (not used)'
