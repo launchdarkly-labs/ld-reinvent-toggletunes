@@ -115,6 +115,9 @@ function GameAdminDashboard() {
       } else{
         setResetProgressMessage("Check the code log for more information.");
       }
+
+          // @ts-ignore
+          console.log(resp);
     
       setResetProgress(100);
       setIsDisabled(false);
@@ -128,6 +131,8 @@ function GameAdminDashboard() {
         error: ${error}
         url: ${resp.url}`,
       ]);
+      // @ts-ignore
+      console.log(resp);
       setResetProgress(100);
       setResetProgressMessage("Reset Failed!");
       setDisplayErrorMessage(true);
