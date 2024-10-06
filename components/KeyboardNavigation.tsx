@@ -16,11 +16,12 @@ export default function KeyboardNavigation({
   const handleKeyPress = useCallback((event: any) => {
     switch (event.key) {
       case "r":
-        setGreenProgress(0);
-        setRedProgress(0);
-        setPurpleProgress(0);
-        setBlueProgress(0);
-        fetch("/api/apiReset");
+        //TODO: turn off key press r 
+        // setGreenProgress(0);
+        // setRedProgress(0);
+        // setPurpleProgress(0);
+        // setBlueProgress(0);
+        // fetch("/api/apiReset");
         break;
       // case "1":
       //   location.push("/playlist/1");
