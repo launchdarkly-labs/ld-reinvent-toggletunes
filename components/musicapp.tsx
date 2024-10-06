@@ -293,7 +293,7 @@ export default function MusicApp({ teamName }: { teamName?: string }) {
     releaseTracklistLDFlag,
     releaseRecentTunesLDFlag,
     releaseNewUsersPlaylistLDFlag,
-    releaseAdSidebarLDFlag,
+    releaseAIPlaylistCreatorLDFlag,
     migrateNewSongDBLDFlag,
   ]);
 
