@@ -109,10 +109,9 @@ function GameAdminDashboard() {
         body: ${
           respJson.success
             ? respJson.success
-            : `{
+            : `
           errorMessage: ${respJson.errorMessage},
           errorType: ${respJson.errorType}
-          }
           `
         },
         url: ${resp.url}`,
