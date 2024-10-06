@@ -254,7 +254,7 @@ export default function MusicApp({ teamName }: { teamName?: string }) {
           console.log("Step 4 not eligible for evaluation!");
         }
 
-        if (releaseAdSidebarLDFlag === true && flagFive === false) {
+        if ((aiModelName.includes(META) || aiModelName.includes(COHERE))  && flagFive === false) {
           broadcast({
             type: teamName,
             complete: "stepFiveComplete",
