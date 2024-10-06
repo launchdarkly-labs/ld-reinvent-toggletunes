@@ -106,7 +106,7 @@ function GameAdminDashboard() {
         ...prevLogs, 
         `Status: ${resp.status}, 
         Status Text: ${resp.statusText},
-        body: ${respJson},
+        body: ${{respJson}},
         url: ${resp.url}`
         ]);
 
@@ -121,7 +121,7 @@ function GameAdminDashboard() {
     
       setResetProgress(100);
       setIsDisabled(false);
-      await wait(60);
+      await wait(120);
       setIsResetting(false);
     } catch (error: any) {
       setCodeLogs((prevLogs) => [
