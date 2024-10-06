@@ -94,7 +94,7 @@ function GameAdminDashboard() {
     }, 3000);
 
     let resp: Response;
-    let respJson: { success?: boolean };
+    let respJson: { success: string; errorType?: string; errorMessage?: string };
 
     try {
       resp = await fetch("/api/apiReset");
@@ -103,22 +103,30 @@ function GameAdminDashboard() {
       console.log(respJson);
       handleReload();
       setCodeLogs((prevLogs) => [
-        ...prevLogs, 
+        ...prevLogs,
         `Status: ${resp.status}, 
         Status Text: ${resp.statusText},
-        body: ${{respJson}},
-        url: ${resp.url}`
-        ]);
+        body: ${
+          respJson.success
+            ? respJson.success
+            : `{
+          errorMessage: ${respJson.errorMessage},
+          errorType: ${respJson.errorType}
+          }
+          `
+        },
+        url: ${resp.url}`,
+      ]);
 
-      if(resp.status === 200){
+      if (resp.status === 200) {
         setResetProgressMessage("Reset Complete!");
-      } else{
+      } else {
         setResetProgressMessage("Check the code log for more information.");
       }
 
-          // @ts-ignore
-          console.log(resp);
-    
+      // @ts-ignore
+      console.log(resp);
+
       setResetProgress(100);
       setIsDisabled(false);
       await wait(120);
