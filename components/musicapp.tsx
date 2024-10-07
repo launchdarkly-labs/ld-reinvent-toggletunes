@@ -13,7 +13,7 @@ import MusicPlayingBar from "./MusicPlayingBar";
 import PlaylistTableSection from "./PlaylistTableSection";
 import AdSection from "./AdSection";
 import { playlists, moreNewPlaylists, moreNewSongs, songs } from "@/lib/data";
-import { aiModelColors, formatForJSON } from "@/lib/utils";
+import { aiModelColors, formatForJSON, wait } from "@/lib/utils";
 import { v4 as uuidv4 } from "uuid";
 import Link from "next/link";
 import AIGeneratedPlaylistContext from "@/lib/AIGeneratedPlaylistContext";
@@ -73,7 +73,6 @@ export default function MusicApp({ teamName }: { teamName?: string }) {
   async function submitQuery(): Promise<void> {
     // const userInput = input;
     // setInput("");
-    console.log("triggered");
     setIsLoading(true);
     // const userMessage: Message = {
     //   role: "user",
@@ -189,6 +188,7 @@ export default function MusicApp({ teamName }: { teamName?: string }) {
       songs: aiGeneratedSonglistAnswerFormatted,
       createdBy: `${aiModelName}`,
     };
+    console.log(objectFormat)
     // @ts-ignore
     setAIPlaylists((prevPlaylists): PlaylistInterface[] => {
       return [objectFormat, ...prevPlaylists];
@@ -254,7 +254,7 @@ export default function MusicApp({ teamName }: { teamName?: string }) {
           console.log("Step 4 not eligible for evaluation!");
         }
 
-        if ((aiModelName.includes(META) || aiModelName.includes(COHERE))  && flagFive === false) {
+        if ((aiModelName.includes(META) || aiModelName.includes(COHERE)) && flagFive === false) {
           broadcast({
             type: teamName,
             complete: "stepFiveComplete",
@@ -300,14 +300,23 @@ export default function MusicApp({ teamName }: { teamName?: string }) {
   useEffect(() => {
     // setPlaylistAPI([]);
     const fetchPlaylists = async () => {
-      // await wait(1);
-      setPlaylistAPI((prevState) => [...prevState, ...moreNewPlaylists]);
+      let addingPlaylists: PlaylistInterface[] = [];
+      if (migrateNewSongDBLDFlag?.includes("complete")) {
+        addingPlaylists = [...moreNewPlaylists];
+      }
+      // await wait(5);
+      setPlaylistAPI((prevState) => [...prevState, ...addingPlaylists]);
     };
     const fetchSongs = async () => {
-      // await wait(1);
-      setSongsAPI((prevState) => [...prevState, ...moreNewSongs, ...moreNewSongs]);
+      let addingSongs: SongInterface[] = [];
+      if (migrateNewSongDBLDFlag?.includes("complete")) {
+        addingSongs = [...moreNewSongs];
+      }
+      // await wait(5);
+
+      setSongsAPI((prevState) => [...prevState, ...addingSongs]);
     };
-    if (migrateNewSongDBLDFlag?.includes("off")) return;
+    if (migrateNewSongDBLDFlag?.includes("off") || migrateNewSongDBLDFlag === undefined) return;
     fetchPlaylists();
     fetchSongs();
   }, [migrateNewSongDBLDFlag]);
@@ -367,7 +376,8 @@ export default function MusicApp({ teamName }: { teamName?: string }) {
                  }`}
                 id="music-app-main-center-part"
               >
-                {releaseNewUsersPlaylistLDFlag === false && (
+                {(releaseNewUsersPlaylistLDFlag === false ||
+                  releaseNewUsersPlaylistLDFlag === undefined) && (
                   <>
                     <h2 className="flex items-center gap-x-4">
                       <IoIosMusicalNotes className="w-10 h-10 text-ldcomplicatedwhite" />
@@ -547,11 +557,15 @@ export default function MusicApp({ teamName }: { teamName?: string }) {
                           className="place-items-center border-white bg-ldinputback 
                             rounded-md hover:bg-gray-900/50  inline-block p-4"
                         >
-                          <img
-                            className="object-cover transition-all hover:scale-105 h-48 w-48 mb-4"
-                            alt={song.title}
-                            src={song.image}
-                          />
+                          {migrateNewSongDBLDFlag?.includes("complete") ? (
+                            <img
+                              className="object-cover transition-all hover:scale-105 h-48 w-48 mb-4"
+                              alt={song.title}
+                              src={song.image}
+                            />
+                          ) : (
+                            <IoIosMusicalNotes className="object-cover transition-all hover:scale-105 h-48 w-48 mb-4 text-ldcomplicatedwhite" />
+                          )}
                           <div className="flex flex-col gap-y-2">
                             <p className="text-lg text-center font-sohne ">{song.title}</p>
                             <p className="text-base text-gray-500  text-center font-sohne font-thin">
@@ -571,7 +585,9 @@ export default function MusicApp({ teamName }: { teamName?: string }) {
           </section>
         )}
 
-        {releaseTracklistLDFlag === false || releaseTracklistLDFlag === undefined && <SimplePlayerScreen />}
+        {(releaseTracklistLDFlag === false || releaseTracklistLDFlag === undefined) && (
+          <SimplePlayerScreen />
+        )}
       </main>
     </Room>
   );

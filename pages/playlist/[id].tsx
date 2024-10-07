@@ -9,15 +9,19 @@ import AIGeneratedPlaylistContext from "@/lib/AIGeneratedPlaylistContext";
 import { PlaylistInterface, AIModelInterface } from "@/lib/typesInterface";
 import FourAlbumArtCard from "@/components/FourAlbumArtCard";
 import { aiModelColors } from "@/lib/utils";
+import { useFlags } from "launchdarkly-react-client-sdk";
+import { IoIosMusicalNotes } from "react-icons/io";
 
 const Item = () => {
   const router = useRouter();
   const { id } = router.query; //string
-
+  //const migrateNewSongDBLDFlag: string = useFlags()["migrate-new-song-db"];
+  const migrateNewSongDBLDFlag: string = "complete";
   const { aiPlaylists } = useContext(AIGeneratedPlaylistContext);
-
+  console.log(migrateNewSongDBLDFlag)
+console.log(aiPlaylists)
   const allPlaylists: PlaylistInterface[] = [...playlists, ...moreNewPlaylists, ...aiPlaylists];
-// @ts-ignore
+  // @ts-ignore
   let playlist: PlaylistInterface = allPlaylists.find((playlist) => playlist.id === id);
 
   if (playlist === undefined) {
@@ -56,6 +60,20 @@ const Item = () => {
     return totalDuration;
   };
 
+  const renderPlaylistCover = (playlist: PlaylistInterface) => {
+    if (migrateNewSongDBLDFlag?.includes("complete") && playlist?.cover) {
+      return <img
+        src={playlist?.cover}
+        alt={playlist?.title}
+        className="object-cover h-full w-full shadow-[5px_0_30px_0px_rgba(0,0,0,0.3)]"
+      />;
+    } else if (migrateNewSongDBLDFlag?.includes("complete") && !playlist?.cover){
+      return <FourAlbumArtCard playlist={playlist} />
+    } else{
+      return <IoIosMusicalNotes className="object-cover h-full w-full shadow-[5px_0_30px_0px_rgba(0,0,0,0.3)] text-ldcomplicatedwhite" />
+    }
+  };
+
   return (
     <AnimatePresence>
       <motion.div
@@ -75,15 +93,7 @@ const Item = () => {
               playlist?.cover ? "flex-none" : "grid grid-cols-2 grid-rows-2"
             }`}
           >
-            {playlist?.cover ? (
-              <img
-                src={playlist?.cover}
-                alt={playlist?.title}
-                className="object-cover h-full w-full shadow-[5px_0_30px_0px_rgba(0,0,0,0.3)]"
-              />
-            ) : (
-              <FourAlbumArtCard playlist={playlist} />
-            )}
+            {renderPlaylistCover(playlist)}
           </div>
           <div className="flex flex-col justify-between">
             <h3 className="flex flex-1 items-end mb-2">Playlist</h3>
@@ -116,7 +126,7 @@ const Item = () => {
             <CircleEllipsisIcon className="h-8 w-8" />
           </div>
           <div className="px-0 py-0 sm:px-6 sm:py-4  w-full flex flex-col ">
-            <PlaylistTableSection playlistSongs={playlistSongs} />
+            <PlaylistTableSection playlistSongs={playlistSongs} backUpMigrateNewSongDB={migrateNewSongDBLDFlag} />
           </div>
         </div>
         <motion.div

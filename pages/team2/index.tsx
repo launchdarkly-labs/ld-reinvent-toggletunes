@@ -5,6 +5,8 @@ import { Room } from "@/components/room";
 import { setCookie } from "cookies-next";
 import { PERSONA_TIER_STANARD, PERSONA_ROLE_USER } from "@/lib/constant";
 import { LoginProvider } from "@/lib/LoginContext";
+import { AIGeneratedPlaylistProvider } from "@/lib/AIGeneratedPlaylistContext";
+
 let Team2;
 
 if (typeof window !== "undefined") {
@@ -33,7 +35,6 @@ if (typeof window !== "undefined") {
   });
 
   Team2 = () => {
-    const [teamName, setTeamName] = useState("red");
     const [isConfigured, setIsConfigured] = useState(false);
 
     async function configUser() {
@@ -50,7 +51,7 @@ if (typeof window !== "undefined") {
         {isConfigured && (
           <Room>
             <LoginProvider>
-              <MusicApp teamName={teamName} />
+              <MusicApp teamName={"red"} />
             </LoginProvider>
           </Room>
         )}

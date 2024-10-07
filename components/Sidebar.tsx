@@ -11,11 +11,14 @@ const SideBar = ({ songsAPI }: any) => {
 
   let releaseSidebarUglyDesign: boolean = false;
 
-  if(releaseRecentTunesLDFlag === true && releaseNewUsersPlaylistLDFlag === false){
+  if (
+    releaseRecentTunesLDFlag === true &&
+    (releaseNewUsersPlaylistLDFlag === false || releaseNewUsersPlaylistLDFlag === undefined)
+  ) {
     releaseSidebarUglyDesign = true;
-  } else if (releaseRecentTunesLDFlag === false && releaseNewUsersPlaylistLDFlag === true){
+  } else if (releaseRecentTunesLDFlag === false && releaseNewUsersPlaylistLDFlag === true) {
     releaseSidebarUglyDesign = false;
-  } else if (releaseRecentTunesLDFlag === true && releaseNewUsersPlaylistLDFlag === true){
+  } else if (releaseRecentTunesLDFlag === true && releaseNewUsersPlaylistLDFlag === true) {
     releaseSidebarUglyDesign = false;
   }
 
@@ -26,7 +29,11 @@ const SideBar = ({ songsAPI }: any) => {
       transition={{ duration: 1 }}
       className={`flex flex-col  gap-2 h-full  ${releaseSidebarUglyDesign ? "!font-serif" : ""}`}
     >
-      <section className={`p-4 ${releaseSidebarUglyDesign ? "bg-red-500 rounded-full" : "bg-ldbackground rounded-md"}`}>
+      <section
+        className={`p-4 ${
+          releaseSidebarUglyDesign ? "bg-red-500 rounded-full" : "bg-ldbackground rounded-md"
+        }`}
+      >
         <img src="/images/ToggleTunes.png" className="w-full lg:w-2/3 mb-6" />
         <ul className="flex flex-col gap-y-4">
           <li
@@ -46,7 +53,11 @@ const SideBar = ({ songsAPI }: any) => {
         </ul>
       </section>
 
-      <section className={`"flex-1 p-4  ${releaseSidebarUglyDesign ? "bg-purple-500 rounded-full" : "bg-ldbackground rounded-md"} "`}>
+      <section
+        className={`"flex-1 p-4  ${
+          releaseSidebarUglyDesign ? "bg-purple-500 rounded-full" : "bg-ldbackground rounded-md"
+        } "`}
+      >
         <h2 className="flex gap-3 lg:gap-4 text-ldcomplicatedwhite font-semibold text-lg sm:text-lg xl:text-2xl items-center font-extra mb-6 w-full truncate ">
           {/* <RxCounterClockwiseClock className="h-6 w-6 hidden lg:block" />
           <span> Recently Played</span> */}
@@ -66,7 +77,7 @@ const SideBar = ({ songsAPI }: any) => {
                 key={index}
                 className="flex items-center gap-2 cursor-default"
               >
-                {migrateNewSongDBLDFlag?.includes("off") ? (
+                {migrateNewSongDBLDFlag?.includes("off") || migrateNewSongDBLDFlag === undefined ? (
                   <Music2Icon className="h-8 w-8" />
                 ) : (
                   <img src={song.image} alt={song.title} className="h-8 w-8 rounded-sm" />

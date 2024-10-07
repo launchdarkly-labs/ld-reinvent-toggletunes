@@ -5,6 +5,7 @@ import { Room } from "@/components/room";
 // import { setCookie } from "cookies-next";
 import { PERSONA_TIER_STANARD, PERSONA_ROLE_USER } from "@/lib/constant";
 import { LoginProvider } from "@/lib/LoginContext";
+import { AIGeneratedPlaylistProvider } from "@/lib/AIGeneratedPlaylistContext";
 
 let Team1: () => JSX.Element | null;
 

@@ -5,6 +5,7 @@ import { Room } from "@/components/room";
 import { setCookie } from "cookies-next";
 import { PERSONA_TIER_STANARD, PERSONA_ROLE_USER } from "@/lib/constant";
 import { LoginProvider } from "@/lib/LoginContext";
+import { AIGeneratedPlaylistProvider } from "@/lib/AIGeneratedPlaylistContext";
 
 let Team3;
 
@@ -51,7 +52,7 @@ if (typeof window !== "undefined") {
         {isConfigured && (
           <Room>
             <LoginProvider>
-              <MusicApp teamName={teamName} />
+              <MusicApp teamName={"purple"} />
             </LoginProvider>
           </Room>
         )}
