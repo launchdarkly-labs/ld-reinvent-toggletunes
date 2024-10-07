@@ -106,9 +106,9 @@ function GameAdminDashboard() {
         ...prevLogs,
         `Status: ${resp.status}, 
         Status Text: ${resp.statusText},
-        ${respJson.errorMessage && `errorMessage: ${respJson.errorMessage}`}
-        ${respJson.errorType && `errorType: ${respJson.errorType}`}
-        ${respJson.success && `success: ${respJson.success}`}
+        ${respJson.errorMessage ? `errorMessage: ${respJson.errorMessage}` : null}
+        ${respJson.errorType ? `errorType: ${respJson.errorType}` : null}
+        ${respJson.success ? `success: ${respJson.success}` : null}
         url: ${resp.url}`,
       ]);
 
