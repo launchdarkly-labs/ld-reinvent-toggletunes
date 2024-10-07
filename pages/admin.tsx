@@ -94,7 +94,7 @@ function GameAdminDashboard() {
     }, 3000);
 
     let resp: Response;
-    let respJson: { success: string; errorType?: string; errorMessage?: string };
+    let respJson: { success: string; errorType?: string; errorMessage?: string; error?: string };
 
     try {
       resp = await fetch("/api/apiReset");
@@ -108,6 +108,7 @@ function GameAdminDashboard() {
         Status Text: ${resp.statusText},
         ${respJson.errorMessage ? `errorMessage: ${respJson.errorMessage}` : ""}
         ${respJson.errorType ? `errorType: ${respJson.errorType}` : ""}
+        ${respJson.error ? `error: ${respJson.error}` : ""}
         ${respJson.success ? `success: ${respJson.success}` : ""}
         url: ${resp.url}`,
       ]);

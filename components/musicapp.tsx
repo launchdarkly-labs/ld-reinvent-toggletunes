@@ -31,7 +31,7 @@ import Navbar from "./Navbar";
 //TODO: i think release should be a really ugly version of spotify from 2012 and then release a new version
 export default function MusicApp({ teamName }: { teamName?: string }) {
   const releaseTracklistLDFlag: boolean = useFlags()["release-tracklist"];
-  const releaseRecentTunesLDFlag: boolean = useFlags()["release-recent-tunes"];
+  const releaseSavedPlaylistsSidebarLDFlag: boolean = useFlags()["release-saved-playlists-sidebar"];
   const releaseNewUsersPlaylistLDFlag: boolean = useFlags()["release-new-users-playlist"];
   const releaseAdSidebarLDFlag: boolean = useFlags()["release-ad-sidebar"];
   const migrateNewSongDBLDFlag: string = useFlags()["migrate-new-song-db"];
@@ -219,7 +219,7 @@ export default function MusicApp({ teamName }: { teamName?: string }) {
           console.log("Step 1 not eligible for evaluation!");
         }
 
-        if (releaseRecentTunesLDFlag === true && flagTwo === false) {
+        if (releaseSavedPlaylistsSidebarLDFlag === true && flagTwo === false) {
           broadcast({ type: teamName, complete: "stepTwoComplete", value: 20 });
           // console.log("second step running");
           // await triggerStep("second step complete", "stepTwoComplete");
@@ -291,7 +291,7 @@ export default function MusicApp({ teamName }: { teamName?: string }) {
     triggerSteps();
   }, [
     releaseTracklistLDFlag,
-    releaseRecentTunesLDFlag,
+    releaseSavedPlaylistsSidebarLDFlag,
     releaseNewUsersPlaylistLDFlag,
     releaseAIPlaylistCreatorLDFlag,
     migrateNewSongDBLDFlag,
@@ -341,19 +341,19 @@ export default function MusicApp({ teamName }: { teamName?: string }) {
               className={`flex flex-col sm:flex-row gap-2 ${
                 releaseTracklistLDFlag &&
                 releaseNewUsersPlaylistLDFlag == false &&
-                releaseRecentTunesLDFlag == false &&
+                releaseSavedPlaylistsSidebarLDFlag == false &&
                 "m-0 my-2"
               } ${
                 releaseTracklistLDFlag &&
                 releaseNewUsersPlaylistLDFlag == false &&
-                releaseRecentTunesLDFlag == true &&
+                releaseSavedPlaylistsSidebarLDFlag == true &&
                 "m-2"
               } ${
                 releaseNewUsersPlaylistLDFlag && "m-2 "
               }  h-[calc(100vh-19rem)] sm:h-[calc(100vh-13rem)] relative overflow-y-visible`}
               id="music-app-main-cards-wrapper"
             >
-              {(releaseRecentTunesLDFlag || releaseNewUsersPlaylistLDFlag) && (
+              {(releaseSavedPlaylistsSidebarLDFlag || releaseNewUsersPlaylistLDFlag) && (
                 <section className="w-1/5 hidden sm:block overflow-y-auto scrollbar-hide ">
                   <SideBar songsAPI={songsAPI} />
                 </section>
@@ -368,9 +368,9 @@ export default function MusicApp({ teamName }: { teamName?: string }) {
                 }}
                 className={` p-4 bg-ldbackground overflow-y-auto scrollbar-hide w-full flex flex-col gap-6
                  ${
-                   releaseRecentTunesLDFlag && releaseAdSidebarLDFlag
+                   releaseSavedPlaylistsSidebarLDFlag && releaseAdSidebarLDFlag
                      ? "sm:w-3/5 rounded-md"
-                     : releaseRecentTunesLDFlag || releaseNewUsersPlaylistLDFlag
+                     : releaseSavedPlaylistsSidebarLDFlag || releaseNewUsersPlaylistLDFlag
                      ? "sm:w-4/5 rounded-md"
                      : "sm:w-full "
                  }`}

@@ -7,18 +7,18 @@ import { useFlags, useLDClient } from "launchdarkly-react-client-sdk";
 const SideBar = ({ songsAPI }: any) => {
   const migrateNewSongDBLDFlag: string = useFlags()["migrate-new-song-db"];
   const releaseNewUsersPlaylistLDFlag: boolean = useFlags()["release-new-users-playlist"];
-  const releaseRecentTunesLDFlag: boolean = useFlags()["release-recent-tunes"];
+  const releaseSavedPlaylistsSidebarLDFlag: boolean = useFlags()["release-saved-playlists-sidebar"];
 
   let releaseSidebarUglyDesign: boolean = false;
 
   if (
-    releaseRecentTunesLDFlag === true &&
+    releaseSavedPlaylistsSidebarLDFlag === true &&
     (releaseNewUsersPlaylistLDFlag === false || releaseNewUsersPlaylistLDFlag === undefined)
   ) {
     releaseSidebarUglyDesign = true;
-  } else if (releaseRecentTunesLDFlag === false && releaseNewUsersPlaylistLDFlag === true) {
+  } else if (releaseSavedPlaylistsSidebarLDFlag === false && releaseNewUsersPlaylistLDFlag === true) {
     releaseSidebarUglyDesign = false;
-  } else if (releaseRecentTunesLDFlag === true && releaseNewUsersPlaylistLDFlag === true) {
+  } else if (releaseSavedPlaylistsSidebarLDFlag === true && releaseNewUsersPlaylistLDFlag === true) {
     releaseSidebarUglyDesign = false;
   }
 
