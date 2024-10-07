@@ -571,7 +571,7 @@ export default function MusicApp({ teamName }: { teamName?: string }) {
           </section>
         )}
 
-        {releaseTracklistLDFlag === false && <SimplePlayerScreen />}
+        {releaseTracklistLDFlag === false || releaseTracklistLDFlag === undefined && <SimplePlayerScreen />}
       </main>
     </Room>
   );
