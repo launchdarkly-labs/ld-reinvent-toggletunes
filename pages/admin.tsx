@@ -124,8 +124,8 @@ function GameAdminDashboard() {
 
       setResetProgress(100);
       setIsDisabled(false);
-      await wait(120);
-      setIsResetting(false);
+      // await wait(120);
+      //setIsResetting(false);
     } catch (error: any) {
       setCodeLogs((prevLogs) => [
         ...prevLogs,
