@@ -117,28 +117,29 @@ async function deleteFlag(projectKey: string, flagKey: string) {
 
   //console.log("Running the delete function for the flag " + flagKey);
   // `https://app.launchdarkly.com/api/v2/flags/${projectKey}/${flagKey}`,
-  // const deleteResp = await fetch(
-  //   `https://app.launchdarkly.com/api/v2/flags/${projectKey}/${flagKey}`,
-  //   {
-  //     method: "DELETE",
-  //     headers: {
-  //       Authorization: API_KEY,
-  //     },
-  // body: JSON.stringify({
-  //   environmentKey: projectKey,
-  // }),
-  //   }
-  // );
-  // console.log("deleteResp", deleteResp);
-  // let data;
-  // if (deleteResp.ok) {
-  //   data = await deleteResp.text();
-  //   if (data) {
-  //     data = JSON.parse(data);
-  //   }
-  // } else {
-  //   throw new Error(`Cannot delete flag ${flagKey}: ${data ?? "unknown"}`);
-  // }
+  const deleteResp = await fetch(
+    `https://app.launchdarkly.com/api/v2/flags/toggletunes/${flagKey}`,
+    {
+      method: "DELETE",
+      headers: {
+        Authorization: API_KEY,
+      },
+  body: JSON.stringify({
+    //environmentKey: projectKey,
+    environmentKey: "toggletunes",
+  }),
+    }
+  );
+  console.log("deleteResp", deleteResp);
+  let data;
+  if (deleteResp.ok) {
+    data = await deleteResp.text();
+    if (data) {
+      data = JSON.parse(data);
+    }
+  } else {
+    throw new Error(`Cannot delete flag ${flagKey}: ${data ?? "unknown"}`);
+  }
 }
 
 async function getSegments(projectKey: string, environmentKey: string) {
