@@ -1,21 +1,39 @@
 import { Music2Icon } from "lucide-react";
 import { MdHome } from "react-icons/md";
 import { FiSearch } from "react-icons/fi";
-import { RxCounterClockwiseClock } from "react-icons/rx";
 import { motion } from "framer-motion";
 import { useFlags, useLDClient } from "launchdarkly-react-client-sdk";
 
 const SideBar = ({ songsAPI }: any) => {
   const migrateNewSongDBLDFlag: string = useFlags()["migrate-new-song-db"];
+  const releaseNewUsersPlaylistLDFlag: boolean = useFlags()["release-new-users-playlist"];
+  const releaseSavedPlaylistsSidebarLDFlag: boolean = useFlags()["release-saved-playlists-sidebar"];
+
+  let releaseSidebarUglyDesign: boolean = false;
+
+  if (
+    releaseSavedPlaylistsSidebarLDFlag === true &&
+    (releaseNewUsersPlaylistLDFlag === false || releaseNewUsersPlaylistLDFlag === undefined)
+  ) {
+    releaseSidebarUglyDesign = true;
+  } else if (releaseSavedPlaylistsSidebarLDFlag === false && releaseNewUsersPlaylistLDFlag === true) {
+    releaseSidebarUglyDesign = false;
+  } else if (releaseSavedPlaylistsSidebarLDFlag === true && releaseNewUsersPlaylistLDFlag === true) {
+    releaseSidebarUglyDesign = false;
+  }
 
   return (
     <motion.nav
       initial={{ x: -100 }}
       animate={{ x: 0 }}
       transition={{ duration: 1 }}
-      className="flex flex-col  gap-2 h-full"
+      className={`flex flex-col  gap-2 h-full  ${releaseSidebarUglyDesign ? "!font-serif" : ""}`}
     >
-      <section className="bg-ldbackground rounded-md p-4">
+      <section
+        className={`p-4 ${
+          releaseSidebarUglyDesign ? "bg-red-500 rounded-full" : "bg-ldbackground rounded-md"
+        }`}
+      >
         <img src="/images/ToggleTunes.png" className="w-full lg:w-2/3 mb-6" />
         <ul className="flex flex-col gap-y-4">
           <li
@@ -35,12 +53,15 @@ const SideBar = ({ songsAPI }: any) => {
         </ul>
       </section>
 
-      <section className="bg-ldbackground rounded-md flex-1 p-4 ">
+      <section
+        className={`"flex-1 p-4  ${
+          releaseSidebarUglyDesign ? "bg-purple-500 rounded-full" : "bg-ldbackground rounded-md"
+        } "`}
+      >
         <h2 className="flex gap-3 lg:gap-4 text-ldcomplicatedwhite font-semibold text-lg sm:text-lg xl:text-2xl items-center font-extra mb-6 w-full truncate ">
           {/* <RxCounterClockwiseClock className="h-6 w-6 hidden lg:block" />
           <span> Recently Played</span> */}
-     Playlists
-        
+          Playlists
         </h2>
         <div className="">
           <ul className="flex flex-col gap-y-4  overflow-y-auto  h-[calc(100vh-21rem)] sm:h-[calc(100vh-25.4rem)] scrollbar-hide">
@@ -56,7 +77,7 @@ const SideBar = ({ songsAPI }: any) => {
                 key={index}
                 className="flex items-center gap-2 cursor-default"
               >
-                {migrateNewSongDBLDFlag?.includes("off") ? (
+                {migrateNewSongDBLDFlag?.includes("off") || migrateNewSongDBLDFlag === undefined ? (
                   <Music2Icon className="h-8 w-8" />
                 ) : (
                   <img src={song.image} alt={song.title} className="h-8 w-8 rounded-sm" />

@@ -4,7 +4,12 @@ import type { NextApiRequest, NextApiResponse } from "next";
 // this prevents us from accidentally deleting flags from the wrong project
 // since the API key has access to all projects
 //"toggle-tunes-team-1"
-const projectKeys: Array<string> = ["team-1", "team-2", "team-3", "team-4"];
+const projectKeys: Array<string> = [
+  "toggletunes-team-1",
+  "toggletunes-team-2",
+  "toggletunes-team-3",
+  "toggletunes-team-4",
+];
 const API_KEY: string = process.env.LD_API_KEY as string;
 const delay = 1000;
 
@@ -14,9 +19,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     for (const projectKey of projectKeys) {
       // get the flags then delete them
       const flags = await getFlags(projectKey);
-      console.log("flags", flags);
       for (const flag of flags.items) {
-        console.log("flag", flag);
+        console.log("flag line 23", flag);
         await deleteFlag(projectKey, flag.key);
         await sleep(delay);
       }
@@ -63,10 +67,9 @@ async function getEnvironments(projectKey: string) {
 
 //09-23-2024 this works now
 async function getFlags(projectKey: string) {
-  //TODO: NEED TO CHANGE THIS TO SEPARATE PROJECTS
-  //   `https://app.launchdarkly.com/api/v2/flags/${projectKey}`,
+  //`https://app.launchdarkly.com/api/v2/flags/toggletunes?env=${projectKey}&selected-env=${projectKey}`,
   const resp = await fetch(
-    `https://app.launchdarkly.com/api/v2/flags/toggletunes?env=${projectKey}&selected-env=${projectKey}`,
+    `https://app.launchdarkly.com/api/v2/flags/${projectKey}`,
     {
       method: "GET",
       headers: {
@@ -94,10 +97,11 @@ async function deleteFlag(projectKey: string, flagKey: string) {
   }
 
   console.log("Running the disable function for the flag " + flagKey);
-  //    `https://app.launchdarkly.com/api/v2/flags/${projectKey}/${flagKey}`,
-  //`https://app.launchdarkly.com/api/v2/flags/toggletunes/${flagKey}/targeting?env=${projectKey}`,
+
+  // `https://app.launchdarkly.com/api/v2/flags/toggletunes/${flagKey}/targeting?env=${projectKey}`,
+  console.log("projectKey line 107", projectKey)
   const disableResp = await fetch(
-    `https://app.launchdarkly.com/api/v2/flags/toggletunes/${flagKey}`,
+    `https://app.launchdarkly.com/api/v2/flags/${projectKey}/${flagKey}`,
     {
       method: "PATCH",
       headers: {
@@ -105,7 +109,7 @@ async function deleteFlag(projectKey: string, flagKey: string) {
         "Content-Type": "application/json; domain-model=launchdarkly.semanticpatch",
       },
       body: JSON.stringify({
-        environmentKey: projectKey,
+        environmentKey: "production",
         instructions: [{ kind: "turnFlagOff" }],
       }),
     }
@@ -117,28 +121,29 @@ async function deleteFlag(projectKey: string, flagKey: string) {
 
   //console.log("Running the delete function for the flag " + flagKey);
   // `https://app.launchdarkly.com/api/v2/flags/${projectKey}/${flagKey}`,
-  // const deleteResp = await fetch(
-  //   `https://app.launchdarkly.com/api/v2/flags/${projectKey}/${flagKey}`,
-  //   {
-  //     method: "DELETE",
-  //     headers: {
-  //       Authorization: API_KEY,
-  //     },
-  // body: JSON.stringify({
-  //   environmentKey: projectKey,
-  // }),
-  //   }
-  // );
-  // console.log("deleteResp", deleteResp);
-  // let data;
-  // if (deleteResp.ok) {
-  //   data = await deleteResp.text();
-  //   if (data) {
-  //     data = JSON.parse(data);
-  //   }
-  // } else {
-  //   throw new Error(`Cannot delete flag ${flagKey}: ${data ?? "unknown"}`);
-  // }
+  const deleteResp = await fetch(
+    `https://app.launchdarkly.com/api/v2/flags/${projectKey}/${flagKey}`,
+    {
+      method: "DELETE",
+      headers: {
+        Authorization: API_KEY,
+      },
+      body: JSON.stringify({
+        environmentKey: "production",
+        // environmentKey: "toggletunes",
+      }),
+    }
+  );
+  console.log("deleteResp", deleteResp);
+  let data;
+  if (deleteResp.ok) {
+    data = await deleteResp.text();
+    if (data) {
+      data = JSON.parse(data);
+    }
+  } else {
+    throw new Error(`Cannot delete flag ${flagKey}: ${data ?? "unknown"}`);
+  }
 }
 
 async function getSegments(projectKey: string, environmentKey: string) {

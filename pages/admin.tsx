@@ -17,11 +17,13 @@ import {
   RefreshCw,
   Home,
   Archive,
+  X,
 } from "lucide-react";
 import Link from "next/link";
 
 import { Room } from "@/components/room";
 import { useBroadcastEvent } from "@/liveblocks.config";
+import { wait } from "@/lib/utils";
 
 export default function Admin() {
   return (
@@ -69,48 +71,76 @@ function GameAdminDashboard() {
         if (prevProgress === 90) {
           clearInterval(interval);
           return 90;
-        } else if (prevProgress === 100){
+        } else if (prevProgress === 100) {
           clearInterval(interval);
           return 100;
         }
         const newProgress = prevProgress + 10;
 
         if (newProgress <= 20) {
-          setResetProgressMessage("Resetting Team 1 LD Env");
+          setResetProgressMessage("Resetting Team 1 LD Env...");
         } else if (20 < newProgress && newProgress <= 40) {
-          setResetProgressMessage("Resetting Team 2 LD Env");
+          setResetProgressMessage("Resetting Team 2 LD Env...");
         } else if (40 < newProgress && newProgress <= 60) {
-          setResetProgressMessage("Resetting Team 3 LD Env");
+          setResetProgressMessage("Resetting Team 3 LD Env...");
         } else if (60 < newProgress && newProgress <= 80) {
-          setResetProgressMessage("Resetting Team 4 LD Env");
+          setResetProgressMessage("Resetting Team 4 LD Env...");
         } else {
-          setResetProgressMessage("Tying things up");
+          setResetProgressMessage("Tying things up...");
         }
 
         return newProgress;
       });
     }, 3000);
 
-    const resp = await fetch("/api/apiReset");
-    const respJson = await resp.json();
+    let resp: Response;
+    let respJson: { success: string; errorType?: string; errorMessage?: string; error?: string };
 
-    if (resp.status === 200) {
+    try {
+      resp = await fetch("/api/apiReset");
+
+      respJson = await resp.json();
+      console.log(respJson);
       handleReload();
-      setCodeLogs((prevLogs) => [...prevLogs, `Status: ${resp.status}, body: ${respJson.success}`]);
-      setDisplayErrorMessage(false);
-      setResetProgressMessage("Reset Complete!");
+      setCodeLogs((prevLogs) => [
+        ...prevLogs,
+        `Status: ${resp.status}, 
+        Status Text: ${resp.statusText},
+        ${respJson.errorMessage ? `errorMessage: ${respJson.errorMessage}` : ""}
+        ${respJson.errorType ? `errorType: ${respJson.errorType}` : ""}
+        ${respJson.error ? `error: ${respJson.error}` : ""}
+        ${respJson.success ? `success: ${respJson.success}` : ""}
+        url: ${resp.url}`,
+      ]);
+
+      if (resp.status === 200) {
+        setResetProgressMessage("Reset Complete!");
+      } else {
+        setResetProgressMessage("Check the code log for more information.");
+      }
+
+      // @ts-ignore
+      console.log(resp);
+
       setResetProgress(100);
       setIsDisabled(false);
-
-
-    
-    } else {
-      setCodeLogs((prevLogs) => [...prevLogs, `Status: ${resp.status}, error: ${respJson.error}`]);
+      // await wait(120);
+      //setIsResetting(false);
+    } catch (error: any) {
+      setCodeLogs((prevLogs) => [
+        ...prevLogs,
+        `Status: ${resp.status}
+        Status Text: ${resp.statusText}
+        error: ${error}
+        url: ${resp.url}`,
+      ]);
+      // @ts-ignore
+      console.log(resp);
+      setResetProgress(100);
+      setResetProgressMessage("Reset Failed!");
       setDisplayErrorMessage(true);
-      setIsResetting(false);
+      setIsDisabled(false);
     }
-
-    setIsDisabled(false);
   };
 
   const handleReload = async () => {
@@ -275,8 +305,16 @@ function GameAdminDashboard() {
             {/* Progress Bar Card */}
             {isResetting && (
               <div className="bg-gray-800 shadow rounded-lg p-4 mb-8">
-                <h2 className="text-xl font-semibold text-white mb-4">Reset Progress</h2>
-                <p className="text-base text-white mb-4">{resetProgressMessage}...</p>
+                <div className="flex justify-between mb-4">
+                  <h2 className="text-xl font-semibold text-white ">Reset Progress</h2>
+                  {resetProgress === 100 && (
+                    <button onClick={() => setIsResetting(false)}>
+                      <XIcon />
+                    </button>
+                  )}
+                </div>
+
+                <p className="text-base text-white mb-4">{resetProgressMessage}</p>
                 <div className="w-full bg-gray-700 rounded-full h-4 mb-4">
                   <div
                     className="bg-purple-600 h-4 rounded-full transition-all duration-500 ease-out"
@@ -290,10 +328,18 @@ function GameAdminDashboard() {
             {/* Code Logs Card */}
             {(isResetting || displayErrorMessage) && (
               <div className="bg-gray-800 shadow rounded-lg p-4 mb-8">
-                <h2 className="text-xl font-semibold text-white mb-4">Code Logs</h2>
+                <div className="flex justify-between mb-4">
+                  <h2 className="text-xl font-semibold text-white ">Code Logs</h2>
+                  {resetProgress === 100 && (
+                    <button onClick={() => setIsResetting(false)}>
+                      <XIcon />
+                    </button>
+                  )}
+                </div>
+
                 <div className="bg-gray-900 p-4 rounded-lg h-48 overflow-y-auto">
                   {codeLogs.map((log, index) => (
-                    <p key={index} className="text-gray-300 font-mono">
+                    <p key={index} className="text-gray-300 font-mono whitespace-pre-line">
                       {log}
                     </p>
                   ))}

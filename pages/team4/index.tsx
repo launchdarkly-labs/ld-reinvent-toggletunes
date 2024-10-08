@@ -3,7 +3,8 @@ import MusicApp from "@/components/musicapp";
 import { asyncWithLDProvider } from "launchdarkly-react-client-sdk";
 import { Room } from "@/components/room";
 import { setCookie } from "cookies-next";
-
+import { PERSONA_TIER_STANARD, PERSONA_ROLE_USER } from "@/lib/constant";
+import { LoginProvider } from "@/lib/LoginContext";
 let TEAM4;
 
 if (typeof window !== "undefined") {
@@ -20,7 +21,8 @@ if (typeof window !== "undefined") {
         key: uniqueKey,
         name: "Team4",
         appName: "ToggleTunes",
-        tier: "Platinum"
+        tier: PERSONA_TIER_STANARD,
+        role: PERSONA_ROLE_USER,
       },
       device: {
         key: uniqueKey,
@@ -34,7 +36,6 @@ if (typeof window !== "undefined") {
     const [teamName, setTeamName] = useState("blue");
     const [isConfigured, setIsConfigured] = useState(false);
 
-
     async function configUser() {
       await setCookie("team", "Team4");
       setIsConfigured(true);
@@ -47,9 +48,11 @@ if (typeof window !== "undefined") {
     return (
       <LDProviderT4>
         {isConfigured && (
-        <Room>
-          <MusicApp teamName={teamName} />
-        </Room>
+          <Room>
+            <LoginProvider>
+              <MusicApp teamName={teamName} />
+            </LoginProvider>
+          </Room>
         )}
       </LDProviderT4>
     );

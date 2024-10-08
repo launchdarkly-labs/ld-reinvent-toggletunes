@@ -1,12 +1,15 @@
-import { useRouter } from "next/router";
 import Link from "next/link";
 import { PlayIcon } from "lucide-react";
-import { PlaylistInterface,  } from "@/lib/typesInterface";
+import { PlaylistInterface } from "@/lib/typesInterface";
+import { useFlags } from "launchdarkly-react-client-sdk";
+import { IoIosMusicalNotes } from "react-icons/io";
 interface Props {
   playlist: PlaylistInterface;
 }
 
 const ItemCard = ({ playlist }: Props) => {
+  const migrateNewSongDBLDFlag: string = useFlags()["migrate-new-song-db"];
+
   return (
     <Link
       key={playlist.id}
@@ -16,11 +19,15 @@ const ItemCard = ({ playlist }: Props) => {
        bg-zinc-500/30 hover:bg-zinc-500/50 focus:bg-zinc-500/50"
       // data-color={playlist.color.dark}
     >
-      <img
-        src={playlist.cover}
-        alt={playlist.title}
-        className="object-cover h-20 w-20 shadow-[5px_0_30px_0px_rgba(0,0,0,0.3)]"
-      />
+      {migrateNewSongDBLDFlag?.includes("complete") ? (
+        <img
+          src={playlist.cover}
+          alt={playlist.title}
+          className="object-cover h-20 w-20 shadow-[5px_0_30px_0px_rgba(0,0,0,0.3)]"
+        />
+      ) : (
+        <IoIosMusicalNotes className="object-cover h-20 w-20 shadow-[5px_0_30px_0px_rgba(0,0,0,0.3)] text-ldcomplicatedwhite" />
+      )}
 
       <h3 className="font-bold block mr-4">{playlist.title}</h3>
       <div

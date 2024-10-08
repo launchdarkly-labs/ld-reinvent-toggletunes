@@ -8,7 +8,7 @@ import { Music2Icon } from "lucide-react";
 import { motion } from "framer-motion";
 
 const MusicPlayingBar = () => {
-
+  const migrateNewSongDBLDFlag: string = useFlags()["migrate-new-song-db"];
   const releaseTracklistLDFlag: boolean = useFlags()["release-tracklist"];
   const releaseNewUsersPlaylistLDFlag: boolean = useFlags()["release-new-users-playlist"];
 
@@ -35,9 +35,9 @@ const MusicPlayingBar = () => {
       id="music-playing-bar"
     >
       <div className="flex justify-center sm:justify-normal w-full sm:w-[33%]">
-        {releaseTracklistLDFlag == true && releaseNewUsersPlaylistLDFlag == true ? (
+        {(releaseTracklistLDFlag == true || releaseNewUsersPlaylistLDFlag == true) && migrateNewSongDBLDFlag?.includes("complete") ? (
           <img src={songs[currentSongIndex].image} className="h-20 mr-4 hidden sm:block" />
-        ) : releaseTracklistLDFlag == true && releaseNewUsersPlaylistLDFlag == false ? (
+        ) : (releaseTracklistLDFlag == true || releaseNewUsersPlaylistLDFlag == true) && migrateNewSongDBLDFlag?.includes("off") ? (
           <Music2Icon className="h-14 w-14 mr-4 hidden sm:block" />
         ) : null}
         <div className=" relative flex overflow-x-hidden w-full">

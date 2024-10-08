@@ -5,11 +5,17 @@ import { RxCounterClockwiseClock } from "react-icons/rx";
 import { songs } from "@/lib/data";
 import { SongInterface } from "@/lib/typesInterface";
 
-const PlaylistTableSection = ({ playlistSongs = songs }: { playlistSongs: SongInterface[] }) => {
+const PlaylistTableSection = ({ playlistSongs = songs, backUpMigrateNewSongDB }: { playlistSongs: SongInterface[], backUpMigrateNewSongDB?:string }) => {
   const migrateNewSongDBLDFlag: string = useFlags()["migrate-new-song-db"];
-
+  let useableMigrateNewSongDB:string = ""
+  if(backUpMigrateNewSongDB){
+    useableMigrateNewSongDB = backUpMigrateNewSongDB;//TODO: [id] isn't exposed to LD flags bc it isn't wrapped in it. need to deal with it
+  } else {
+    useableMigrateNewSongDB = migrateNewSongDBLDFlag
+  }
+console.log(migrateNewSongDBLDFlag)
   return (
-    <table id="songs-bulleted-list" >
+    <table id="songs-bulleted-list">
       <thead>
         <tr
           className="grid grid-cols-[minmax(0,_0.1fr)_minmax(0,_1.5fr)__minmax(0,_1fr)_minmax(0,_0.2fr)] items-center 
@@ -39,7 +45,7 @@ const PlaylistTableSection = ({ playlistSongs = songs }: { playlistSongs: SongIn
           >
             <td className="">{index + 1}</td>
             <td className="flex gap-x-4 items-center">
-              {migrateNewSongDBLDFlag?.includes("off") ? (
+              {useableMigrateNewSongDB?.includes("off") || useableMigrateNewSongDB === undefined ? (
                 <Music2Icon className="h-10 w-10" />
               ) : song?.image ? (
                 <img src={song?.image} className="h-10 w-10" />

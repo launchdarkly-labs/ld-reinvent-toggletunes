@@ -13,28 +13,25 @@ import MusicPlayingBar from "./MusicPlayingBar";
 import PlaylistTableSection from "./PlaylistTableSection";
 import AdSection from "./AdSection";
 import { playlists, moreNewPlaylists, moreNewSongs, songs } from "@/lib/data";
-import { aiModelColors, formatForJSON } from "@/lib/utils";
+import { aiModelColors, formatForJSON, wait } from "@/lib/utils";
 import { v4 as uuidv4 } from "uuid";
 import Link from "next/link";
 import AIGeneratedPlaylistContext from "@/lib/AIGeneratedPlaylistContext";
 import { colors } from "@/lib/color";
 import FourAlbumArtCard from "./FourAlbumArtCard";
 import { BotIcon } from "lucide-react";
-import {
-
-  RingLoader,
-
-} from "react-spinners";
+import { RingLoader } from "react-spinners";
 import { PlaylistInterface, AIModelInterface, SongInterface } from "@/lib/typesInterface";
 import { defaultListOfCohereGeneratedSongs, defaultListOfClaudeGeneratedSongs } from "@/lib/data";
 import { parseJSONArray } from "parse-json-object";
 import { META, COHERE, CLAUDE } from "@/lib/constant";
+import Navbar from "./Navbar";
 
 //TODO: when you go into playlist 1 /2 or whatever, it should be specific per team1/ team 2 etc
 //TODO: i think release should be a really ugly version of spotify from 2012 and then release a new version
 export default function MusicApp({ teamName }: { teamName?: string }) {
   const releaseTracklistLDFlag: boolean = useFlags()["release-tracklist"];
-  const releaseRecentTunesLDFlag: boolean = useFlags()["release-recent-tunes"];
+  const releaseSavedPlaylistsSidebarLDFlag: boolean = useFlags()["release-saved-playlists-sidebar"];
   const releaseNewUsersPlaylistLDFlag: boolean = useFlags()["release-new-users-playlist"];
   const releaseAdSidebarLDFlag: boolean = useFlags()["release-ad-sidebar"];
   const migrateNewSongDBLDFlag: string = useFlags()["migrate-new-song-db"];
@@ -76,7 +73,6 @@ export default function MusicApp({ teamName }: { teamName?: string }) {
   async function submitQuery(): Promise<void> {
     // const userInput = input;
     // setInput("");
-    console.log("triggered")
     setIsLoading(true);
     // const userMessage: Message = {
     //   role: "user",
@@ -192,6 +188,7 @@ export default function MusicApp({ teamName }: { teamName?: string }) {
       songs: aiGeneratedSonglistAnswerFormatted,
       createdBy: `${aiModelName}`,
     };
+    console.log(objectFormat)
     // @ts-ignore
     setAIPlaylists((prevPlaylists): PlaylistInterface[] => {
       return [objectFormat, ...prevPlaylists];
@@ -222,7 +219,7 @@ export default function MusicApp({ teamName }: { teamName?: string }) {
           console.log("Step 1 not eligible for evaluation!");
         }
 
-        if (releaseRecentTunesLDFlag === true && flagTwo === false) {
+        if (releaseSavedPlaylistsSidebarLDFlag === true && flagTwo === false) {
           broadcast({ type: teamName, complete: "stepTwoComplete", value: 20 });
           // console.log("second step running");
           // await triggerStep("second step complete", "stepTwoComplete");
@@ -257,7 +254,7 @@ export default function MusicApp({ teamName }: { teamName?: string }) {
           console.log("Step 4 not eligible for evaluation!");
         }
 
-        if (releaseAdSidebarLDFlag === true && flagFive === false) {
+        if ((aiModelName.includes(META) || aiModelName.includes(COHERE)) && flagFive === false) {
           broadcast({
             type: teamName,
             complete: "stepFiveComplete",
@@ -294,23 +291,32 @@ export default function MusicApp({ teamName }: { teamName?: string }) {
     triggerSteps();
   }, [
     releaseTracklistLDFlag,
-    releaseRecentTunesLDFlag,
+    releaseSavedPlaylistsSidebarLDFlag,
     releaseNewUsersPlaylistLDFlag,
-    releaseAdSidebarLDFlag,
+    releaseAIPlaylistCreatorLDFlag,
     migrateNewSongDBLDFlag,
   ]);
 
   useEffect(() => {
     // setPlaylistAPI([]);
     const fetchPlaylists = async () => {
-      // await wait(1);
-      setPlaylistAPI((prevState) => [...prevState, ...moreNewPlaylists]);
+      let addingPlaylists: PlaylistInterface[] = [];
+      if (migrateNewSongDBLDFlag?.includes("complete")) {
+        addingPlaylists = [...moreNewPlaylists];
+      }
+      // await wait(5);
+      setPlaylistAPI((prevState) => [...prevState, ...addingPlaylists]);
     };
     const fetchSongs = async () => {
-      // await wait(1);
-      setSongsAPI((prevState) => [...prevState, ...moreNewSongs, ...moreNewSongs]);
+      let addingSongs: SongInterface[] = [];
+      if (migrateNewSongDBLDFlag?.includes("complete")) {
+        addingSongs = [...moreNewSongs];
+      }
+      // await wait(5);
+
+      setSongsAPI((prevState) => [...prevState, ...addingSongs]);
     };
-    if (migrateNewSongDBLDFlag.includes("off")) return;
+    if (migrateNewSongDBLDFlag?.includes("off") || migrateNewSongDBLDFlag === undefined) return;
     fetchPlaylists();
     fetchSongs();
   }, [migrateNewSongDBLDFlag]);
@@ -330,12 +336,25 @@ export default function MusicApp({ teamName }: { teamName?: string }) {
       <main className="flex flex-col gap-2 font-sohne bg-black overflow-y-visible h-screen lg:overflow-y-hidden">
         {releaseTracklistLDFlag && (
           <section className="w-full flex flex-col ">
+            <Navbar />
             <section
-              className="flex flex-col sm:flex-row gap-2 my-2 mx-2  h-[calc(100vh-19rem)] sm:h-[calc(100vh-10rem)] relative overflow-y-visible"
+              className={`flex flex-col sm:flex-row gap-2 ${
+                releaseTracklistLDFlag &&
+                releaseNewUsersPlaylistLDFlag == false &&
+                releaseSavedPlaylistsSidebarLDFlag == false &&
+                "m-0 my-2"
+              } ${
+                releaseTracklistLDFlag &&
+                releaseNewUsersPlaylistLDFlag == false &&
+                releaseSavedPlaylistsSidebarLDFlag == true &&
+                "m-2"
+              } ${
+                releaseNewUsersPlaylistLDFlag && "m-2 "
+              }  h-[calc(100vh-19rem)] sm:h-[calc(100vh-13rem)] relative overflow-y-visible`}
               id="music-app-main-cards-wrapper"
             >
-              {releaseRecentTunesLDFlag && (
-                <section className="w-1/5 hidden sm:block">
+              {(releaseSavedPlaylistsSidebarLDFlag || releaseNewUsersPlaylistLDFlag) && (
+                <section className="w-1/5 hidden sm:block overflow-y-auto scrollbar-hide ">
                   <SideBar songsAPI={songsAPI} />
                 </section>
               )}
@@ -347,24 +366,25 @@ export default function MusicApp({ teamName }: { teamName?: string }) {
                   duration: 0.5,
                   ease: [0, 0.71, 0.2, 1.01],
                 }}
-                className={`rounded-md p-4 bg-ldbackground overflow-y-auto scrollbar-hide w-full flex flex-col gap-6
+                className={` p-4 bg-ldbackground overflow-y-auto scrollbar-hide w-full flex flex-col gap-6
                  ${
-                   releaseRecentTunesLDFlag && releaseAdSidebarLDFlag
-                     ? "sm:w-3/5"
-                     : releaseRecentTunesLDFlag
-                     ? "sm:w-4/5"
-                     : "sm:w-full"
+                   releaseSavedPlaylistsSidebarLDFlag && releaseAdSidebarLDFlag
+                     ? "sm:w-3/5 rounded-md"
+                     : releaseSavedPlaylistsSidebarLDFlag || releaseNewUsersPlaylistLDFlag
+                     ? "sm:w-4/5 rounded-md"
+                     : "sm:w-full "
                  }`}
                 id="music-app-main-center-part"
               >
-                {releaseNewUsersPlaylistLDFlag === false && (
+                {(releaseNewUsersPlaylistLDFlag === false ||
+                  releaseNewUsersPlaylistLDFlag === undefined) && (
                   <>
                     <h2 className="flex items-center gap-x-4">
                       <IoIosMusicalNotes className="w-10 h-10 text-ldcomplicatedwhite" />
                       <p className="text-2xl font-bold">Track List</p>
                       <img src="/images/tunes.png" className="ml-auto mr-5" />
                     </h2>
-
+                    {/* TODO: need transfrom this to playlist lines - not organized and mismosh */}
                     <PlaylistTableSection playlistSongs={songsAPI} />
                   </>
                 )}
@@ -407,7 +427,7 @@ export default function MusicApp({ teamName }: { teamName?: string }) {
                   </section>
                 )}
 
-                {releaseNewUsersPlaylistLDFlag && (
+                {releaseNewUsersPlaylistLDFlag && releaseAIPlaylistCreatorLDFlag ? (
                   <section className={`flex flex-col gap-y-4 `}>
                     <h2 className="text-2xl font-bold">
                       Made For You{" "}
@@ -429,7 +449,7 @@ export default function MusicApp({ teamName }: { teamName?: string }) {
                       <button
                         onClick={() => submitQuery()}
                         className={`${isLoading ? "cursor-auto" : "cursor-pointer"}`}
-                        disabled = {isLoading ? true: false}
+                        disabled={isLoading ? true : false}
                       >
                         <motion.div
                           initial={{ opacity: 0, scale: 0.25 }}
@@ -445,7 +465,7 @@ export default function MusicApp({ teamName }: { teamName?: string }) {
                           {isLoading ? (
                             <>
                               <div className="flex items-center justify-center object-cover transition-all hover:scale-105 mb-4 h-48 w-48 rounded-lg px-3 py-2 text-sm bg-gray-100 dark:bg-blue-700">
-                                <RingLoader  size={125} color={"#22c55e"} />
+                                <RingLoader size={125} color={"#22c55e"} />
                               </div>
                               <div className="flex flex-col gap-y-2 items-center break-words max-w-[200px]">
                                 <p className="text-lg text-center font-sohne  break-words truncate w-full">
@@ -458,8 +478,8 @@ export default function MusicApp({ teamName }: { teamName?: string }) {
                             </>
                           ) : (
                             <>
-                               <div className="flex items-center justify-center object-cover transition-all hover:scale-105 mb-4 h-48 w-48 rounded-lg px-3 py-2 text-sm bg-gray-100 dark:bg-blue-700">
-                                <BotIcon className="h-24 w-24 text-green-500"/>
+                              <div className="flex items-center justify-center object-cover transition-all hover:scale-105 mb-4 h-48 w-48 rounded-lg px-3 py-2 text-sm bg-gray-100 dark:bg-blue-700">
+                                <BotIcon className="h-24 w-24 text-green-500" />
                               </div>
                               <div className="flex flex-col gap-y-2 items-center align-center break-words  max-w-[180px]">
                                 <p className="text-lg text-center font-sohne  break-words  w-full">
@@ -515,7 +535,7 @@ export default function MusicApp({ teamName }: { teamName?: string }) {
                       })}
                     </div>
                   </section>
-                )}
+                ) : null}
 
                 {releaseNewUsersPlaylistLDFlag && (
                   <section className={`flex flex-col gap-y-4 `}>
@@ -537,11 +557,15 @@ export default function MusicApp({ teamName }: { teamName?: string }) {
                           className="place-items-center border-white bg-ldinputback 
                             rounded-md hover:bg-gray-900/50  inline-block p-4"
                         >
-                          <img
-                            className="object-cover transition-all hover:scale-105 h-48 w-48 mb-4"
-                            alt={song.title}
-                            src={song.image}
-                          />
+                          {migrateNewSongDBLDFlag?.includes("complete") ? (
+                            <img
+                              className="object-cover transition-all hover:scale-105 h-48 w-48 mb-4"
+                              alt={song.title}
+                              src={song.image}
+                            />
+                          ) : (
+                            <IoIosMusicalNotes className="object-cover transition-all hover:scale-105 h-48 w-48 mb-4 text-ldcomplicatedwhite" />
+                          )}
                           <div className="flex flex-col gap-y-2">
                             <p className="text-lg text-center font-sohne ">{song.title}</p>
                             <p className="text-base text-gray-500  text-center font-sohne font-thin">
@@ -561,7 +585,9 @@ export default function MusicApp({ teamName }: { teamName?: string }) {
           </section>
         )}
 
-        {releaseTracklistLDFlag === false && <SimplePlayerScreen />}
+        {(releaseTracklistLDFlag === false || releaseTracklistLDFlag === undefined) && (
+          <SimplePlayerScreen />
+        )}
       </main>
     </Room>
   );
