@@ -5,7 +5,7 @@ import { Room } from "@/components/room";
 import { setCookie } from "cookies-next";
 import { PERSONA_TIER_STANARD, PERSONA_ROLE_USER } from "@/lib/constant";
 import { LoginProvider } from "@/lib/LoginContext";
-import { AIGeneratedPlaylistProvider } from "@/lib/AIGeneratedPlaylistContext";
+ 
 
 let Team2;
 
@@ -34,7 +34,7 @@ if (typeof window !== "undefined") {
     },
   });
 
-  Team2 = () => {
+  Team2 = (): JSX.Element  => {
     const [isConfigured, setIsConfigured] = useState(false);
 
     async function configUser() {

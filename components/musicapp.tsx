@@ -34,7 +34,7 @@ export default function MusicApp({ teamName }: { teamName?: string }) {
   const releaseSavedPlaylistsSidebarLDFlag: boolean = useFlags()["release-saved-playlists-sidebar"];
   const releaseNewUsersPlaylistLDFlag: boolean = useFlags()["release-new-users-playlist"];
   const releaseAdSidebarLDFlag: boolean = useFlags()["release-ad-sidebar"];
-  //const migrateNewSongDBLDFlag: string = useFlags()["migrate-new-song-db"];
+  // const migrateNewSongDBLDFlag: string = useFlags()["migrate-new-song-db"];
   const migrateNewSongDBLDFlag: string = "complete";
   const releaseAIPlaylistCreatorLDFlag: AIModelInterface =
     useFlags()["release-ai-playlist-creator"];
@@ -46,7 +46,7 @@ export default function MusicApp({ teamName }: { teamName?: string }) {
   // const [setUpgradeAd] = useState(true);
   const [flagOne, setFlagOne] = useState(false);
   const [flagTwo, setFlagTwo] = useState(false);
-  const [flagThree, setFlagThree] = useState(false);
+  // const [flagThree, setFlagThree] = useState(false);
   const [flagFour, setFlagFour] = useState(false);
   const [flagFive, setFlagFive] = useState(false);
   // const [input, setInput] = useState("");
@@ -196,8 +196,6 @@ export default function MusicApp({ teamName }: { teamName?: string }) {
     });
   }
 
-  // const ldClient = useLDClient();
-
   // const apiURL = "/api/sb-score-add/";
 
   const broadcast = useBroadcastEvent();
@@ -207,13 +205,13 @@ export default function MusicApp({ teamName }: { teamName?: string }) {
   const reloadPage = async () => {
     await router.reload();
   };
-
+console.log("flagOne",flagOne)
   useEffect(() => {
     const triggerSteps = async () => {
       try {
         if (releaseTracklistLDFlag === true && flagOne === false) {
-          broadcast({ type: teamName, complete: "stepOneComplete", value: 20 });
-          // console.log("first step running");
+          broadcast({ type: teamName, complete: "stepOneComplete", value: 25 });
+          console.log("first step running");
           // await triggerStep("first step complete", "stepOneComplete");
           setFlagOne(true);
         } else {
@@ -221,7 +219,7 @@ export default function MusicApp({ teamName }: { teamName?: string }) {
         }
 
         if (releaseSavedPlaylistsSidebarLDFlag === true && flagTwo === false) {
-          broadcast({ type: teamName, complete: "stepTwoComplete", value: 20 });
+          broadcast({ type: teamName, complete: "stepTwoComplete", value: 25 });
           // console.log("second step running");
           // await triggerStep("second step complete", "stepTwoComplete");
           setFlagTwo(true);
@@ -229,24 +227,24 @@ export default function MusicApp({ teamName }: { teamName?: string }) {
           console.log("Step 2 not eligible for evaluation!");
         }
 
-        if (migrateNewSongDBLDFlag === "complete" && flagThree === false) {
-          broadcast({
-            type: teamName,
-            complete: "stepThreeComplete",
-            value: 20,
-          });
-          // console.log("third step running");
-          // await triggerStep("third step complete", "stepThreeComplete");
-          setFlagThree(true);
-        } else {
-          console.log("Step 3 not eligible for evaluation!");
-        }
+        // if (migrateNewSongDBLDFlag === "complete" && flagThree === false) {
+        //   broadcast({
+        //     type: teamName,
+        //     complete: "stepThreeComplete",
+        //     value: 20,
+        //   });
+        //   // console.log("third step running");
+        //   // await triggerStep("third step complete", "stepThreeComplete");
+        //   setFlagThree(true);
+        // } else {
+        //   console.log("Step 3 not eligible for evaluation!");
+        // }
 
         if (releaseNewUsersPlaylistLDFlag === true && flagFour === false) {
           broadcast({
             type: teamName,
             complete: "stepFourComplete",
-            value: 20,
+            value: 25,
           });
           // console.log("fourth step running");
           // await triggerStep("fourth step complete", "stepFourComplete");
@@ -263,7 +261,7 @@ export default function MusicApp({ teamName }: { teamName?: string }) {
           broadcast({
             type: teamName,
             complete: "stepFiveComplete",
-            value: 20,
+            value: 25,
           });
           // console.log("fifth step running");
           // await triggerStep("fifth step complete", "stepFiveComplete");
@@ -300,6 +298,7 @@ export default function MusicApp({ teamName }: { teamName?: string }) {
     releaseNewUsersPlaylistLDFlag,
     releaseAIPlaylistCreatorLDFlag,
     migrateNewSongDBLDFlag,
+    aiPlaylists
   ]);
 
   useEffect(() => {

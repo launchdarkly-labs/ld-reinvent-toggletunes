@@ -176,19 +176,19 @@ const EventListenerComponent = memo(function EventListenerComponent({
       switch (event.type) {
         case "green":
           console.log("green score");
-          setGreenProgress((prevProgress) => prevProgress + 20);
+          setGreenProgress((prevProgress) => prevProgress + 25);
           break;
         case "red":
           console.log("red score");
-          setRedProgress((prevProgress) => prevProgress + 20);
+          setRedProgress((prevProgress) => prevProgress + 25);
           break;
         case "purple":
           console.log("purple score");
-          setPurpleProgress((prevProgress) => prevProgress + 20);
+          setPurpleProgress((prevProgress) => prevProgress + 25);
           break;
         case "blue":
           console.log("blue score");
-          setBlueProgress((prevProgress) => prevProgress + 20);
+          setBlueProgress((prevProgress) => prevProgress + 25);
           break;
         case "startTimer":
           console.log("starting timer");

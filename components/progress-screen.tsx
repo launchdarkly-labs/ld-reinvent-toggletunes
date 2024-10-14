@@ -4,7 +4,7 @@ import * as React from "react";
 export function ProgressStatus({greenProgress, purpleProgress, redProgress, blueProgress}: any) {
   return (
     <>
-      <div className="grid grid-rows-5 bg-[url('/images/scoreboard-background-no-bg.png')] bg-cover grid-cols-3 h-full w-full font-sohne border-zinc-500 m-10 place-items-stretch gap-10">
+      <div className="grid grid-rows-4 bg-[url('/images/scoreboard-background-no-bg.png')] bg-cover grid-cols-3 h-full w-full font-sohne border-zinc-500 m-10 place-items-stretch gap-10">
         <div className="relative col-span-1 col-start-1 row-span-5 h-full w-full overflow-hidden p-8">
           <div
             className="h-full w-full flex-1 bg-gradient-to-t from-ldgreen to-ldyellow transition-all"

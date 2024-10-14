@@ -14,7 +14,7 @@ const PlaylistTableSection = ({ playlistSongs = songs, backUpMigrateNewSongDB }:
   } else {
     useableMigrateNewSongDB = migrateNewSongDBLDFlag
   }
-console.log(migrateNewSongDBLDFlag)
+//console.log(migrateNewSongDBLDFlag)
   return (
     <table id="songs-bulleted-list">
       <thead>

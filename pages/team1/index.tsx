@@ -2,10 +2,10 @@ import React, { useEffect, useState } from "react";
 import MusicApp from "@/components/musicapp";
 import { asyncWithLDProvider } from "launchdarkly-react-client-sdk";
 import { Room } from "@/components/room";
-// import { setCookie } from "cookies-next";
+import { setCookie } from "cookies-next";
 import { PERSONA_TIER_STANARD, PERSONA_ROLE_USER } from "@/lib/constant";
 import { LoginProvider } from "@/lib/LoginContext";
-import { AIGeneratedPlaylistProvider } from "@/lib/AIGeneratedPlaylistContext";
+
 
 let Team1: () => JSX.Element | null;
 
@@ -36,16 +36,15 @@ if (typeof window !== "undefined") {
   });
 
   Team1 = (): JSX.Element => {
-    // const [teamName, setTeamName] = useState("green");
     const [isConfigured, setIsConfigured] = useState(false);
 
-    // async function configUser() {
-    //   // await setCookie("team", "Team1");
-    //   setIsConfigured(true);
-    // }
+   async function configUser() {
+      await setCookie("team", "Team1");
+      setIsConfigured(true);
+    }
 
     useEffect(() => {
-      setIsConfigured(true);
+      configUser();
     }, []);
 
     return (
