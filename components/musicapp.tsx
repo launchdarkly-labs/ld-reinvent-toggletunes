@@ -34,7 +34,8 @@ export default function MusicApp({ teamName }: { teamName?: string }) {
   const releaseSavedPlaylistsSidebarLDFlag: boolean = useFlags()["release-saved-playlists-sidebar"];
   const releaseNewUsersPlaylistLDFlag: boolean = useFlags()["release-new-users-playlist"];
   const releaseAdSidebarLDFlag: boolean = useFlags()["release-ad-sidebar"];
-  const migrateNewSongDBLDFlag: string = useFlags()["migrate-new-song-db"];
+  //const migrateNewSongDBLDFlag: string = useFlags()["migrate-new-song-db"];
+  const migrateNewSongDBLDFlag: string = "complete";
   const releaseAIPlaylistCreatorLDFlag: AIModelInterface =
     useFlags()["release-ai-playlist-creator"];
 
@@ -254,7 +255,11 @@ export default function MusicApp({ teamName }: { teamName?: string }) {
           console.log("Step 4 not eligible for evaluation!");
         }
 
-        if ((aiModelName.includes(META) || aiModelName.includes(COHERE)) && flagFive === false) {
+        if (
+          (aiModelName.includes(META) || aiModelName.includes(COHERE)) &&
+          aiPlaylists.length >= 2 &&
+          flagFive === false
+        ) {
           broadcast({
             type: teamName,
             complete: "stepFiveComplete",
