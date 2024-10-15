@@ -174,23 +174,24 @@ const EventListenerComponent = memo(function EventListenerComponent({
     console.log(connectionId);
     // type: teamName, complete: "stepThreeComplete", value: 20
     console.log(event);
+    //TODO: here you can change event.type or event.complete or event.step and change type of progress for semi steps
     async function scoreRequest(event) {
       switch (event.type) {
         case "green":
           console.log("green score");
-          setGreenProgress((prevProgress) => prevProgress + 25);
+          setGreenProgress((prevProgress) => prevProgress + 20);
           break;
         case "red":
           console.log("red score");
-          setRedProgress((prevProgress) => prevProgress + 25);
+          setRedProgress((prevProgress) => prevProgress + 20);
           break;
         case "purple":
           console.log("purple score");
-          setPurpleProgress((prevProgress) => prevProgress + 25);
+          setPurpleProgress((prevProgress) => prevProgress + 20);
           break;
         case "blue":
           console.log("blue score");
-          setBlueProgress((prevProgress) => prevProgress + 25);
+          setBlueProgress((prevProgress) => prevProgress + 20);
           break;
         case "startTimer":
           console.log("starting timer");

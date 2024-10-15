@@ -59,7 +59,7 @@ export default function MusicApp({ teamName }: { teamName?: string }) {
   // const [setUpgradeAd] = useState(true);
   const [flagOne, setFlagOne] = useState(false);
   const [flagTwo, setFlagTwo] = useState(false);
-  // const [flagThree, setFlagThree] = useState(false);
+  const [flagThree, setFlagThree] = useState(false);
   const [flagFour, setFlagFour] = useState(false);
   const [flagFive, setFlagFive] = useState(false);
   // const [input, setInput] = useState("");
@@ -248,35 +248,24 @@ export default function MusicApp({ teamName }: { teamName?: string }) {
           console.log("Step 2 not eligible for evaluation!");
         }
 
-        // if (migrateNewSongDBLDFlag === "complete" && flagThree === false) {
-        //   broadcast({
-        //     type: teamName,
-        //     complete: "stepThreeComplete",
-        //     value: 20,
-        //   });
-        //   // console.log("third step running");
-        //   // await triggerStep("third step complete", "stepThreeComplete");
-        //   setFlagThree(true);
-        // } else {
-        //   console.log("Step 3 not eligible for evaluation!");
-        // }
-
-        if (releaseNewUsersPlaylistLDFlag === true && flagFour === false) {
+      
+        if (releaseNewUsersPlaylistLDFlag === true && flagThree === false) {
           broadcast({
             type: teamName,
             complete: "stepThreeComplete",
           });
           // console.log("fourth step running");
           // await triggerStep("fourth step complete", "stepFourComplete");
-          setFlagFour(true);
+          setFlagThree(true);
         } else {
           console.log("Step 3 not eligible for evaluation!");
         }
+        
         //TODO: need to divide 25 by 3 in order to send info based on the 3 mini steps done for this point
         if (
           (aiModelName.includes(META) || aiModelName.includes(COHERE)) &&
-          aiPlaylists.length >= 2 &&
-          flagFive === false
+          aiPlaylists.length >= 1 &&
+          flagFour === false
         ) {
           broadcast({
             type: teamName,
@@ -284,13 +273,25 @@ export default function MusicApp({ teamName }: { teamName?: string }) {
           });
           // console.log("fifth step running");
           // await triggerStep("fifth step complete", "stepFiveComplete");
-          setFlagFive(true);
+          setFlagFour(true);
         } else {
           console.log("Step 4 not eligible for evaluation!");
         }
       } catch (err) {
         console.error(err);
       }
+
+        if (releaseAdSidebarLDFlag && flagFive === false) {
+          broadcast({
+            type: teamName,
+            complete: "stepFiveComplete",
+          });
+
+          setFlagFive(true);
+        } else {
+          console.log("Step 5 not eligible for evaluation!");
+        }
+
     };
 
     // const triggerStep = async (event: any, stepCompleted: any) => {
@@ -316,7 +317,7 @@ export default function MusicApp({ teamName }: { teamName?: string }) {
     releaseSavedPlaylistsSidebarLDFlag,
     releaseNewUsersPlaylistLDFlag,
     releaseAIPlaylistCreatorLDFlag,
-    migrateNewSongDBLDFlag,
+    releaseAdSidebarLDFlag,
     aiPlaylists,
   ]);
 
