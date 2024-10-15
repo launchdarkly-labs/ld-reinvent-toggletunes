@@ -16,7 +16,7 @@ export default function Scoreboard() {
   const [winnerName, setWinnerName] = useState("");
   const [greenProgress, setGreenProgress] = useState(0);
   const [isTimerRunning, setIsTimerRunning] = useState(false);
-  const [timer, setTimer] = useState(600000);
+  const [timer, setTimer] = useState(900000);
   const [openStartModal, setOpenStartModal] = useState(true);
   const [animationStarted, setAnimationStarted] = useState(false);
   

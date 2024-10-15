@@ -6,7 +6,8 @@ import { useFlags } from "launchdarkly-react-client-sdk";
 import { memo, useEffect, useState, useContext } from "react";
 import { useRouter } from "next/router";
 import { IoIosMusicalNotes } from "react-icons/io";
-import { useBroadcastEvent, useEventListener } from "../liveblocks.config";
+import { useBroadcastEvent, useEventListener, useHistory, useStatus, useUser,useStorage, useThreads, useSelf } from "../liveblocks.config";
+
 import { Room } from "./room";
 import SimplePlayerScreen from "./SimplePlayerScreen";
 import MusicPlayingBar from "./MusicPlayingBar";
@@ -40,6 +41,9 @@ export default function MusicApp({ teamName }: { teamName?: string }) {
     useFlags()["release-ai-playlist-creator"];
 
   const { aiPlaylists, setAIPlaylists } = useContext(AIGeneratedPlaylistContext);
+  
+  // Check for `error` and `isLoading` before `threads` is defined
+  const { threads, error, isLoading } = useThreads();
 
   const [playlistAPI, setPlaylistAPI] = useState(playlists);
   const [songsAPI, setSongsAPI] = useState(songs);
@@ -51,7 +55,7 @@ export default function MusicApp({ teamName }: { teamName?: string }) {
   const [flagFive, setFlagFive] = useState(false);
   // const [input, setInput] = useState("");
   // const [messages, setMessages] = useState<Message[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingApp, setIsLoadingApp] = useState(false);
 
   // const handleInputChange = (e: any): void => {
   //   setInput(e.target.value);
@@ -74,7 +78,7 @@ export default function MusicApp({ teamName }: { teamName?: string }) {
   async function submitQuery(): Promise<void> {
     // const userInput = input;
     // setInput("");
-    setIsLoading(true);
+    setIsLoadingApp(true);
     // const userMessage: Message = {
     //   role: "user",
     //   content: userInput,
@@ -120,7 +124,7 @@ export default function MusicApp({ teamName }: { teamName?: string }) {
       prompt: string;
     } = await response.json();
 
-    setIsLoading(false);
+    setIsLoadingApp(false);
     let aiAnswer: string;
 
     if (data?.generation) {
@@ -199,7 +203,14 @@ export default function MusicApp({ teamName }: { teamName?: string }) {
   // const apiURL = "/api/sb-score-add/";
 
   const broadcast = useBroadcastEvent();
-
+  //TODO: this some reason causes eveyrthing ot load to make sure livelbocks works?
+  const animals = useStorage((root) => root);
+  console.log(animals)
+  console.log(error)
+  console.log(isLoading)
+  console.log(threads)
+  const currentUser = useSelf();
+  console.log(currentUser)
   const router = useRouter();
 
   const reloadPage = async () => {
@@ -208,16 +219,17 @@ export default function MusicApp({ teamName }: { teamName?: string }) {
 console.log("flagOne",flagOne)
   useEffect(() => {
     const triggerSteps = async () => {
+      console.log(currentUser)
       try {
         if (releaseTracklistLDFlag === true && flagOne === false) {
           broadcast({ type: teamName, complete: "stepOneComplete", value: 25 });
-          console.log("first step running");
+          //console.log("first step running");
           // await triggerStep("first step complete", "stepOneComplete");
           setFlagOne(true);
         } else {
           console.log("Step 1 not eligible for evaluation!");
         }
-
+        //TODO: can you get a list of complete: stepTwoComplete etc? 
         if (releaseSavedPlaylistsSidebarLDFlag === true && flagTwo === false) {
           broadcast({ type: teamName, complete: "stepTwoComplete", value: 25 });
           // console.log("second step running");
@@ -243,16 +255,16 @@ console.log("flagOne",flagOne)
         if (releaseNewUsersPlaylistLDFlag === true && flagFour === false) {
           broadcast({
             type: teamName,
-            complete: "stepFourComplete",
+            complete: "stepThreeComplete",
             value: 25,
           });
           // console.log("fourth step running");
           // await triggerStep("fourth step complete", "stepFourComplete");
           setFlagFour(true);
         } else {
-          console.log("Step 4 not eligible for evaluation!");
+          console.log("Step 3 not eligible for evaluation!");
         }
-
+        //TODO: need to divide 25 by 3 in order to send info based on the 3 mini steps done for this point
         if (
           (aiModelName.includes(META) || aiModelName.includes(COHERE)) &&
           aiPlaylists.length >= 2 &&
@@ -260,14 +272,14 @@ console.log("flagOne",flagOne)
         ) {
           broadcast({
             type: teamName,
-            complete: "stepFiveComplete",
+            complete: "stepFourComplete",
             value: 25,
           });
           // console.log("fifth step running");
           // await triggerStep("fifth step complete", "stepFiveComplete");
           setFlagFive(true);
         } else {
-          console.log("Step 5 not eligible for evaluation!");
+          console.log("Step 4 not eligible for evaluation!");
         }
       } catch (err) {
         console.error(err);
@@ -452,8 +464,8 @@ console.log("flagOne",flagOne)
                     >
                       <button
                         onClick={() => submitQuery()}
-                        className={`${isLoading ? "cursor-auto" : "cursor-pointer"}`}
-                        disabled={isLoading ? true : false}
+                        className={`${isLoadingApp ? "cursor-auto" : "cursor-pointer"}`}
+                        disabled={isLoadingApp ? true : false}
                       >
                         <motion.div
                           initial={{ opacity: 0, scale: 0.25 }}
@@ -466,7 +478,7 @@ console.log("flagOne",flagOne)
                           className="place-items-center border-white bg-ldinputback 
                             rounded-md hover:bg-gray-900/50  inline-block p-4"
                         >
-                          {isLoading ? (
+                          {isLoadingApp ? (
                             <>
                               <div className="flex items-center justify-center object-cover transition-all hover:scale-105 mb-4 h-48 w-48 rounded-lg px-3 py-2 text-sm bg-gray-100 dark:bg-blue-700">
                                 <RingLoader size={125} color={"#22c55e"} />
