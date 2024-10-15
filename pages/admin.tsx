@@ -48,6 +48,7 @@ function GameAdminDashboard() {
   const handleStart = async () => {
     setArchivedMessage("");
     setDisplayErrorMessage(false);
+    setIsResetting(false);
     broadcast({ type: "startTimer" });
   };
 

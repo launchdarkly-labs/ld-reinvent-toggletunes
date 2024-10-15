@@ -18,8 +18,7 @@ const Item = () => {
   //const migrateNewSongDBLDFlag: string = useFlags()["migrate-new-song-db"];
   const migrateNewSongDBLDFlag: string = "complete";
   const { aiPlaylists } = useContext(AIGeneratedPlaylistContext);
-  console.log(migrateNewSongDBLDFlag)
-console.log(aiPlaylists)
+
   const allPlaylists: PlaylistInterface[] = [...playlists, ...moreNewPlaylists, ...aiPlaylists];
   // @ts-ignore
   let playlist: PlaylistInterface = allPlaylists.find((playlist) => playlist.id === id);

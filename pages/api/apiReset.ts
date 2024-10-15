@@ -14,26 +14,28 @@ const API_KEY: string = process.env.LD_API_KEY as string;
 const delay = 1000;
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<any>) {
-  console.log("Reset starting");
+
   try {
     for (const projectKey of projectKeys) {
       // get the flags then delete them
       const flags = await getFlags(projectKey);
       for (const flag of flags.items) {
-        console.log("flag line 23", flag);
         await deleteFlag(projectKey, flag.key);
         await sleep(delay);
       }
-      // get environments which we need for deleting segments
-      // const environments = await getEnvironments(projectKey);
-      // // get the segments for each environment and delete them
-      // for (const environment of environments.items) {
-      //   const segments = await getSegments(projectKey, environment.key);
-      //   for (const segment of segments.items) {
-      //     await deleteSegment(projectKey, environment.key, segment.key);
-      //     await sleep(delay);
-      //   }
-      // }
+      //get environments which we need for deleting segments
+      const environments = await getEnvironments(projectKey);
+      console.log("environments",environments)
+     // get the segments for each environment and delete them
+
+      for (const environment of environments.items) {
+        const metricsFetched = await getMetrics(projectKey, environment.key);
+        console.log("metricsFetched",metricsFetched)
+        for (const metric of metricsFetched.items) {
+          await deleteMetrics(projectKey, metric.key);
+          await sleep(delay);
+        }
+      }
     }
   } catch (e: any) {
     return res.status(500).json({ error: e.message });
@@ -91,15 +93,15 @@ async function getFlags(projectKey: string) {
 }
 
 async function deleteFlag(projectKey: string, flagKey: string) {
-  console.log("Debug: Deleting Flag " + flagKey);
+  //console.log("Debug: Deleting Flag " + flagKey);
   if (!projectKeys.includes(projectKey)) {
     throw new Error("Cannot delete flags from an unspecified project");
   }
 
-  console.log("Running the disable function for the flag " + flagKey);
+ // console.log("Running the disable function for the flag " + flagKey);
 
   // `https://app.launchdarkly.com/api/v2/flags/toggletunes/${flagKey}/targeting?env=${projectKey}`,
-  console.log("projectKey line 107", projectKey)
+
   const disableResp = await fetch(
     `https://app.launchdarkly.com/api/v2/flags/${projectKey}/${flagKey}`,
     {
@@ -114,7 +116,7 @@ async function deleteFlag(projectKey: string, flagKey: string) {
       }),
     }
   );
-  console.log("disableResp", disableResp);
+
   if (!disableResp.ok) {
     throw new Error(`Cannot disable flag ${flagKey}: ${disableResp.statusText}`);
   }
@@ -134,7 +136,7 @@ async function deleteFlag(projectKey: string, flagKey: string) {
       }),
     }
   );
-  console.log("deleteResp", deleteResp);
+
   let data;
   if (deleteResp.ok) {
     data = await deleteResp.text();
@@ -192,6 +194,55 @@ async function deleteSegment(projectKey: string, environmentKey: string, segment
     }
   } else {
     throw new Error(`Cannot delete segment ${segmentKey}: ${data ?? "unknown"}`);
+  }
+}
+
+async function getMetrics(projectKey: string, environmentKey: string) {
+  console.log("Debug: Getting Metrics");
+  const resp = await fetch(
+    `https://app.launchdarkly.com/api/v2/metrics/${projectKey}`,
+    {
+      method: "GET",
+      headers: {
+        Authorization: API_KEY,
+      },
+    }
+  );
+
+  let data;
+  if (resp.ok) {
+    data = await resp.text();
+    if (data) {
+      data = JSON.parse(data);
+    }
+  } else {
+    throw new Error(`Cannot get metrics: ${data ?? "unknown"}`);
+  }
+  return data;
+}
+
+async function deleteMetrics(projectKey: string, metricKey: string) {
+  if (!projectKeys.includes(projectKey)) {
+    throw new Error("Cannot delete metrics from an unspecified project");
+  }
+  const resp = await fetch(
+    `https://app.launchdarkly.com/api/v2/metrics/${projectKey}/${metricKey}`,
+    {
+      method: "DELETE",
+      headers: {
+        Authorization: API_KEY,
+      },
+    }
+  );
+
+  let data;
+  if (resp.ok) {
+    data = await resp.text();
+    if (data) {
+      data = JSON.parse(data);
+    }
+  } else {
+    throw new Error(`Cannot delete metric ${metricKey}: ${data ?? "unknown"}`);
   }
 }
 

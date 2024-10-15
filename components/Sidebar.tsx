@@ -5,7 +5,8 @@ import { motion } from "framer-motion";
 import { useFlags, useLDClient } from "launchdarkly-react-client-sdk";
 
 const SideBar = ({ songsAPI }: any) => {
-  const migrateNewSongDBLDFlag: string = useFlags()["migrate-new-song-db"];
+  //const migrateNewSongDBLDFlag: string = useFlags()["migrate-new-song-db"];
+  const migrateNewSongDBLDFlag: string = "complete";
   const releaseNewUsersPlaylistLDFlag: boolean = useFlags()["release-new-users-playlist"];
   const releaseSavedPlaylistsSidebarLDFlag: boolean = useFlags()["release-saved-playlists-sidebar"];
 

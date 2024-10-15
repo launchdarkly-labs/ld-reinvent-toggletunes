@@ -8,7 +8,8 @@ interface Props {
 }
 
 const ItemCard = ({ playlist }: Props) => {
-  const migrateNewSongDBLDFlag: string = useFlags()["migrate-new-song-db"];
+  //const migrateNewSongDBLDFlag: string = useFlags()["migrate-new-song-db"];
+  const migrateNewSongDBLDFlag: string = "complete";
 
   return (
     <Link
