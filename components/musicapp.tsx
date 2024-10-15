@@ -238,7 +238,7 @@ export default function MusicApp({ teamName }: { teamName?: string }) {
         } else {
           console.log("Step 1 not eligible for evaluation!");
         }
-        //TODO: can you get a list of complete: stepTwoComplete etc?
+        //TODO: split into 2 point where first 10 pt is release and 2nd 10 is to turn off
         if (releaseSavedPlaylistsSidebarLDFlag === true && flagTwo === false) {
           broadcast({ type: teamName, complete: "stepTwoComplete" });
           // console.log("second step running");
@@ -247,8 +247,7 @@ export default function MusicApp({ teamName }: { teamName?: string }) {
         } else {
           console.log("Step 2 not eligible for evaluation!");
         }
-
-      
+        //TODO: need to check to see if switch user and release flag
         if (releaseNewUsersPlaylistLDFlag === true && flagThree === false) {
           broadcast({
             type: teamName,
@@ -280,7 +279,7 @@ export default function MusicApp({ teamName }: { teamName?: string }) {
       } catch (err) {
         console.error(err);
       }
-
+      //TODO: add api call to check to see if metrics exist
         if (releaseAdSidebarLDFlag && flagFive === false) {
           broadcast({
             type: teamName,
