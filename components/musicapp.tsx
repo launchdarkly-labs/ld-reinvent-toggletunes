@@ -6,7 +6,16 @@ import { useFlags } from "launchdarkly-react-client-sdk";
 import { memo, useEffect, useState, useContext } from "react";
 import { useRouter } from "next/router";
 import { IoIosMusicalNotes } from "react-icons/io";
-import { useBroadcastEvent, useEventListener, useHistory, useStatus, useUser,useStorage, useThreads, useSelf } from "../liveblocks.config";
+import {
+  useBroadcastEvent,
+  useEventListener,
+  useHistory,
+  useStatus,
+  useUser,
+  useStorage,
+  useThreads,
+  useSelf,
+} from "../liveblocks.config";
 
 import { Room } from "./room";
 import SimplePlayerScreen from "./SimplePlayerScreen";
@@ -41,7 +50,7 @@ export default function MusicApp({ teamName }: { teamName?: string }) {
     useFlags()["release-ai-playlist-creator"];
 
   const { aiPlaylists, setAIPlaylists } = useContext(AIGeneratedPlaylistContext);
-  
+
   // Check for `error` and `isLoading` before `threads` is defined
   const { threads, error, isLoading } = useThreads();
 
@@ -193,7 +202,7 @@ export default function MusicApp({ teamName }: { teamName?: string }) {
       songs: aiGeneratedSonglistAnswerFormatted,
       createdBy: `${aiModelName}`,
     };
-    console.log(objectFormat)
+    console.log(objectFormat);
     // @ts-ignore
     setAIPlaylists((prevPlaylists): PlaylistInterface[] => {
       return [objectFormat, ...prevPlaylists];
@@ -205,33 +214,33 @@ export default function MusicApp({ teamName }: { teamName?: string }) {
   const broadcast = useBroadcastEvent();
   //TODO: this some reason causes eveyrthing ot load to make sure livelbocks works?
   const animals = useStorage((root) => root);
-  console.log(animals)
-  console.log(error)
-  console.log(isLoading)
-  console.log(threads)
+  console.log(animals);
+  console.log(error);
+  console.log(isLoading);
+  console.log(threads);
   const currentUser = useSelf();
-  console.log(currentUser)
+  console.log(currentUser);
   const router = useRouter();
 
   const reloadPage = async () => {
     await router.reload();
   };
-console.log("flagOne",flagOne)
+  console.log("flagOne", flagOne);
   useEffect(() => {
     const triggerSteps = async () => {
-      console.log(currentUser)
+      console.log(currentUser);
       try {
         if (releaseTracklistLDFlag === true && flagOne === false) {
-          broadcast({ type: teamName, complete: "stepOneComplete", value: 25 });
+          broadcast({ type: teamName, complete: "stepOneComplete" });
           //console.log("first step running");
           // await triggerStep("first step complete", "stepOneComplete");
           setFlagOne(true);
         } else {
           console.log("Step 1 not eligible for evaluation!");
         }
-        //TODO: can you get a list of complete: stepTwoComplete etc? 
+        //TODO: can you get a list of complete: stepTwoComplete etc?
         if (releaseSavedPlaylistsSidebarLDFlag === true && flagTwo === false) {
-          broadcast({ type: teamName, complete: "stepTwoComplete", value: 25 });
+          broadcast({ type: teamName, complete: "stepTwoComplete" });
           // console.log("second step running");
           // await triggerStep("second step complete", "stepTwoComplete");
           setFlagTwo(true);
@@ -256,7 +265,6 @@ console.log("flagOne",flagOne)
           broadcast({
             type: teamName,
             complete: "stepThreeComplete",
-            value: 25,
           });
           // console.log("fourth step running");
           // await triggerStep("fourth step complete", "stepFourComplete");
@@ -273,7 +281,6 @@ console.log("flagOne",flagOne)
           broadcast({
             type: teamName,
             complete: "stepFourComplete",
-            value: 25,
           });
           // console.log("fifth step running");
           // await triggerStep("fifth step complete", "stepFiveComplete");
@@ -310,7 +317,7 @@ console.log("flagOne",flagOne)
     releaseNewUsersPlaylistLDFlag,
     releaseAIPlaylistCreatorLDFlag,
     migrateNewSongDBLDFlag,
-    aiPlaylists
+    aiPlaylists,
   ]);
 
   useEffect(() => {

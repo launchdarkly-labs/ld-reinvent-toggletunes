@@ -8,7 +8,9 @@ import { useEventListener } from "@/liveblocks.config";
 import { setCookie } from "cookies-next";
 import { memo, useEffect, useState } from "react";
 
+const defaultTimer = 900000; //15 min
 export default function Scoreboard() {
+ 
   const [redProgress, setRedProgress] = useState(0);
   const [purpleProgress, setPurpleProgress] = useState(0);
   const [blueProgress, setBlueProgress] = useState(0);
@@ -16,7 +18,7 @@ export default function Scoreboard() {
   const [winnerName, setWinnerName] = useState("");
   const [greenProgress, setGreenProgress] = useState(0);
   const [isTimerRunning, setIsTimerRunning] = useState(false);
-  const [timer, setTimer] = useState(900000);
+  const [timer, setTimer] = useState(defaultTimer);
   const [openStartModal, setOpenStartModal] = useState(true);
   const [animationStarted, setAnimationStarted] = useState(false);
   
@@ -203,7 +205,7 @@ const EventListenerComponent = memo(function EventListenerComponent({
           console.log("resetting scoreboard");
           setIsTimerRunning(false);
           setOpenStartModal(true);
-          setTimer(600000);
+          setTimer(defaultTimer);
           setWinnerState(false);
           setWinnerName("");
           setGreenProgress(0);
