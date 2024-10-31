@@ -8,34 +8,34 @@ const projectKeys: Array<string> = [
   "toggletunes-team-1",
   "toggletunes-team-2",
   "toggletunes-team-3",
-  "toggletunes-team-4",
+  // "toggletunes-team-4",
 ];
 const API_KEY: string = process.env.LD_API_KEY as string;
 const delay = 1000;
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<any>) {
-
   try {
     for (const projectKey of projectKeys) {
       // get the flags then delete them
-      const flags = await getFlags(projectKey);
-      for (const flag of flags.items) {
-        await deleteFlag(projectKey, flag.key);
-        await sleep(delay);
-      }
+      createFlags(projectKey)
+      // const flags = await getFlags(projectKey);
+      // for (const flag of flags.items) {
+      //   await deleteFlag(projectKey, flag.key);
+      //   await sleep(delay);
+      // }
       //get environments which we need for deleting segments
-      const environments = await getEnvironments(projectKey);
-      console.log("environments",environments)
-     // get the segments for each environment and delete them
+      //const environments = await getEnvironments(projectKey);
 
-      for (const environment of environments.items) {
-        const metricsFetched = await getMetrics(projectKey, environment.key);
-        console.log("metricsFetched",metricsFetched)
-        for (const metric of metricsFetched.items) {
-          await deleteMetrics(projectKey, metric.key);
-          await sleep(delay);
-        }
-      }
+      // get the segments for each environment and delete them
+
+      // for (const environment of environments.items) {
+      //   const metricsFetched = await getMetrics(projectKey, environment.key);
+      //   console.log("metricsFetched", metricsFetched);
+      //   for (const metric of metricsFetched.items) {
+      //     await deleteMetrics(projectKey, metric.key);
+      //     await sleep(delay);
+      //   }
+      // }
     }
   } catch (e: any) {
     return res.status(500).json({ error: e.message });
@@ -70,15 +70,12 @@ async function getEnvironments(projectKey: string) {
 //09-23-2024 this works now
 async function getFlags(projectKey: string) {
   //`https://app.launchdarkly.com/api/v2/flags/toggletunes?env=${projectKey}&selected-env=${projectKey}`,
-  const resp = await fetch(
-    `https://app.launchdarkly.com/api/v2/flags/${projectKey}`,
-    {
-      method: "GET",
-      headers: {
-        Authorization: API_KEY,
-      },
-    }
-  );
+  const resp = await fetch(`https://app.launchdarkly.com/api/v2/flags/${projectKey}`, {
+    method: "GET",
+    headers: {
+      Authorization: API_KEY,
+    },
+  });
 
   let data;
   if (resp.ok) {
@@ -98,7 +95,7 @@ async function deleteFlag(projectKey: string, flagKey: string) {
     throw new Error("Cannot delete flags from an unspecified project");
   }
 
- // console.log("Running the disable function for the flag " + flagKey);
+  // console.log("Running the disable function for the flag " + flagKey);
 
   // `https://app.launchdarkly.com/api/v2/flags/toggletunes/${flagKey}/targeting?env=${projectKey}`,
 
@@ -199,15 +196,12 @@ async function deleteSegment(projectKey: string, environmentKey: string, segment
 
 async function getMetrics(projectKey: string, environmentKey: string) {
   console.log("Debug: Getting Metrics");
-  const resp = await fetch(
-    `https://app.launchdarkly.com/api/v2/metrics/${projectKey}`,
-    {
-      method: "GET",
-      headers: {
-        Authorization: API_KEY,
-      },
-    }
-  );
+  const resp = await fetch(`https://app.launchdarkly.com/api/v2/metrics/${projectKey}`, {
+    method: "GET",
+    headers: {
+      Authorization: API_KEY,
+    },
+  });
 
   let data;
   if (resp.ok) {
@@ -244,6 +238,55 @@ async function deleteMetrics(projectKey: string, metricKey: string) {
   } else {
     throw new Error(`Cannot delete metric ${metricKey}: ${data ?? "unknown"}`);
   }
+}
+
+async function createFlags(projectKey: string) {
+  //`https://app.launchdarkly.com/api/v2/flags/toggletunes?env=${projectKey}&selected-env=${projectKey}`,
+
+  const payload = {
+    clientSideAvailability: {
+      usingEnvironmentId: true,
+      usingMobileKey: true,
+    },
+    key: "storeHeaders",
+    name: "10 - Featured Store Headers",
+    description: "Headers to drive engagement on specific stores",
+    // variations: [
+    //   {
+    //     value: true,
+    //     name: "Available",
+    //   },
+    //   {
+    //     value: true,
+    //     name: "Unavailable",
+    //   },
+    // ],
+    // defaults: {
+    //   onVariation: 0,
+    //   offVariation: 1,
+    // },
+    tags: ["experiment"],
+  };
+
+  const resp = await fetch(`https://app.launchdarkly.com/api/v2/flags/${projectKey}`, {
+    method: "POST",
+    headers: {
+      Authorization: API_KEY,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(payload),
+  });
+  console.log("awfawfe resp",resp)
+  // let data;
+  // if (resp.ok) {
+  //   data = await resp.text();
+  //   if (data) {
+  //     data = JSON.parse(data);
+  //   }
+  // } else {
+  //   throw new Error(`Cannot get flags: ${data ?? "unknown"}`);
+  // }
+  // return data;
 }
 
 function sleep(ms: number) {
