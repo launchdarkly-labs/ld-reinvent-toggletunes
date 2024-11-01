@@ -17,12 +17,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
   try {
     for (const projectKey of projectKeys) {
       // get the flags then delete them
-      createFlags(projectKey)
-      // const flags = await getFlags(projectKey);
-      // for (const flag of flags.items) {
-      //   await deleteFlag(projectKey, flag.key);
-      //   await sleep(delay);
-      // }
+
+      const flags = await getFlags(projectKey);
+      for (const flag of flags.items) {
+        await deleteFlag(projectKey, flag.key);
+        await sleep(delay);
+      }
+
       //get environments which we need for deleting segments
       //const environments = await getEnvironments(projectKey);
 
@@ -36,6 +37,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       //     await sleep(delay);
       //   }
       // }
+
+      createFlags(projectKey);
     }
   } catch (e: any) {
     return res.status(500).json({ error: e.message });
@@ -243,50 +246,107 @@ async function deleteMetrics(projectKey: string, metricKey: string) {
 async function createFlags(projectKey: string) {
   //`https://app.launchdarkly.com/api/v2/flags/toggletunes?env=${projectKey}&selected-env=${projectKey}`,
 
-  const payload = {
+  const flag2 = {
     clientSideAvailability: {
       usingEnvironmentId: true,
       usingMobileKey: true,
     },
-    key: "storeHeaders",
-    name: "10 - Featured Store Headers",
-    description: "Headers to drive engagement on specific stores",
-    // variations: [
-    //   {
-    //     value: true,
-    //     name: "Available",
-    //   },
-    //   {
-    //     value: true,
-    //     name: "Unavailable",
-    //   },
-    // ],
-    // defaults: {
-    //   onVariation: 0,
-    //   offVariation: 1,
-    // },
-    tags: ["experiment"],
+    key: "release-saved-playlists-sidebar",
+    name: "2 - Release Saved Playlist Sidebar",
+    description: "Releasing new playlist feature on the sidebar",
+    kind: "boolean",
+    temporary: true,
+    tags: ["release"],
   };
 
-  const resp = await fetch(`https://app.launchdarkly.com/api/v2/flags/${projectKey}`, {
-    method: "POST",
-    headers: {
-      Authorization: API_KEY,
-      "Content-Type": "application/json",
+  const flag3 = {
+    clientSideAvailability: {
+      usingEnvironmentId: true,
+      usingMobileKey: true,
     },
-    body: JSON.stringify(payload),
-  });
-  console.log("awfawfe resp",resp)
-  // let data;
-  // if (resp.ok) {
-  //   data = await resp.text();
-  //   if (data) {
-  //     data = JSON.parse(data);
-  //   }
-  // } else {
-  //   throw new Error(`Cannot get flags: ${data ?? "unknown"}`);
-  // }
-  // return data;
+    key: "release-new-users-playlist",
+    name: "3 - Release New Users Playlist",
+    description: "Releasing new UI layout for all playlists on main page",
+    kind: "boolean",
+    temporary: true,
+    tags: ["release", "targeting"],
+  };
+
+  const flag4 = {
+    clientSideAvailability: {
+      usingEnvironmentId: true,
+      usingMobileKey: true,
+    },
+    key: "release-ai-playlist-creator",
+    name: "4 - Change AI Model for AI Playlist Creator",
+    description: "Changing AI Model",
+    kind: "JSON",
+    variations: [
+      {
+        name: "Claude Haiku",
+        description: "This is Claude Haiku's AI model for quick response and cost saving",
+        value: {
+          max_tokens_to_sample: 0,
+          modelId: "",
+          temperature: 0,
+          top_p: 0,
+        },
+      },
+      {
+        name: "Meta Llama",
+        description: "This is Meta's Llama AI model for more creative responses",
+        value: {
+          max_gen_len: 0,
+          modelId: "",
+          temperature: 0,
+          top_p: 0,
+        },
+      },
+      {
+        name: "Cohere Coral",
+        description: "This is Cohere Coral AI model for balance between precision and creativity",
+        value: {
+          max_tokens: 0,
+          modelId: "",
+          p: 0,
+          temperature: 0,
+        },
+      },
+    ],
+    "defaults":{
+      "onVariation": 2,
+      "offVariation": 0
+  },
+    temporary: true,
+    tags: ["ai"],
+  };
+
+  const flag5 = {
+    clientSideAvailability: {
+      usingEnvironmentId: true,
+      usingMobileKey: true,
+    },
+    key: "release-ad-sidebar",
+    name: "5 - Release Ad Sidebar",
+    description: "Releasing new sidebar for Ads",
+    kind: "boolean",
+    temporary: true,
+    tags: ["remediate"],
+  };
+
+  const payloads: any = [flag2, flag3, flag4, flag5];
+
+  for (const payload of payloads) {
+    const resp = await fetch(`https://app.launchdarkly.com/api/v2/flags/${projectKey}`, {
+      method: "POST",
+      headers: {
+        Authorization: API_KEY,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
+    console.log("awfawfe resp", resp);
+  }
 }
 
 function sleep(ms: number) {
