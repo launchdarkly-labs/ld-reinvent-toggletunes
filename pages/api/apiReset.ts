@@ -23,6 +23,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
         if (flag.key === "release-new-ad-sidebar") {
           await turnOffFlag(projectKey, flag.key);
           await removeMetricKeysFromFlag(projectKey, flag.key);
+          await changeFlagToReleaseFlag(projectKey, flag.key);
           await sleep(delay);
         } else {
           await deleteFlag(projectKey, flag.key);
@@ -76,7 +77,6 @@ async function getEnvironments(projectKey: string) {
   return data;
 }
 
-//09-23-2024 this works now
 async function getFlags(projectKey: string) {
   //`https://app.launchdarkly.com/api/v2/flags/toggletunes?env=${projectKey}&selected-env=${projectKey}`,
   const resp = await fetch(`https://app.launchdarkly.com/api/v2/flags/${projectKey}`, {
@@ -125,7 +125,6 @@ async function turnOffFlag(projectKey: string, flagKey: string) {
     throw new Error(`Cannot disable flag ${flagKey}: ${disableResp.statusText}`);
   }
 
-  console.log("disableResp.ok", disableResp.ok);
   let data;
   if (disableResp.ok) {
     data = await disableResp.text();
@@ -137,6 +136,46 @@ async function turnOffFlag(projectKey: string, flagKey: string) {
   }
 }
 
+async function changeFlagToReleaseFlag(projectKey: string, flagKey: string) {
+  //console.log("Debug: Deleting Flag " + flagKey);
+  if (!projectKeys.includes(projectKey)) {
+    throw new Error("Cannot delete flags from an unspecified project");
+  }
+
+  console.log("Running the changeFlagToReleaseFlag function for the flag " + flagKey);
+
+  const resp = await fetch(`https://app.launchdarkly.com/api/v2/flags/${projectKey}/${flagKey}`, {
+    method: "PATCH",
+    headers: {
+      Authorization: API_KEY,
+      "Content-Type": "application/json; domain-model=launchdarkly.semanticpatch",
+    },
+    body: JSON.stringify({
+      environmentKey: "test",
+      instructions: [
+        {
+          kind: "updateFallthroughVariationOrRollout",
+          variationId: "8660263a-04cd-49c4-9429-a3d429008b25",
+        },
+      ],
+    }),
+  });
+
+  if (!resp.ok) {
+    throw new Error(`Cannot changeFlagToReleaseFlag ${flagKey}: ${resp.statusText}`);
+  }
+
+  let data;
+  if (resp.ok) {
+    data = await resp.text();
+    if (data) {
+      data = JSON.parse(data);
+    }
+  } else {
+    throw new Error(`Cannot changeFlagToReleaseFlag  ${flagKey}: ${data ?? "unknown"}`);
+  }
+}
+
 async function removeMetricKeysFromFlag(projectKey: string, flagKey: string) {
   //console.log("Debug: Deleting Flag " + flagKey);
   if (!projectKeys.includes(projectKey)) {
@@ -145,7 +184,7 @@ async function removeMetricKeysFromFlag(projectKey: string, flagKey: string) {
 
   console.log("Running the disable function for the flag " + flagKey);
 
-  const disableResp = await fetch(
+  const resp = await fetch(
     `https://app.launchdarkly.com/api/v2/projects/${projectKey}/flags/${flagKey}/measured-rollout-configuration`,
     {
       method: "PUT",
@@ -161,19 +200,18 @@ async function removeMetricKeysFromFlag(projectKey: string, flagKey: string) {
     }
   );
 
-  if (!disableResp.ok) {
-    throw new Error(`Cannot remove metrics from flag ${flagKey}: ${disableResp.statusText}`);
+  if (!resp.ok) {
+    throw new Error(`Cannot remove metrics from flag ${flagKey}: ${resp.statusText}`);
   }
 
-  console.log("disableResp.ok", disableResp.ok);
   let data;
-  if (disableResp.ok) {
-    data = await disableResp.text();
+  if (resp.ok) {
+    data = await resp.text();
     if (data) {
       data = JSON.parse(data);
     }
   } else {
-    throw new Error(`Cannot turn off flag ${flagKey}: ${data ?? "unknown"}`);
+    throw new Error(`Cannot remove metrics from flag ${flagKey}: ${data ?? "unknown"}`);
   }
 }
 
