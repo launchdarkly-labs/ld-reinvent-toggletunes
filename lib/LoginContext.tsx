@@ -2,7 +2,7 @@
 import { useLDClient } from "launchdarkly-react-client-sdk";
 import { createContext, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
-import CryptoJS from "crypto-js";
+// import CryptoJS from "crypto-js";
 import { setCookie, getCookie } from "cookies-next";
 import { LD_CONTEXT_COOKIE_KEY } from "@/lib/constant";
 import { STARTER_PERSONAS } from "@/lib/StarterUserPersonas";
