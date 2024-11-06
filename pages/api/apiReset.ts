@@ -22,6 +22,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       for (const flag of flags.items) {
         if (flag.key === "release-new-ad-sidebar") {
           await turnOffFlag(projectKey, flag.key);
+          await removeMetricKeysFromFlag(projectKey, flag.key);
           await sleep(delay);
         } else {
           await deleteFlag(projectKey, flag.key);
@@ -105,8 +106,6 @@ async function turnOffFlag(projectKey: string, flagKey: string) {
 
   console.log("Running the disable function for the flag " + flagKey);
 
-  // `https://app.launchdarkly.com/api/v2/flags/toggletunes/${flagKey}/targeting?env=${projectKey}`,
-
   const disableResp = await fetch(
     `https://app.launchdarkly.com/api/v2/flags/${projectKey}/${flagKey}`,
     {
@@ -124,6 +123,46 @@ async function turnOffFlag(projectKey: string, flagKey: string) {
 
   if (!disableResp.ok) {
     throw new Error(`Cannot disable flag ${flagKey}: ${disableResp.statusText}`);
+  }
+
+  console.log("disableResp.ok", disableResp.ok);
+  let data;
+  if (disableResp.ok) {
+    data = await disableResp.text();
+    if (data) {
+      data = JSON.parse(data);
+    }
+  } else {
+    throw new Error(`Cannot turn off flag ${flagKey}: ${data ?? "unknown"}`);
+  }
+}
+
+async function removeMetricKeysFromFlag(projectKey: string, flagKey: string) {
+  //console.log("Debug: Deleting Flag " + flagKey);
+  if (!projectKeys.includes(projectKey)) {
+    throw new Error("Cannot delete flags from an unspecified project");
+  }
+
+  console.log("Running the disable function for the flag " + flagKey);
+
+  const disableResp = await fetch(
+    `https://app.launchdarkly.com/api/v2/projects/${projectKey}/flags/${flagKey}/measured-rollout-configuration`,
+    {
+      method: "PUT",
+      headers: {
+        Authorization: API_KEY,
+        "Content-Type": "application/json",
+        "ld-api-version": "beta"
+      },
+      body: JSON.stringify({
+        environmentKey: "test",
+        instructions: [{ metricKeys: []  }],
+      }),
+    }
+  );
+
+  if (!disableResp.ok) {
+    throw new Error(`Cannot remove metrics from flag ${flagKey}: ${disableResp.statusText}`);
   }
 
   console.log("disableResp.ok", disableResp.ok);
