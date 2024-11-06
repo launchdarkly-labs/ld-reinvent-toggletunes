@@ -2,7 +2,7 @@
 import { useLDClient } from "launchdarkly-react-client-sdk";
 import { createContext, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
-// import CryptoJS from "crypto-js";
+import CryptoJS from "crypto-js";
 import { setCookie, getCookie } from "cookies-next";
 import { LD_CONTEXT_COOKIE_KEY } from "@/lib/constant";
 import { STARTER_PERSONAS } from "@/lib/StarterUserPersonas";
@@ -41,8 +41,8 @@ export const LoginProvider = ({ children }: { children: any }) => {
   const [allUsers, setAllUsers] = useState<Persona[]>(STARTER_PERSONAS);
 
   const hashEmail = async (email: string): Promise<string> => {
-    // return CryptoJS.SHA256(email).toString();
-    return email;
+    //return CryptoJS.SHA256(email).toString();
+    return uuidv4().slice(0, 10);
   };
 
   const loginUser = async (email: string): Promise<void> => {

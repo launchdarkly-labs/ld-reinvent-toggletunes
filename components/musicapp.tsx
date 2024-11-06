@@ -43,7 +43,7 @@ export default function MusicApp({ teamName }: { teamName?: string }) {
   const releaseTracklistLDFlag: boolean = useFlags()["release-tracklist"];
   const releaseSavedPlaylistsSidebarLDFlag: boolean = useFlags()["release-saved-playlists-sidebar"];
   const releaseNewUsersPlaylistLDFlag: boolean = useFlags()["release-new-users-playlist"];
-  const releaseAdSidebarLDFlag: boolean = useFlags()["release-ad-sidebar"];
+  const releaseAdSidebarLDFlag: boolean = useFlags()["release-new-ad-sidebar"];
   // const migrateNewSongDBLDFlag: string = useFlags()["migrate-new-song-db"];
   const migrateNewSongDBLDFlag: string = "complete";
   const releaseAIPlaylistCreatorLDFlag: AIModelInterface =

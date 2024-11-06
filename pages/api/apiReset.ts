@@ -20,8 +20,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
       const flags = await getFlags(projectKey);
       for (const flag of flags.items) {
-        await deleteFlag(projectKey, flag.key);
-        await sleep(delay);
+        if (flag.key === "release-new-ad-sidebar") {
+          await turnOffFlag(projectKey, flag.key);
+          await sleep(delay);
+        } else {
+          await deleteFlag(projectKey, flag.key);
+          await sleep(delay);
+        }
       }
 
       //get environments which we need for deleting segments
@@ -37,7 +42,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       //     await sleep(delay);
       //   }
       // }
-
+      //createMetrics(projectKey);
       createFlags(projectKey);
     }
   } catch (e: any) {
@@ -92,13 +97,13 @@ async function getFlags(projectKey: string) {
   return data;
 }
 
-async function deleteFlag(projectKey: string, flagKey: string) {
+async function turnOffFlag(projectKey: string, flagKey: string) {
   //console.log("Debug: Deleting Flag " + flagKey);
   if (!projectKeys.includes(projectKey)) {
     throw new Error("Cannot delete flags from an unspecified project");
   }
 
-  // console.log("Running the disable function for the flag " + flagKey);
+  console.log("Running the disable function for the flag " + flagKey);
 
   // `https://app.launchdarkly.com/api/v2/flags/toggletunes/${flagKey}/targeting?env=${projectKey}`,
 
@@ -111,7 +116,7 @@ async function deleteFlag(projectKey: string, flagKey: string) {
         "Content-Type": "application/json; domain-model=launchdarkly.semanticpatch",
       },
       body: JSON.stringify({
-        environmentKey: "production",
+        environmentKey: "test",
         instructions: [{ kind: "turnFlagOff" }],
       }),
     }
@@ -120,6 +125,26 @@ async function deleteFlag(projectKey: string, flagKey: string) {
   if (!disableResp.ok) {
     throw new Error(`Cannot disable flag ${flagKey}: ${disableResp.statusText}`);
   }
+
+  console.log("disableResp.ok", disableResp.ok);
+  let data;
+  if (disableResp.ok) {
+    data = await disableResp.text();
+    if (data) {
+      data = JSON.parse(data);
+    }
+  } else {
+    throw new Error(`Cannot turn off flag ${flagKey}: ${data ?? "unknown"}`);
+  }
+}
+
+async function deleteFlag(projectKey: string, flagKey: string) {
+  //console.log("Debug: Deleting Flag " + flagKey);
+  if (!projectKeys.includes(projectKey)) {
+    throw new Error("Cannot delete flags from an unspecified project");
+  }
+
+  await turnOffFlag(projectKey, flagKey);
 
   //console.log("Running the delete function for the flag " + flagKey);
   // `https://app.launchdarkly.com/api/v2/flags/${projectKey}/${flagKey}`,
@@ -131,7 +156,7 @@ async function deleteFlag(projectKey: string, flagKey: string) {
         Authorization: API_KEY,
       },
       body: JSON.stringify({
-        environmentKey: "production",
+        environmentKey: "test",
         // environmentKey: "toggletunes",
       }),
     }
@@ -222,6 +247,8 @@ async function deleteMetrics(projectKey: string, metricKey: string) {
   if (!projectKeys.includes(projectKey)) {
     throw new Error("Cannot delete metrics from an unspecified project");
   }
+  console.log("projectKey", projectKey);
+  console.log("metricKey", metricKey);
   const resp = await fetch(
     `https://app.launchdarkly.com/api/v2/metrics/${projectKey}/${metricKey}`,
     {
@@ -313,31 +340,72 @@ async function createFlags(projectKey: string) {
         },
       },
     ],
-    "defaults":{
-      "onVariation": 2,
-      "offVariation": 0
-  },
+    defaults: {
+      onVariation: 2,
+      offVariation: 0,
+    },
     temporary: true,
     tags: ["ai"],
   };
 
-  const flag5 = {
-    clientSideAvailability: {
-      usingEnvironmentId: true,
-      usingMobileKey: true,
-    },
-    key: "release-ad-sidebar",
-    name: "5 - Release Ad Sidebar",
-    description: "Releasing new sidebar for Ads",
-    kind: "boolean",
-    temporary: true,
+  // const flag5 = {
+  //   clientSideAvailability: {
+  //     usingEnvironmentId: true,
+  //     usingMobileKey: true,
+  //   },
+  //   key: "release-ad-sidebar",
+  //   name: "5 - Release Ad Sidebar",
+  //   description: "Releasing new sidebar for Ads",
+  //   kind: "boolean",
+  //   temporary: true,
+  // };
+
+  const payloads: any = [flag2, flag3, flag4];
+
+  for (const payload of payloads) {
+    await fetch(`https://app.launchdarkly.com/api/v2/flags/${projectKey}`, {
+      method: "POST",
+      headers: {
+        Authorization: API_KEY,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
+  }
+}
+
+async function createMetrics(projectKey: string) {
+  //`https://app.launchdarkly.com/api/v2/flags/toggletunes?env=${projectKey}&selected-env=${projectKey}`,
+
+  const metricPayload1 = {
+    name: "Website Latency Rate",
+    eventKey: "Website Latency Rate",
+    Description: "Track to see if the newly released component affects Website Latency Rate",
+    isNumeric: true,
+    key: "website-latency-rate",
+    kind: "custom",
+    successCriteria: "LowerThanBaseline",
+    randomizationUnits: ["user"],
+    tags: ["remediate"],
+    unit: "ms",
+  };
+
+  const metricPayload2 = {
+    name: "Website Error Rate",
+    eventKey: "Website Error Rate",
+    Description: "Track to see if the newly released component affects Website Error Rate",
+    isNumeric: false,
+    key: "website-error-rate",
+    kind: "custom",
+    successCriteria: "LowerThanBaseline",
+    randomizationUnits: ["user"],
     tags: ["remediate"],
   };
 
-  const payloads: any = [flag2, flag3, flag4, flag5];
+  const payloads: any = [metricPayload1, metricPayload2];
 
   for (const payload of payloads) {
-    const resp = await fetch(`https://app.launchdarkly.com/api/v2/flags/${projectKey}`, {
+    const resp = await fetch(`https://app.launchdarkly.com/api/v2/metrics/${projectKey}`, {
       method: "POST",
       headers: {
         Authorization: API_KEY,
