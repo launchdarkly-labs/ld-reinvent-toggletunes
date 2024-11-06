@@ -8,7 +8,8 @@ import { Music2Icon } from "lucide-react";
 import { motion } from "framer-motion";
 
 const MusicPlayingBar = () => {
-  const migrateNewSongDBLDFlag: string = useFlags()["migrate-new-song-db"];
+  //const migrateNewSongDBLDFlag: string = useFlags()["migrate-new-song-db"];
+  const migrateNewSongDBLDFlag: string = "complete";
   const releaseTracklistLDFlag: boolean = useFlags()["release-tracklist"];
   const releaseNewUsersPlaylistLDFlag: boolean = useFlags()["release-new-users-playlist"];
 

@@ -6,7 +6,17 @@ import { useFlags } from "launchdarkly-react-client-sdk";
 import { memo, useEffect, useState, useContext } from "react";
 import { useRouter } from "next/router";
 import { IoIosMusicalNotes } from "react-icons/io";
-import { useBroadcastEvent, useEventListener } from "../liveblocks.config";
+import {
+  useBroadcastEvent,
+  useEventListener,
+  useHistory,
+  useStatus,
+  useUser,
+  useStorage,
+  useThreads,
+  useSelf,
+} from "../liveblocks.config";
+
 import { Room } from "./room";
 import SimplePlayerScreen from "./SimplePlayerScreen";
 import MusicPlayingBar from "./MusicPlayingBar";
@@ -33,12 +43,16 @@ export default function MusicApp({ teamName }: { teamName?: string }) {
   const releaseTracklistLDFlag: boolean = useFlags()["release-tracklist"];
   const releaseSavedPlaylistsSidebarLDFlag: boolean = useFlags()["release-saved-playlists-sidebar"];
   const releaseNewUsersPlaylistLDFlag: boolean = useFlags()["release-new-users-playlist"];
-  const releaseAdSidebarLDFlag: boolean = useFlags()["release-ad-sidebar"];
-  const migrateNewSongDBLDFlag: string = useFlags()["migrate-new-song-db"];
+  const releaseAdSidebarLDFlag: boolean = useFlags()["release-new-ad-sidebar"];
+  // const migrateNewSongDBLDFlag: string = useFlags()["migrate-new-song-db"];
+  const migrateNewSongDBLDFlag: string = "complete";
   const releaseAIPlaylistCreatorLDFlag: AIModelInterface =
     useFlags()["release-ai-playlist-creator"];
 
   const { aiPlaylists, setAIPlaylists } = useContext(AIGeneratedPlaylistContext);
+
+  // Check for `error` and `isLoading` before `threads` is defined
+  const { threads, error, isLoading } = useThreads();
 
   const [playlistAPI, setPlaylistAPI] = useState(playlists);
   const [songsAPI, setSongsAPI] = useState(songs);
@@ -50,7 +64,7 @@ export default function MusicApp({ teamName }: { teamName?: string }) {
   const [flagFive, setFlagFive] = useState(false);
   // const [input, setInput] = useState("");
   // const [messages, setMessages] = useState<Message[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingApp, setIsLoadingApp] = useState(false);
 
   // const handleInputChange = (e: any): void => {
   //   setInput(e.target.value);
@@ -73,7 +87,7 @@ export default function MusicApp({ teamName }: { teamName?: string }) {
   async function submitQuery(): Promise<void> {
     // const userInput = input;
     // setInput("");
-    setIsLoading(true);
+    setIsLoadingApp(true);
     // const userMessage: Message = {
     //   role: "user",
     //   content: userInput,
@@ -119,7 +133,7 @@ export default function MusicApp({ teamName }: { teamName?: string }) {
       prompt: string;
     } = await response.json();
 
-    setIsLoading(false);
+    setIsLoadingApp(false);
     let aiAnswer: string;
 
     if (data?.generation) {
@@ -188,87 +202,95 @@ export default function MusicApp({ teamName }: { teamName?: string }) {
       songs: aiGeneratedSonglistAnswerFormatted,
       createdBy: `${aiModelName}`,
     };
-    console.log(objectFormat)
+    console.log(objectFormat);
     // @ts-ignore
     setAIPlaylists((prevPlaylists): PlaylistInterface[] => {
       return [objectFormat, ...prevPlaylists];
     });
   }
 
-  // const ldClient = useLDClient();
-
   // const apiURL = "/api/sb-score-add/";
 
   const broadcast = useBroadcastEvent();
-
+  //TODO: this some reason causes eveyrthing ot load to make sure livelbocks works?
+  const animals = useStorage((root) => root);
+  console.log(animals);
+  console.log(error);
+  console.log(isLoading);
+  console.log(threads);
+  const currentUser = useSelf();
+  console.log(currentUser);
   const router = useRouter();
 
   const reloadPage = async () => {
     await router.reload();
   };
-
+  console.log("flagOne", flagOne);
   useEffect(() => {
     const triggerSteps = async () => {
+      console.log(currentUser);
       try {
         if (releaseTracklistLDFlag === true && flagOne === false) {
-          broadcast({ type: teamName, complete: "stepOneComplete", value: 20 });
-          // console.log("first step running");
+          broadcast({ type: teamName, complete: "stepOneComplete" });
+          //console.log("first step running");
           // await triggerStep("first step complete", "stepOneComplete");
           setFlagOne(true);
         } else {
           console.log("Step 1 not eligible for evaluation!");
         }
-
+        //TODO: split into 2 point where first 10 pt is release and 2nd 10 is to turn off
         if (releaseSavedPlaylistsSidebarLDFlag === true && flagTwo === false) {
-          broadcast({ type: teamName, complete: "stepTwoComplete", value: 20 });
+          broadcast({ type: teamName, complete: "stepTwoComplete" });
           // console.log("second step running");
           // await triggerStep("second step complete", "stepTwoComplete");
           setFlagTwo(true);
         } else {
           console.log("Step 2 not eligible for evaluation!");
         }
-
-        if (migrateNewSongDBLDFlag === "complete" && flagThree === false) {
+        //TODO: need to check to see if switch user and release flag
+        if (releaseNewUsersPlaylistLDFlag === true && flagThree === false) {
           broadcast({
             type: teamName,
             complete: "stepThreeComplete",
-            value: 20,
           });
-          // console.log("third step running");
-          // await triggerStep("third step complete", "stepThreeComplete");
+          // console.log("fourth step running");
+          // await triggerStep("fourth step complete", "stepFourComplete");
           setFlagThree(true);
         } else {
           console.log("Step 3 not eligible for evaluation!");
         }
-
-        if (releaseNewUsersPlaylistLDFlag === true && flagFour === false) {
+        
+        //TODO: need to divide 25 by 3 in order to send info based on the 3 mini steps done for this point
+        if (
+          (aiModelName.includes(META) || aiModelName.includes(COHERE)) &&
+          aiPlaylists.length >= 1 &&
+          flagFour === false
+        ) {
           broadcast({
             type: teamName,
             complete: "stepFourComplete",
-            value: 20,
           });
-          // console.log("fourth step running");
-          // await triggerStep("fourth step complete", "stepFourComplete");
+          // console.log("fifth step running");
+          // await triggerStep("fifth step complete", "stepFiveComplete");
           setFlagFour(true);
         } else {
           console.log("Step 4 not eligible for evaluation!");
         }
-
-        if ((aiModelName.includes(META) || aiModelName.includes(COHERE)) && flagFive === false) {
+      } catch (err) {
+        console.error(err);
+      }
+      //TODO: add api call to check to see if metrics exist
+        if (releaseAdSidebarLDFlag && flagFive === false) {
           broadcast({
             type: teamName,
             complete: "stepFiveComplete",
-            value: 20,
           });
-          // console.log("fifth step running");
-          // await triggerStep("fifth step complete", "stepFiveComplete");
+
           setFlagFive(true);
         } else {
           console.log("Step 5 not eligible for evaluation!");
         }
-      } catch (err) {
-        console.error(err);
-      }
+
     };
 
     // const triggerStep = async (event: any, stepCompleted: any) => {
@@ -294,7 +316,8 @@ export default function MusicApp({ teamName }: { teamName?: string }) {
     releaseSavedPlaylistsSidebarLDFlag,
     releaseNewUsersPlaylistLDFlag,
     releaseAIPlaylistCreatorLDFlag,
-    migrateNewSongDBLDFlag,
+    releaseAdSidebarLDFlag,
+    aiPlaylists,
   ]);
 
   useEffect(() => {
@@ -448,8 +471,8 @@ export default function MusicApp({ teamName }: { teamName?: string }) {
                     >
                       <button
                         onClick={() => submitQuery()}
-                        className={`${isLoading ? "cursor-auto" : "cursor-pointer"}`}
-                        disabled={isLoading ? true : false}
+                        className={`${isLoadingApp ? "cursor-auto" : "cursor-pointer"}`}
+                        disabled={isLoadingApp ? true : false}
                       >
                         <motion.div
                           initial={{ opacity: 0, scale: 0.25 }}
@@ -462,7 +485,7 @@ export default function MusicApp({ teamName }: { teamName?: string }) {
                           className="place-items-center border-white bg-ldinputback 
                             rounded-md hover:bg-gray-900/50  inline-block p-4"
                         >
-                          {isLoading ? (
+                          {isLoadingApp ? (
                             <>
                               <div className="flex items-center justify-center object-cover transition-all hover:scale-105 mb-4 h-48 w-48 rounded-lg px-3 py-2 text-sm bg-gray-100 dark:bg-blue-700">
                                 <RingLoader size={125} color={"#22c55e"} />

@@ -6,14 +6,15 @@ import { songs } from "@/lib/data";
 import { SongInterface } from "@/lib/typesInterface";
 
 const PlaylistTableSection = ({ playlistSongs = songs, backUpMigrateNewSongDB }: { playlistSongs: SongInterface[], backUpMigrateNewSongDB?:string }) => {
-  const migrateNewSongDBLDFlag: string = useFlags()["migrate-new-song-db"];
+  //const migrateNewSongDBLDFlag: string = useFlags()["migrate-new-song-db"];
+  const migrateNewSongDBLDFlag: string = "complete";
   let useableMigrateNewSongDB:string = ""
   if(backUpMigrateNewSongDB){
     useableMigrateNewSongDB = backUpMigrateNewSongDB;//TODO: [id] isn't exposed to LD flags bc it isn't wrapped in it. need to deal with it
   } else {
     useableMigrateNewSongDB = migrateNewSongDBLDFlag
   }
-console.log(migrateNewSongDBLDFlag)
+//console.log(migrateNewSongDBLDFlag)
   return (
     <table id="songs-bulleted-list">
       <thead>
