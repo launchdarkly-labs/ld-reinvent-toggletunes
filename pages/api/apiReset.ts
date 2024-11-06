@@ -152,11 +152,11 @@ async function removeMetricKeysFromFlag(projectKey: string, flagKey: string) {
       headers: {
         Authorization: API_KEY,
         "Content-Type": "application/json",
-        "ld-api-version": "beta"
+        "ld-api-version": "beta",
       },
       body: JSON.stringify({
         environmentKey: "test",
-        instructions: [{ metricKeys: []  }],
+        instructions: [{ metricKeys: [] }],
       }),
     }
   );
@@ -323,6 +323,11 @@ async function createFlags(projectKey: string) {
     kind: "boolean",
     temporary: true,
     tags: ["release"],
+    variations: [
+      { value: true, name: "Available" },
+      { value: false, name: "Unavailable" },
+    ],
+    defaults: { onVariation: 1, offVariation: 1 },
   };
 
   const flag3 = {
@@ -336,6 +341,11 @@ async function createFlags(projectKey: string) {
     kind: "boolean",
     temporary: true,
     tags: ["release", "targeting"],
+    variations: [
+      { value: true, name: "Available" },
+      { value: false, name: "Unavailable" },
+    ],
+    defaults: { onVariation: 1, offVariation: 1 },
   };
 
   const flag4 = {
