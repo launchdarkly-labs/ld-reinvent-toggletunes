@@ -20,10 +20,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
       const flags = await getFlags(projectKey);
       for (const flag of flags.items) {
-        if (flag.key === "release-new-ad-sidebar") {
+        if (flag.key.includes("sidebar") && flag.key.includes("release")) {
           await turnOffFlag(projectKey, flag.key);
           await removeMetricKeysFromFlag(projectKey, flag.key);
-          await changeFlagToReleaseFlag(projectKey, flag.key);
+          await changeFlagToReleaseFlag(projectKey, flag.key, flag.variations);
           await sleep(delay);
         } else {
           await deleteFlag(projectKey, flag.key);
@@ -136,7 +136,7 @@ async function turnOffFlag(projectKey: string, flagKey: string) {
   }
 }
 
-async function changeFlagToReleaseFlag(projectKey: string, flagKey: string) {
+async function changeFlagToReleaseFlag(projectKey: string, flagKey: string, variations: {"_id":string, name: string, value:string|boolean}[]) {
   //console.log("Debug: Deleting Flag " + flagKey);
   if (!projectKeys.includes(projectKey)) {
     throw new Error("Cannot delete flags from an unspecified project");
@@ -155,7 +155,7 @@ async function changeFlagToReleaseFlag(projectKey: string, flagKey: string) {
       instructions: [
         {
           kind: "updateFallthroughVariationOrRollout",
-          variationId: "8660263a-04cd-49c4-9429-a3d429008b25",
+          variationId: variations[1]["_id"],
         },
       ],
     }),
