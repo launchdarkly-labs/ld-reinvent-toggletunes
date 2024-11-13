@@ -428,7 +428,7 @@ async function createFlags(projectKey: string) {
       },
     ],
     defaults: {
-      onVariation: 2,
+      onVariation: 0,
       offVariation: 0,
     },
     temporary: true,
