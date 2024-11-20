@@ -33,17 +33,17 @@ const AlertDialogContent = React.forwardRef(
       case "blue":
         console.log("triggering blue");
         backgroundClass =
-          "bg-[url('https://uploadthing.com/f/fb4283d2-da2d-4deb-8fc6-a0faab3ec8e0-qu8v5p.gif')] text-white";
+          "bg-[url('https://utfs.io/f/o5A3nMDIMFiPqcNLqyauJRehkrOX8pcynWtvZ31YxfU4zaiP')] text-white";
         break;
       case "purple":
         console.log("triggering purple");
         backgroundClass =
-          "bg-[url('https://uploadthing.com/f/bc280636-adae-40ea-a95e-173639b38b3a-66sra9.gif')] text-white";
+          "bg-[url('https://utfs.io/f/o5A3nMDIMFiPmB2403G6Yw09c3M2RmDgSIzUBGWbrNn7t51s')] text-white";
         break;
       case "red":
         console.log("triggering red");
         backgroundClass =
-          "bg-[url('https://uploadthing.com/f/7547833a-4406-4c1f-a59a-28fd5b742bee-ti9u5k.gif')] text-white";
+          "bg-[url('https://utfs.io/f/o5A3nMDIMFiPSKqGoCwiKxObBUVkqPh1rio4T8ZugcCvDSNW')] text-white";
         break;
       case "green":
         console.log("triggering green");

@@ -127,6 +127,7 @@ export default function Scoreboard() {
           setPurpleProgress={setPurpleProgress}
           setBlueProgress={setBlueProgress}
         />
+        {/* this modal shows the winner */}
         <Modal
           winnerState={winnerState}
           setWinnerState={setWinnerState}

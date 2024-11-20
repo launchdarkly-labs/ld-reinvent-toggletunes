@@ -40,10 +40,15 @@ export function Modal({
       document.removeEventListener("keydown", handleKeyDown);
     };
   }, [winnerName, winnerState]);
-
+// they overwrote alert dialog with the winner gif
+let x;
+useEffect(()=>{
+  const x =  Math.floor(Math.random() * 3)
+},[])
+//winnerState
   return (
     <>
-      <AlertDialog open={winnerState}>
+      <AlertDialog open={true}>
         <AlertDialogTrigger>
           <AlertDialogContent variant={winnerName}>
             <AlertDialogHeader />
