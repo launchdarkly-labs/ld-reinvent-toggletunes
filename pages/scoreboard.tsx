@@ -114,14 +114,14 @@ export default function Scoreboard() {
         items-center justify-center py-4 px-10"
           id="scoreboard-main"
         >
-          <img src="/images/ld-logo.svg" alt="ld-logo" className="h-16" />
+          <img src="/images/ld-logo.svg" alt="ld-logo" className="h-16 xl:h-20 z-10" />
           <img src="/images/scoreboard-right/ellipse-1616.svg" alt="purple" className="absolute right-0 top-0" />
-          <img src="/images/scoreboard-left/ellipse-1615.svg" alt="pink" className="absolute left-0 top-0" />
           <img src="/images/scoreboard-right/star-13.svg" alt="right-star-1" className="absolute bg-transparent right-[4rem] top-[-.6rem] w-[5rem] h-[5rem] brightness-[80%]" />
           <img src="/images/scoreboard-right/star-12.svg" alt="right-star-2" className="absolute bg-transparent right-[-1rem] top-[6rem] w-[6rem] h-[6rem] brightness-[80%]" />
-
+          <img src="/images/scoreboard-left/ellipse-1615.svg" alt="pink" className="absolute left-0 top-0" />
+          <img src="/images/scoreboard-left/frame-13.svg" alt="left-object" className="absolute bg-transparent left-[-2rem] top-[-6rem] w-[15rem] h-[15rem] brightness-[100%]" />
           <ProgressStatus
-            greenProgress={greenProgress}
+            greenProgress={40}
             purpleProgress={purpleProgress}
             redProgress={redProgress}
             blueProgress={blueProgress}
