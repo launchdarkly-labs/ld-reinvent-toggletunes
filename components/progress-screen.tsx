@@ -19,6 +19,7 @@ export function ProgressStatus({
   const progresBarHeightRef = useRef(null);
 
   useEffect(() => {
+      // @ts-ignore
     setProgressBarHeight(progresBarHeightRef?.current?.clientHeight);
 
   }, []);
@@ -33,7 +34,7 @@ export function ProgressStatus({
       >
         <div className="flex justify-evenly items-end  w-full h-full mx-auto">
           <div
-            className="w-[25%] bg-purple-500 rounded-sm overflow-hidden"
+            className="w-[25%] bg-zinc-500 rounded-sm overflow-hidden"
             style={{ height: `${progressBarHeight}px` }}
             id="progress-bar-green"
           >
@@ -47,7 +48,7 @@ export function ProgressStatus({
           </div>
 
           <div
-            className="w-[25%] bg-blue-500 rounded-sm overflow-hidden"
+            className="w-[25%] bg-zinc-500 rounded-sm overflow-hidden"
             style={{ height: `${progressBarHeight}px` }}
             id="progress-bar-purple"
           >
@@ -61,7 +62,7 @@ export function ProgressStatus({
           </div>
 
           <div
-            className="w-[25%] bg-blue-500 rounded-sm overflow-hidden"
+            className="w-[25%] bg-zinc-500 rounded-sm overflow-hidden"
             style={{ height: `${progressBarHeight}px` }}
             id="progress-bar-red"
           >
