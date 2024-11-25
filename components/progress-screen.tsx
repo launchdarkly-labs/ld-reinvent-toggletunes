@@ -1,57 +1,75 @@
 "use client";
-import { useState } from "react";
-9;
+import { useState, useRef, useEffect } from "react";
 
-export function ProgressStatus({ greenProgress, purpleProgress, redProgress, blueProgress }: any) {
-  const initialProgress = 30;
-  const height = 300;
-  const [progress, setProgress] = useState(initialProgress);
+export function ProgressStatus({
+  greenProgress,
+  purpleProgress,
+  redProgress,
+  blueProgress,
+}: {
+  greenProgress: number;
+  purpleProgress: number;
+  redProgress: number;
+  blueProgress: number;
+}) {
+  const height = 100;
+  const [progressBarHeight, setProgressBarHeight] = useState(0);
+  const [greenHeight, setGreenHeight] = useState(0);
+  const [redHeight, setRedHeight] = useState(0);
+  const progresBarHeightRef = useRef(null);
 
-  const incrementProgress = () => {
-    setProgress((prevProgress) => Math.min(prevProgress + 10, 100));
-  };
+  useEffect(() => {
+    setProgressBarHeight(progresBarHeightRef?.current?.clientHeight);
+
+  }, []);
+
   return (
     <>
       <section
         id="scoreboard-body"
-        className=" bg-[url('/images/scoreboard-background-no-bg.png')]
-     bg-cover   h-full w-full 
-   "
+        className=" bg-[url('/images/scoreboard-background-no-bg-line.svg')]
+     bg-contain bg-no-repeat grid- h-full w-full  border-b-[1px] border-zinc-500"
+        ref={progresBarHeightRef}
       >
-        <div className="flex justify-evenly w-full h-full mx-auto">
+        <div className="flex justify-evenly items-end  w-full h-full mx-auto">
           <div
-            className="w-[25%] bg-blue-500 rounded-sm overflow-hidden"
-            style={{ height: `${height}px` }}
+            className="w-[25%] bg-purple-500 rounded-sm overflow-hidden"
+            style={{ height: `${progressBarHeight}px` }}
+            id="progress-bar-green"
           >
             <div
               className="bg-gradient-to-t from-ldgreen to-ldyellow w-full transition-all duration-300 ease-out rounded-sm"
               style={{
                 height: `${greenProgress}%`,
-                marginTop: `${height - (greenProgress / 100) * height}px`,
+                marginTop: `${progressBarHeight - ((greenProgress / 100) * progressBarHeight)}px`,
               }}
             />
           </div>
+
           <div
             className="w-[25%] bg-blue-500 rounded-sm overflow-hidden"
-            style={{ height: `${height}px` }}
+            style={{ height: `${progressBarHeight}px` }}
+            id="progress-bar-purple"
           >
             <div
               className="bg-gradient-to-t from-lddred to-ldred w-full transition-all duration-300 ease-out rounded-sm"
               style={{
                 height: `${purpleProgress}%`,
-                marginTop: `${height - (purpleProgress / 100) * height}px`,
+                marginTop: `${progressBarHeight - (purpleProgress / 100) * progressBarHeight}px`,
               }}
             />
           </div>
+
           <div
             className="w-[25%] bg-blue-500 rounded-sm overflow-hidden"
-            style={{ height: `${height}px` }}
+            style={{ height: `${progressBarHeight}px` }}
+            id="progress-bar-red"
           >
             <div
               className="bg-gradient-to-t from-lddpurple to-ldpurple w-full transition-all duration-300 ease-out rounded-sm"
               style={{
                 height: `${redProgress}%`,
-                marginTop: `${height - (redProgress / 100) * height}px`,
+                marginTop: `${progressBarHeight - (redProgress / 100) * progressBarHeight}px`,
               }}
             />
           </div>

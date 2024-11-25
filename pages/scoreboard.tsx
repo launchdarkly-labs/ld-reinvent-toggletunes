@@ -10,12 +10,12 @@ import { memo, useEffect, useState } from "react";
 
 const defaultTimer = 900000; //15 min
 export default function Scoreboard() {
-  const [redProgress, setRedProgress] = useState(0);
-  const [purpleProgress, setPurpleProgress] = useState(0);
-  const [blueProgress, setBlueProgress] = useState(0);
+  const [redProgress, setRedProgress] = useState<number>(0);
+  const [purpleProgress, setPurpleProgress] = useState<number>(0);
+  const [blueProgress, setBlueProgress] = useState<number>(0);
+  const [greenProgress, setGreenProgress] = useState<number>(0);
   const [winnerState, setWinnerState] = useState(false);
   const [winnerName, setWinnerName] = useState("");
-  const [greenProgress, setGreenProgress] = useState(0);
   const [isTimerRunning, setIsTimerRunning] = useState(false);
   const [timer, setTimer] = useState(defaultTimer);
   const [openStartModal, setOpenStartModal] = useState(true);
@@ -107,7 +107,7 @@ export default function Scoreboard() {
       <main
         className="  
        h-full
-          bg-red-500"
+          bg-black"
       >
         <div
           className="flex flex-col bg-[#191919] mx-auto max-w-8xl h-full gap-y-10
@@ -115,13 +115,33 @@ export default function Scoreboard() {
           id="scoreboard-main"
         >
           <img src="/images/ld-logo.svg" alt="ld-logo" className="h-16 xl:h-20 z-10" />
-          <img src="/images/scoreboard-right/ellipse-1616.svg" alt="purple" className="absolute right-0 top-0" />
-          <img src="/images/scoreboard-right/star-13.svg" alt="right-star-1" className="absolute bg-transparent right-[4rem] top-[-.6rem] w-[5rem] h-[5rem] brightness-[80%]" />
-          <img src="/images/scoreboard-right/star-12.svg" alt="right-star-2" className="absolute bg-transparent right-[-1rem] top-[6rem] w-[6rem] h-[6rem] brightness-[80%]" />
-          <img src="/images/scoreboard-left/ellipse-1615.svg" alt="pink" className="absolute left-0 top-0" />
-          <img src="/images/scoreboard-left/frame-13.svg" alt="left-object" className="absolute bg-transparent left-[-2rem] top-[-6rem] w-[15rem] h-[15rem] brightness-[100%]" />
+          <img
+            src="/images/scoreboard-right/ellipse-1616.svg"
+            alt="purple"
+            className="absolute right-0 top-0"
+          />
+          <img
+            src="/images/scoreboard-right/star-13.svg"
+            alt="right-star-1"
+            className="absolute bg-transparent right-[4rem] top-[-.6rem] w-[5rem] h-[5rem] brightness-[80%]"
+          />
+          <img
+            src="/images/scoreboard-right/star-12.svg"
+            alt="right-star-2"
+            className="absolute bg-transparent right-[-1rem] top-[6rem] w-[6rem] h-[6rem] brightness-[80%]"
+          />
+          <img
+            src="/images/scoreboard-left/ellipse-1615.svg"
+            alt="pink"
+            className="absolute left-0 top-0"
+          />
+          <img
+            src="/images/scoreboard-left/frame-13.svg"
+            alt="left-object"
+            className="absolute bg-transparent left-[-2rem] top-[-6rem] w-[15rem] h-[15rem] brightness-[100%]"
+          />
           <ProgressStatus
-            greenProgress={60}
+            greenProgress={100}
             purpleProgress={40}
             redProgress={20}
             blueProgress={blueProgress}
