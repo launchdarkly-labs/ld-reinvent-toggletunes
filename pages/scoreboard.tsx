@@ -10,7 +10,6 @@ import { memo, useEffect, useState } from "react";
 
 const defaultTimer = 900000; //15 min
 export default function Scoreboard() {
- 
   const [redProgress, setRedProgress] = useState(0);
   const [purpleProgress, setPurpleProgress] = useState(0);
   const [blueProgress, setBlueProgress] = useState(0);
@@ -21,7 +20,6 @@ export default function Scoreboard() {
   const [timer, setTimer] = useState(defaultTimer);
   const [openStartModal, setOpenStartModal] = useState(true);
   const [animationStarted, setAnimationStarted] = useState(false);
-  
 
   const decreaseMainTimer = () => {
     if (isTimerRunning) {
@@ -36,16 +34,14 @@ export default function Scoreboard() {
     };
   }, [isTimerRunning]);
 
-  const timerToMinutesSecondsMilliseconds = (timer:number):string => {
+  const timerToMinutesSecondsMilliseconds = (timer: number): string => {
     if (timer <= 0 && isTimerRunning) {
       setIsTimerRunning(false);
       endGame();
     }
     const minutes = Math.floor(timer / 60000);
     const seconds = Math.floor((timer % 60000) / 1000);
-    return `${minutes.toString().padStart(2, "0")}:${seconds
-      .toString()
-      .padStart(2, "0")}`;
+    return `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
   };
 
   async function configUser() {
@@ -53,12 +49,7 @@ export default function Scoreboard() {
   }
 
   const endGame = () => {
-    const maxProgress = Math.max(
-      greenProgress,
-      redProgress,
-      purpleProgress,
-      blueProgress
-    );
+    const maxProgress = Math.max(greenProgress, redProgress, purpleProgress, blueProgress);
     let winners = [];
     let winnerName = "";
     if (maxProgress === greenProgress) {
@@ -97,14 +88,7 @@ export default function Scoreboard() {
     ) {
       endGame();
     }
-  }, [
-    greenProgress,
-    redProgress,
-    blueProgress,
-    purpleProgress,
-    isTimerRunning,
-    winnerName,
-  ]);
+  }, [greenProgress, redProgress, blueProgress, purpleProgress, isTimerRunning, winnerName]);
 
   return (
     <Room>
@@ -120,39 +104,63 @@ export default function Scoreboard() {
         setWinnerState={setWinnerState}
         setWinnerName={setWinnerName}
       />
-      <main className="container mx-auto flex min-h-screen flex-col items-center justify-center bg-black">
-        <KeyboardNavigation
-          setGreenProgress={setGreenProgress}
-          setRedProgress={setRedProgress}
-          setPurpleProgress={setPurpleProgress}
-          setBlueProgress={setBlueProgress}
-        />
-        {/* this modal shows the winner */}
-        <Modal
-          winnerState={winnerState}
-          setWinnerState={setWinnerState}
-          winnerName={winnerName}
-          setWinnerName={setWinnerName}
-        />
-        <StartModal
-          setIsTimerRunning={setIsTimerRunning}
-          openStartModal={openStartModal}
-          setOpenStartModal={setOpenStartModal}
-          animationStarted={animationStarted}
-          setAnimationStarted={setAnimationStarted}
-        />
-        <div className="flex sticky top-10 place-items-center border border-zinc-500 mt-10 w-1/3 xl:w-1/6 bg-transparent justify-center rounded-md">
-          <div className="flex text-8xl sm:text-6xl font-bold text-white font-audimat mt-4">
-            {timerToMinutesSecondsMilliseconds(timer)}
-          </div>
+      <main
+        className="  
+       h-full
+          bg-red-500"
+      >
+        <div
+          className="flex flex-col bg-[#191919] mx-auto max-w-8xl h-full gap-y-10
+        items-center justify-center py-4 px-10"
+          id="scoreboard-main"
+        >
+          <img src="/images/ld-logo.svg" alt="ld-logo" className="h-16" />
+          <img src="/images/scoreboard-right/ellipse-1616.svg" alt="purple" className="absolute right-0 top-0" />
+          <img src="/images/scoreboard-left/ellipse-1615.svg" alt="pink" className="absolute left-0 top-0" />
+          <img src="/images/scoreboard-right/star-13.svg" alt="right-star-1" className="absolute bg-transparent right-[4rem] top-[-.6rem] w-[5rem] h-[5rem] brightness-[80%]" />
+          <img src="/images/scoreboard-right/star-12.svg" alt="right-star-2" className="absolute bg-transparent right-[-1rem] top-[6rem] w-[6rem] h-[6rem] brightness-[80%]" />
+
+          <ProgressStatus
+            greenProgress={greenProgress}
+            purpleProgress={purpleProgress}
+            redProgress={redProgress}
+            blueProgress={blueProgress}
+          />
+          <section
+            id="scoreboard-wrapper"
+            className="flex sticky 
+  place-items-center border border-zinc-500 
+  w-1/3 xl:w-1/6 bg-gradient-scoreboard-timer-background justify-center rounded-md"
+          >
+            <div
+              id="scoreboard-text"
+              className="flex text-8xl sm:text-6xl font-bold bg-transparent bg-gradient-scoreboard-timer-text text-transparent bg-clip-text font-audimat mt-4"
+            >
+              {timerToMinutesSecondsMilliseconds(timer)}
+            </div>
+          </section>
         </div>
-        <ProgressStatus
-          greenProgress={greenProgress}
-          purpleProgress={purpleProgress}
-          redProgress={redProgress}
-          blueProgress={blueProgress}
-        />
       </main>
+      {/* this modal shows the winner */}
+      <Modal
+        winnerState={winnerState}
+        setWinnerState={setWinnerState}
+        winnerName={winnerName}
+        setWinnerName={setWinnerName}
+      />
+      <StartModal
+        setIsTimerRunning={setIsTimerRunning}
+        openStartModal={openStartModal}
+        setOpenStartModal={setOpenStartModal}
+        animationStarted={animationStarted}
+        setAnimationStarted={setAnimationStarted}
+      />
+      <KeyboardNavigation
+        setGreenProgress={setGreenProgress}
+        setRedProgress={setRedProgress}
+        setPurpleProgress={setPurpleProgress}
+        setBlueProgress={setBlueProgress}
+      />
     </Room>
   );
 }

@@ -17,6 +17,8 @@ const config: Config = {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
         'gradient-conic':
           'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
+          'gradient-scoreboard-timer-text': "linear-gradient(126.05deg, #FFFFFF 50.31%, rgba(255, 255, 255, 0) 123.98%)",
+          'gradient-scoreboard-timer-background':  'linear-gradient(180deg, #151515 0%, rgba(125, 125, 125, 0) 100%)'
       },
       colors: {
         context: "var(--context-color)",
