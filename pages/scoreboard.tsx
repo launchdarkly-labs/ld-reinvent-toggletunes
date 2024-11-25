@@ -121,9 +121,9 @@ export default function Scoreboard() {
           <img src="/images/scoreboard-left/ellipse-1615.svg" alt="pink" className="absolute left-0 top-0" />
           <img src="/images/scoreboard-left/frame-13.svg" alt="left-object" className="absolute bg-transparent left-[-2rem] top-[-6rem] w-[15rem] h-[15rem] brightness-[100%]" />
           <ProgressStatus
-            greenProgress={40}
-            purpleProgress={purpleProgress}
-            redProgress={redProgress}
+            greenProgress={60}
+            purpleProgress={40}
+            redProgress={20}
             blueProgress={blueProgress}
           />
           <section
