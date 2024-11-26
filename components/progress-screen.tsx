@@ -24,71 +24,36 @@ export function ProgressStatus({
   const gap = 10; // Gap between segments in pixels
   const segmentHeight = Math.ceil(progressBarHeight / segments);
   console.log(segmentHeight);
-  const filledSegments = (colorProgress:number)=> Math.ceil((colorProgress / 100) * segments); //convert from 60% to 12 /20 segment
+  const filledSegments = (colorProgress: number) => Math.ceil((colorProgress / 100) * segments); //convert from 60% to 12 /20 segment
 
   return (
     <>
       <section
         id="scoreboard-body"
         className=" bg-[url('/images/scoreboard-background-no-bg-line.svg')]
-     bg-contain bg-no-repeat grid- h-full w-full  border-b-[1px] border-zinc-500 z-10"
+     bg-cover bg-no-repeat grid- h-full w-full  border-b-[1px] border-zinc-500 z-10"
         ref={progresBarHeightRef}
       >
         <div className="flex justify-evenly items-end  w-full h-full mx-auto">
-          <div
-            className="w-[20%] bg-transparent rounded-none overflow-hidden relative flex flex-col-reverse justify-start items-center"
-            style={{ height: `${progressBarHeight}px` }}
-            id="progress-bar-green"
-          >
-            {Array.from({ length: segments }).map((_, index) => (
-              <div
-                key={index}
-                className={`w-full rounded-none transition-all duration-300 ease-out ${
-                  index < filledSegments(greenProgress) ? "bg-gradient-green-progress-bar" : "bg-zinc-500/20"
-                }`}
-                style={{
-                  height: `${segmentHeight - gap}px`,
-                  marginBottom: `${index == 0 ? 30 : gap}px`,
-                }}
-              />
-            ))}
-          </div>
-          <div
-            className="w-[20%] bg-transparent rounded-none overflow-hidden relative flex flex-col-reverse justify-start items-center"
-            style={{ height: `${progressBarHeight}px` }}
-            id="progress-bar-purple"
-          >
-            {Array.from({ length: segments }).map((_, index) => (
-              <div
-                key={index}
-                className={`w-full rounded-none transition-all duration-300 ease-out ${
-                  index < filledSegments(purpleProgress) ? "bg-gradient-purple-progress-bar" : "bg-zinc-500/20"
-                }`}
-                style={{
-                  height: `${segmentHeight - gap}px`,
-                  marginBottom: `${index == 0 ? 30 : gap}px`,
-                }}
-              />
-            ))}
-          </div>
-          <div
-            className="w-[20%] bg-transparent rounded-none overflow-hidden relative flex flex-col-reverse justify-start items-center"
-            style={{ height: `${progressBarHeight}px` }}
-            id="progress-bar-red"
-          >
-            {Array.from({ length: segments }).map((_, index) => (
-              <div
-                key={index}
-                className={`w-full rounded-none transition-all duration-300 ease-out ${
-                  index < filledSegments(redProgress) ? "bg-gradient-red-progress-bar" : "bg-zinc-500/20"
-                }`}
-                style={{
-                  height: `${segmentHeight - gap}px`,
-                  marginBottom: `${index == 0 ? 30 : gap}px`,
-                }}
-              />
-            ))}
-          </div>
+          <VerticalProgressBar
+            progressBarHeight={progressBarHeight}
+            colorProgress={greenProgress}
+            barColor="bg-gradient-green-progress-bar"
+            color="green"
+          />
+          <VerticalProgressBar
+            progressBarHeight={progressBarHeight}
+            colorProgress={purpleProgress}
+            barColor="bg-gradient-purple-progress-bar"
+            color="purple"
+          />
+          <VerticalProgressBar
+            progressBarHeight={progressBarHeight}
+            colorProgress={redProgress}
+            barColor="bg-gradient-red-progress-bar"
+            color="red"
+          />
+
           {/* <div
             className="w-[25%] bg-zinc-500 rounded-sm overflow-hidden"
             style={{ height: `${progressBarHeight}px` }}

@@ -141,7 +141,7 @@ export default function Scoreboard() {
             className="absolute bg-transparent left-[-2rem] top-[-6rem] w-[15rem] h-[15rem] brightness-[100%]"
           />
           <ProgressStatus
-            greenProgress={60}
+            greenProgress={40}
             purpleProgress={40}
             redProgress={20}
             blueProgress={blueProgress}
@@ -162,7 +162,7 @@ export default function Scoreboard() {
         </div>
       </main>
       {/* this modal shows the winner */}
-      {/* <Modal
+      <Modal
         winnerState={winnerState}
         setWinnerState={setWinnerState}
         winnerName={winnerName}
@@ -174,7 +174,7 @@ export default function Scoreboard() {
         setOpenStartModal={setOpenStartModal}
         animationStarted={animationStarted}
         setAnimationStarted={setAnimationStarted}
-      /> */}
+      />
       <KeyboardNavigation
         setGreenProgress={setGreenProgress}
         setRedProgress={setRedProgress}
