@@ -34,7 +34,6 @@ if (typeof window !== "undefined") {
   });
 
   Team4 = () => {
-    const [teamName, setTeamName] = useState(BLUE);
     const [isConfigured, setIsConfigured] = useState(false);
 
     async function configUser() {
@@ -51,7 +50,7 @@ if (typeof window !== "undefined") {
         {isConfigured && (
           <Room>
             <LoginProvider>
-              <MusicApp teamName={teamName} />
+              <MusicApp teamColor={BLUE} teamName={TEAM4} />
             </LoginProvider>
           </Room>
         )}

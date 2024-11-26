@@ -53,7 +53,7 @@ if (typeof window !== "undefined") {
         {isConfigured && (
           <Room>
             <LoginProvider>
-              <MusicApp teamName={GREEN} />
+              <MusicApp teamColor={GREEN} teamName={TEAM1} />
             </LoginProvider>
           </Room>
         )}
