@@ -21,10 +21,10 @@ export function ProgressStatus({
   }, []);
 
   const segments = 20;
-
-  const segmentHeight = Math.ceil(progressBarHeight / segments);
   const gap = 10; // Gap between segments in pixels
-  const filledSegments = Math.floor((greenProgress / 100) * segments);
+  const segmentHeight = Math.ceil(progressBarHeight / segments);
+  console.log(segmentHeight);
+  const filledSegments = (colorProgress:number)=> Math.ceil((colorProgress / 100) * segments); //convert from 60% to 12 /20 segment
 
   return (
     <>
@@ -35,6 +35,60 @@ export function ProgressStatus({
         ref={progresBarHeightRef}
       >
         <div className="flex justify-evenly items-end  w-full h-full mx-auto">
+          <div
+            className="w-[20%] bg-transparent rounded-none overflow-hidden relative flex flex-col-reverse justify-start items-center"
+            style={{ height: `${progressBarHeight}px` }}
+            id="progress-bar-green"
+          >
+            {Array.from({ length: segments }).map((_, index) => (
+              <div
+                key={index}
+                className={`w-full rounded-none transition-all duration-300 ease-out ${
+                  index < filledSegments(greenProgress) ? "bg-gradient-green-progress-bar" : "bg-zinc-500/20"
+                }`}
+                style={{
+                  height: `${segmentHeight - gap}px`,
+                  marginBottom: `${index == 0 ? 30 : gap}px`,
+                }}
+              />
+            ))}
+          </div>
+          <div
+            className="w-[20%] bg-transparent rounded-none overflow-hidden relative flex flex-col-reverse justify-start items-center"
+            style={{ height: `${progressBarHeight}px` }}
+            id="progress-bar-purple"
+          >
+            {Array.from({ length: segments }).map((_, index) => (
+              <div
+                key={index}
+                className={`w-full rounded-none transition-all duration-300 ease-out ${
+                  index < filledSegments(purpleProgress) ? "bg-gradient-purple-progress-bar" : "bg-zinc-500/20"
+                }`}
+                style={{
+                  height: `${segmentHeight - gap}px`,
+                  marginBottom: `${index == 0 ? 30 : gap}px`,
+                }}
+              />
+            ))}
+          </div>
+          <div
+            className="w-[20%] bg-transparent rounded-none overflow-hidden relative flex flex-col-reverse justify-start items-center"
+            style={{ height: `${progressBarHeight}px` }}
+            id="progress-bar-red"
+          >
+            {Array.from({ length: segments }).map((_, index) => (
+              <div
+                key={index}
+                className={`w-full rounded-none transition-all duration-300 ease-out ${
+                  index < filledSegments(redProgress) ? "bg-gradient-red-progress-bar" : "bg-zinc-500/20"
+                }`}
+                style={{
+                  height: `${segmentHeight - gap}px`,
+                  marginBottom: `${index == 0 ? 30 : gap}px`,
+                }}
+              />
+            ))}
+          </div>
           {/* <div
             className="w-[25%] bg-zinc-500 rounded-sm overflow-hidden"
             style={{ height: `${progressBarHeight}px` }}
@@ -47,28 +101,9 @@ export function ProgressStatus({
                 marginTop: `${progressBarHeight - (greenProgress / 100) * progressBarHeight}px`,
               }}
             />
-          </div> */}
-
-          <div
-            className="w-[25rem] bg-transparent rounded-none overflow-hidden relative flex flex-col-reverse justify-start items-center"
-            style={{ height: `${progressBarHeight}px` }}
-          >
-            {Array.from({ length: segments }).map((_, index) => (
-              <div
-                key={index}
-                className={`w-full rounded-none transition-all duration-300 ease-out ${
-                  index < filledSegments ? "bg-gradient-green-progress-bar" : "bg-blue-500/20"
-                }`}
-                style={{
-                  height: `${segmentHeight - gap}px`,
-                  marginBottom: `${index == 0 ? 0 : gap}px`,
-                }}
-              />
-            ))}
           </div>
-
           <div
-            className="w-[25%] bg-zinc-500 rounded-sm overflow-hidden"
+            className="w-[20%] bg-zinc-500 rounded-sm overflow-hidden"
             style={{ height: `${progressBarHeight}px` }}
             id="progress-bar-purple"
           >
@@ -82,7 +117,7 @@ export function ProgressStatus({
           </div>
 
           <div
-            className="w-[25%] bg-zinc-500 rounded-sm overflow-hidden"
+            className="w-[20%] bg-zinc-500 rounded-sm overflow-hidden"
             style={{ height: `${progressBarHeight}px` }}
             id="progress-bar-red"
           >
@@ -93,37 +128,8 @@ export function ProgressStatus({
                 marginTop: `${progressBarHeight - (redProgress / 100) * progressBarHeight}px`,
               }}
             />
-          </div>
+          </div> */}
         </div>
-
-        {/* 
-        <div className="relative col-span-1 col-start-1 row-span-5 h-full w-full overflow-hidden p-8">
-          <div
-            className="h-full w-full flex-1 bg-gradient-to-t from-ldgreen to-ldyellow transition-all"
-            style={{ transform: `translateY(${100 - (greenProgress || 0)}%)` }}
-          ></div>
-        </div>
-
-        <div className="relative col-span-1 col-start-2 row-span-5 h-full w-full overflow-hidden p-8">
-          <div
-            className="h-full w-full flex-1 bg-gradient-to-t from-lddred to-ldred transition-all"
-            style={{ transform: `translateY(${100 - (redProgress || 0)}%)` }}
-          ></div>
-        </div>
-        <div className="relative col-span-1 col-start-3 row-span-5 h-full w-full overflow-hidden p-8">
-          <div
-            className="h-full w-full flex-1 bg-gradient-to-t from-lddpurple to-ldpurple transition-all"
-            style={{
-              transform: `translateY(${100 - (purpleProgress || 0)}%)`,
-            }}
-          ></div>
-        </div> */}
-        {/* <div className="relative col-span-1 col-start-4 row-span-5 h-full w-full overflow-hidden p-8">
-          <div
-            className="h-full w-full flex-1 bg-gradient-to-t from-lddblue to-ldblue transition-all"
-            style={{ transform: `translateY(${100 - (blueProgress || 0)}%)` }}
-          ></div>
-        </div> */}
       </section>
     </>
   );

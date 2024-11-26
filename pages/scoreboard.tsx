@@ -106,7 +106,7 @@ export default function Scoreboard() {
       />
       <main
         className="  
-       h-full
+       h-screen
           bg-black"
       >
         <div
@@ -141,7 +141,7 @@ export default function Scoreboard() {
             className="absolute bg-transparent left-[-2rem] top-[-6rem] w-[15rem] h-[15rem] brightness-[100%]"
           />
           <ProgressStatus
-            greenProgress={20}
+            greenProgress={60}
             purpleProgress={40}
             redProgress={20}
             blueProgress={blueProgress}
