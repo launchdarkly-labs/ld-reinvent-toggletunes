@@ -48,7 +48,7 @@ export default function MusicApp({ teamName }: { teamName?: string }) {
   const migrateNewSongDBLDFlag: string = "complete";
   const releaseAIPlaylistCreatorLDFlag: AIModelInterface =
     useFlags()["release-ai-playlist-creator"];
-
+console.log(teamName)
   const { aiPlaylists, setAIPlaylists } = useContext(AIGeneratedPlaylistContext);
 
   // Check for `error` and `isLoading` before `threads` is defined
@@ -65,6 +65,9 @@ export default function MusicApp({ teamName }: { teamName?: string }) {
   // const [input, setInput] = useState("");
   // const [messages, setMessages] = useState<Message[]>([]);
   const [isLoadingApp, setIsLoadingApp] = useState(false);
+
+  const [releaseReleaseGuardianButton, setReleaseReleaseGuardianButton] = useState(false);
+
 
   // const handleInputChange = (e: any): void => {
   //   setInput(e.target.value);
@@ -213,22 +216,22 @@ export default function MusicApp({ teamName }: { teamName?: string }) {
 
   const broadcast = useBroadcastEvent();
   //TODO: this some reason causes eveyrthing ot load to make sure livelbocks works?
-  const animals = useStorage((root) => root);
-  console.log(animals);
-  console.log(error);
-  console.log(isLoading);
-  console.log(threads);
-  const currentUser = useSelf();
-  console.log(currentUser);
+  // const animals = useStorage((root) => root);
+  // console.log(animals);
+  // console.log(error);
+  // console.log(isLoading);
+  // console.log(threads);
+  // const currentUser = useSelf();
+  // console.log(currentUser);
   const router = useRouter();
 
   const reloadPage = async () => {
     await router.reload();
   };
-  console.log("flagOne", flagOne);
+
   useEffect(() => {
     const triggerSteps = async () => {
-      console.log(currentUser);
+     
       try {
         if (releaseTracklistLDFlag === true && flagOne === false) {
           broadcast({ type: teamName, complete: "stepOneComplete" });
@@ -247,7 +250,7 @@ export default function MusicApp({ teamName }: { teamName?: string }) {
         } else {
           console.log("Step 2 not eligible for evaluation!");
         }
-        //TODO: need to check to see if switch user and release flag
+        //TODO: need to check to see if switch user and release flag - maybe use local storage
         if (releaseNewUsersPlaylistLDFlag === true && flagThree === false) {
           broadcast({
             type: teamName,
@@ -273,6 +276,7 @@ export default function MusicApp({ teamName }: { teamName?: string }) {
           // console.log("fifth step running");
           // await triggerStep("fifth step complete", "stepFiveComplete");
           setFlagFour(true);
+          setReleaseReleaseGuardianButton(true)
         } else {
           console.log("Step 4 not eligible for evaluation!");
         }
@@ -280,7 +284,7 @@ export default function MusicApp({ teamName }: { teamName?: string }) {
         console.error(err);
       }
       //TODO: add api call to check to see if metrics exist
-        if (releaseAdSidebarLDFlag && flagFive === false) {
+        if (releaseAdSidebarLDFlag && flagFive === false && releaseReleaseGuardianButton === true) {
           broadcast({
             type: teamName,
             complete: "stepFiveComplete",
@@ -359,7 +363,7 @@ export default function MusicApp({ teamName }: { teamName?: string }) {
       <main className="flex flex-col gap-2 font-sohne bg-black overflow-y-visible h-screen lg:overflow-y-hidden">
         {releaseTracklistLDFlag && (
           <section className="w-full flex flex-col ">
-            <Navbar />
+            <Navbar releaseReleaseGuardianButton={releaseReleaseGuardianButton}/>
             <section
               className={`flex flex-col sm:flex-row gap-2 ${
                 releaseTracklistLDFlag &&

@@ -5,6 +5,7 @@ import { Room } from "@/components/room";
 import { setCookie } from "cookies-next";
 import { PERSONA_TIER_STANARD, PERSONA_ROLE_USER } from "@/lib/constant";
 import { LoginProvider } from "@/lib/LoginContext";
+import { GREEN,TEAM1 } from "@/lib/constant";
 
 
 let Team1: () => JSX.Element | null;
@@ -22,7 +23,7 @@ if (typeof window !== "undefined") {
       kind: "multi",
       user: {
         key: uniqueKey,
-        name: "Team1",
+        name: TEAM1,
         appName: "ToggleTunes",
         tier: PERSONA_TIER_STANARD,
         role: PERSONA_ROLE_USER,
@@ -39,7 +40,7 @@ if (typeof window !== "undefined") {
     const [isConfigured, setIsConfigured] = useState(false);
 
    async function configUser() {
-      await setCookie("team", "Team1");
+      await setCookie("team", TEAM1);
       setIsConfigured(true);
     }
 
@@ -52,7 +53,7 @@ if (typeof window !== "undefined") {
         {isConfigured && (
           <Room>
             <LoginProvider>
-              <MusicApp teamName={"green"} />
+              <MusicApp teamName={GREEN} />
             </LoginProvider>
           </Room>
         )}

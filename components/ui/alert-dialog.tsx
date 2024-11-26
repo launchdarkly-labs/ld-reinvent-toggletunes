@@ -4,6 +4,7 @@ import * as AlertDialogPrimitive from "@radix-ui/react-alert-dialog";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
+import { RED, BLUE, PURPLE, GREEN } from "@/lib/constant";
 
 const AlertDialog = AlertDialogPrimitive.Root;
 
@@ -30,22 +31,22 @@ const AlertDialogContent = React.forwardRef(
   ({ className, variant, ...props }, ref) => {
     let backgroundClass = "";
     switch (variant) {
-      case "blue":
+      case BLUE:
         console.log("triggering blue");
         backgroundClass =
           "bg-[url('https://utfs.io/f/o5A3nMDIMFiPqcNLqyauJRehkrOX8pcynWtvZ31YxfU4zaiP')] text-white";
         break;
-      case "purple":
+      case PURPLE:
         console.log("triggering purple");
         backgroundClass =
           "bg-[url('https://utfs.io/f/o5A3nMDIMFiPmB2403G6Yw09c3M2RmDgSIzUBGWbrNn7t51s')] text-white";
         break;
-      case "red":
+      case RED:
         console.log("triggering red");
         backgroundClass =
           "bg-[url('https://utfs.io/f/o5A3nMDIMFiPSKqGoCwiKxObBUVkqPh1rio4T8ZugcCvDSNW')] text-white";
         break;
-      case "green":
+      case GREEN:
         console.log("triggering green");
         backgroundClass =
           "bg-[url('https://uploadthing.com/f/9ece43b7-0efc-442a-917c-d766ec1b2f8e-wkjqfr.gif')] text-black";

@@ -1,5 +1,6 @@
 import { Liveblocks } from "@liveblocks/node";
 import type { NextApiRequest, NextApiResponse } from "next";
+import { TEAM1, TEAM2,TEAM3,TEAM4 } from "@/lib/constant";
 
 const API_KEY = process.env.NEXT_PUBLIC_LIVEBLOCKS_KEY;
 
@@ -23,10 +24,10 @@ export default async function handler(
   function __shouldUserHaveAccess__(user: any, room: string) {
     if (
       team === "Root" ||
-      team === "Team1" ||
-      team === "Team2" ||
-      team === "Team3" ||
-      team === "Team4" ||
+      team === TEAM1 ||
+      team === TEAM2 ||
+      team === TEAM3 ||
+      team === TEAM4 ||
       team === "Scoreboard"
     ) {
       return true;

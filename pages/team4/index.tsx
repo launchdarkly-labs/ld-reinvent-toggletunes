@@ -5,7 +5,8 @@ import { Room } from "@/components/room";
 import { setCookie } from "cookies-next";
 import { PERSONA_TIER_STANARD, PERSONA_ROLE_USER } from "@/lib/constant";
 import { LoginProvider } from "@/lib/LoginContext";
-let TEAM4;
+import { TEAM4, BLUE } from "@/lib/constant";
+let Team4;
 
 if (typeof window !== "undefined") {
   const uniqueKey = 1;
@@ -19,7 +20,7 @@ if (typeof window !== "undefined") {
       kind: "multi",
       user: {
         key: uniqueKey,
-        name: "Team4",
+        name: TEAM4,
         appName: "ToggleTunes",
         tier: PERSONA_TIER_STANARD,
         role: PERSONA_ROLE_USER,
@@ -32,12 +33,12 @@ if (typeof window !== "undefined") {
     },
   });
 
-  TEAM4 = () => {
-    const [teamName, setTeamName] = useState("blue");
+  Team4 = () => {
+    const [teamName, setTeamName] = useState(BLUE);
     const [isConfigured, setIsConfigured] = useState(false);
 
     async function configUser() {
-      await setCookie("team", "Team4");
+      await setCookie("team", TEAM4);
       setIsConfigured(true);
     }
 
@@ -58,7 +59,7 @@ if (typeof window !== "undefined") {
     );
   };
 } else {
-  TEAM4 = () => null;
+  Team4 = () => null;
 }
 
-export default TEAM4;
+export default Team4;

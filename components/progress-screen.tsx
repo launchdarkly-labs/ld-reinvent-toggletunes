@@ -1,6 +1,8 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
 import VerticalProgressBar from "./VerticalProgressBar";
+import { PURPLE,RED,BLUE,GREEN } from "@/lib/constant";
+ 
 export function ProgressStatus({
   greenProgress,
   purpleProgress,
@@ -39,19 +41,19 @@ export function ProgressStatus({
             progressBarHeight={progressBarHeight}
             colorProgress={greenProgress}
             barColor="bg-gradient-green-progress-bar"
-            color="green"
-          />
-          <VerticalProgressBar
-            progressBarHeight={progressBarHeight}
-            colorProgress={purpleProgress}
-            barColor="bg-gradient-purple-progress-bar"
-            color="purple"
+            color={GREEN}
           />
           <VerticalProgressBar
             progressBarHeight={progressBarHeight}
             colorProgress={redProgress}
             barColor="bg-gradient-red-progress-bar"
-            color="red"
+            color={RED}
+          />
+          <VerticalProgressBar
+            progressBarHeight={progressBarHeight}
+            colorProgress={purpleProgress}
+            barColor="bg-gradient-purple-progress-bar"
+            color={PURPLE}
           />
 
           {/* <div

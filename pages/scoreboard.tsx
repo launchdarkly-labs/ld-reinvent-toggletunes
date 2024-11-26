@@ -7,6 +7,7 @@ import { StartModal } from "@/components/start-modal";
 import { useEventListener } from "@/liveblocks.config";
 import { setCookie } from "cookies-next";
 import { memo, useEffect, useState } from "react";
+import { RED, BLUE, PURPLE, GREEN } from "@/lib/constant";
 
 const defaultTimer = 900000; //15 min
 export default function Scoreboard() {
@@ -53,16 +54,16 @@ export default function Scoreboard() {
     let winners = [];
     let winnerName = "";
     if (maxProgress === greenProgress) {
-      winners.push("green");
+      winners.push(GREEN);
     }
     if (maxProgress === redProgress) {
-      winners.push("red");
+      winners.push(RED);
     }
     if (maxProgress === purpleProgress) {
-      winners.push("purple");
+      winners.push(PURPLE);
     }
     if (maxProgress === blueProgress) {
-      winners.push("blue");
+      winners.push(BLUE);
     }
     // TODO: Nothing happens on tie currently
     if (winners.length > 1) {
@@ -206,19 +207,19 @@ const EventListenerComponent = memo(function EventListenerComponent({
     //TODO: here you can change event.type or event.complete or event.step and change type of progress for semi steps
     async function scoreRequest(event) {
       switch (event.type) {
-        case "green":
+        case GREEN:
           console.log("green score");
           setGreenProgress((prevProgress) => prevProgress + 20);
           break;
-        case "red":
+        case RED:
           console.log("red score");
           setRedProgress((prevProgress) => prevProgress + 20);
           break;
-        case "purple":
+        case PURPLE:
           console.log("purple score");
           setPurpleProgress((prevProgress) => prevProgress + 20);
           break;
-        case "blue":
+        case BLUE:
           console.log("blue score");
           setBlueProgress((prevProgress) => prevProgress + 20);
           break;
