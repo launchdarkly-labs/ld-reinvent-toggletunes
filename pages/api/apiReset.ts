@@ -1,15 +1,14 @@
 import type { NextApiRequest, NextApiResponse } from "next";
+import { LDPROJECTKEYSVALUEOBJECTS } from "@/lib/constant";
 
 // we need to list the project keys for each of the projects that we want to clean up
 // this prevents us from accidentally deleting flags from the wrong project
 // since the API key has access to all projects
 //"toggle-tunes-team-1"
-const projectKeys: Array<string> = [
-  "toggletunes-team-1",
-  "toggletunes-team-2",
-  "toggletunes-team-3",
-  // "toggletunes-team-4",
-];
+
+const projectKeys: Array<string> = Object.values(LDPROJECTKEYSVALUEOBJECTS);
+console.log(projectKeys);
+
 const API_KEY: string = process.env.LD_API_KEY as string;
 const delay = 1000;
 

@@ -34,12 +34,12 @@ import { RingLoader } from "react-spinners";
 import { PlaylistInterface, AIModelInterface, SongInterface } from "@/lib/typesInterface";
 import { defaultListOfCohereGeneratedSongs, defaultListOfClaudeGeneratedSongs } from "@/lib/data";
 import { parseJSONArray } from "parse-json-object";
-import { META, COHERE, CLAUDE } from "@/lib/constant";
+import { META, COHERE, CLAUDE, LDPROJECTKEYSVALUEOBJECTS } from "@/lib/constant";
 import Navbar from "./Navbar";
 
 //TODO: when you go into playlist 1 /2 or whatever, it should be specific per team1/ team 2 etc
 //TODO: i think release should be a really ugly version of spotify from 2012 and then release a new version
-export default function MusicApp({ teamColor, teamName }: { teamColor: string, teamName:string }) {
+export default function MusicApp({ teamColor, teamName }: { teamColor: string; teamName: string }) {
   const releaseTracklistLDFlag: boolean = useFlags()["release-tracklist"];
   const releaseSavedPlaylistsSidebarLDFlag: boolean = useFlags()["release-saved-playlists-sidebar"];
   const releaseNewUsersPlaylistLDFlag: boolean = useFlags()["release-new-users-playlist"];
@@ -48,7 +48,6 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string, t
   const migrateNewSongDBLDFlag: string = "complete";
   const releaseAIPlaylistCreatorLDFlag: AIModelInterface =
     useFlags()["release-ai-playlist-creator"];
-
   const { aiPlaylists, setAIPlaylists } = useContext(AIGeneratedPlaylistContext);
 
   // Check for `error` and `isLoading` before `threads` is defined
@@ -62,12 +61,13 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string, t
   const [flagThree, setFlagThree] = useState(false);
   const [flagFour, setFlagFour] = useState(false);
   const [flagFive, setFlagFive] = useState(false);
-  // const [input, setInput] = useState("");
-  // const [messages, setMessages] = useState<Message[]>([]);
   const [isLoadingApp, setIsLoadingApp] = useState(false);
 
   const [releaseReleaseGuardianButton, setReleaseReleaseGuardianButton] = useState(false);
+  const [releaseAdSidebarManually, setReleaseAdSidebarManually] = useState(false);
+  const [countNumReleaseGuardianAdSidebar, setCountNumReleaseGuardianAdSidebar] = useState(0);
 
+  const API_KEY: string = process.env.NEXT_PUBLIC_LD_API_KEY as string;
 
   // const handleInputChange = (e: any): void => {
   //   setInput(e.target.value);
@@ -87,7 +87,7 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string, t
     aiModelName = "Anthropic Claude";
   }
 
-  async function submitQuery(): Promise<void> {
+  async function submitAIQuery(): Promise<void> {
     // const userInput = input;
     // setInput("");
     setIsLoadingApp(true);
@@ -212,17 +212,51 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string, t
     });
   }
 
+  async function submitReleaseGuardianQuery(): Promise<void> {
+    // @ts-ignore
+    const projectKey: string = LDPROJECTKEYSVALUEOBJECTS[teamName];
+
+    const environmentKey = "test";
+    const flag_key = "release-new-ad-sidebar";
+    setIsLoadingApp(true);
+    const response = await fetch(
+      `https://app.launchdarkly.com/api/v2/projects/${projectKey}/flags/${flag_key}/measured-rollouts?filter=environmentKey:${environmentKey}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: API_KEY,
+          "ld-api-version": "beta",
+        },
+      }
+    );
+    const data = await response.json();
+
+    setIsLoadingApp(false);
+
+    try {
+      if (countNumReleaseGuardianAdSidebar === 0) {
+        //get count of number of release guardian attached to ad sidebar flag
+        setCountNumReleaseGuardianAdSidebar(data.items.length);
+      } else if (data.items.length > countNumReleaseGuardianAdSidebar) {
+        setReleaseAdSidebarManually(true);
+      }
+    } catch (e) {
+      throw new Error(`Cannot find release guardian`);
+    }
+  }
+
+  useEffect(() => {
+    submitReleaseGuardianQuery();
+  }, []);
+
   // const apiURL = "/api/sb-score-add/";
 
   const broadcast = useBroadcastEvent();
   //TODO: this some reason causes eveyrthing ot load to make sure livelbocks works?
   // const animals = useStorage((root) => root);
   // console.log(animals);
-  // console.log(error);
-  // console.log(isLoading);
-  // console.log(threads);
-  // const currentUser = useSelf();
-  // console.log(currentUser);
+
   const router = useRouter();
 
   const reloadPage = async () => {
@@ -231,7 +265,6 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string, t
 
   useEffect(() => {
     const triggerSteps = async () => {
-     
       try {
         if (releaseTracklistLDFlag === true && flagOne === false) {
           broadcast({ type: teamColor, complete: "stepOneComplete" });
@@ -262,7 +295,7 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string, t
         } else {
           console.log("Step 3 not eligible for evaluation!");
         }
-        
+
         //TODO: need to divide 25 by 3 in order to send info based on the 3 mini steps done for this point
         if (
           (aiModelName.includes(META) || aiModelName.includes(COHERE)) &&
@@ -276,7 +309,7 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string, t
           // console.log("fifth step running");
           // await triggerStep("fifth step complete", "stepFiveComplete");
           setFlagFour(true);
-          setReleaseReleaseGuardianButton(true)
+          setReleaseReleaseGuardianButton(true);
         } else {
           console.log("Step 4 not eligible for evaluation!");
         }
@@ -284,17 +317,20 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string, t
         console.error(err);
       }
       //TODO: add api call to check to see if metrics exist
-        if (releaseAdSidebarLDFlag && flagFive === false && releaseReleaseGuardianButton === true) {
-          broadcast({
-            type: teamColor,
-            complete: "stepFiveComplete",
-          });
+      if (
+        (releaseAdSidebarLDFlag || releaseAdSidebarManually) &&
+        flagFive === false &&
+        releaseReleaseGuardianButton === true
+      ) {
+        broadcast({
+          type: teamColor,
+          complete: "stepFiveComplete",
+        });
 
-          setFlagFive(true);
-        } else {
-          console.log("Step 5 not eligible for evaluation!");
-        }
-
+        setFlagFive(true);
+      } else {
+        console.log("Step 5 not eligible for evaluation!");
+      }
     };
 
     // const triggerStep = async (event: any, stepCompleted: any) => {
@@ -321,6 +357,7 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string, t
     releaseNewUsersPlaylistLDFlag,
     releaseAIPlaylistCreatorLDFlag,
     releaseAdSidebarLDFlag,
+    releaseAdSidebarManually,
     aiPlaylists,
   ]);
 
@@ -363,7 +400,10 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string, t
       <main className="flex flex-col gap-2 font-sohne bg-black overflow-y-visible h-screen lg:overflow-y-hidden">
         {releaseTracklistLDFlag && (
           <section className="w-full flex flex-col ">
-            <Navbar releaseReleaseGuardianButton={releaseReleaseGuardianButton}/>
+            <Navbar
+              releaseReleaseGuardianButton={releaseReleaseGuardianButton}
+              submitReleaseGuardianQuery={submitReleaseGuardianQuery}
+            />
             <section
               className={`flex flex-col sm:flex-row gap-2 ${
                 releaseTracklistLDFlag &&
@@ -395,7 +435,8 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string, t
                 }}
                 className={` p-4 bg-ldbackground overflow-y-auto scrollbar-hide w-full flex flex-col gap-6
                  ${
-                   releaseSavedPlaylistsSidebarLDFlag && releaseAdSidebarLDFlag
+                   releaseSavedPlaylistsSidebarLDFlag &&
+                   (releaseAdSidebarLDFlag || releaseAdSidebarManually)
                      ? "sm:w-3/5 rounded-md"
                      : releaseSavedPlaylistsSidebarLDFlag || releaseNewUsersPlaylistLDFlag
                      ? "sm:w-4/5 rounded-md"
@@ -474,7 +515,7 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string, t
                       id="song-cards-list"
                     >
                       <button
-                        onClick={() => submitQuery()}
+                        onClick={() => submitAIQuery()}
                         className={`${isLoadingApp ? "cursor-auto" : "cursor-pointer"}`}
                         disabled={isLoadingApp ? true : false}
                       >
@@ -606,7 +647,7 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string, t
                 )}
               </motion.section>
 
-              {releaseAdSidebarLDFlag && <AdSection />}
+              {(releaseAdSidebarLDFlag || releaseAdSidebarManually) && <AdSection />}
             </section>
             <MusicPlayingBar />
           </section>

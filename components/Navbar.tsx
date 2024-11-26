@@ -21,8 +21,10 @@ import { Search, User } from "lucide-react";
 
 export default function Navbar({
   releaseReleaseGuardianButton,
+  submitReleaseGuardianQuery,
 }: {
   releaseReleaseGuardianButton: boolean;
+  submitReleaseGuardianQuery: any;
 }) {
   const { loginUser, userObject, allUsers } = useContext(LoginContext);
 
@@ -73,7 +75,10 @@ export default function Navbar({
 
       <div className="flex items-center">
         {releaseReleaseGuardianButton && (
-          <button className="mr-3 p-2 bg-red-500 rounded-full hover:brightness-125 active:bg-red-700">
+          <button
+            onClick={() => submitReleaseGuardianQuery()}
+            className="mr-3 p-2 bg-red-500 rounded-full hover:brightness-125 active:bg-red-700"
+          >
             Validate Release Guardian
           </button>
         )}
