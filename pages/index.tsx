@@ -5,6 +5,7 @@ import { Room } from "@/components/room";
 import { setCookie } from "cookies-next";
 import { PERSONA_TIER_STANARD, PERSONA_ROLE_USER } from "@/lib/constant";
 import { LoginProvider } from "@/lib/LoginContext";
+import { BLUE,TEAM4 } from "@/lib/constant";
 
 let c;
 
@@ -49,7 +50,7 @@ if (typeof window !== "undefined") {
         {isConfigured && (
           <Room>
             <LoginProvider>
-              <MusicApp />
+              <MusicApp teamColor={BLUE} teamName={TEAM4} />
             </LoginProvider>
           </Room>
         )}
