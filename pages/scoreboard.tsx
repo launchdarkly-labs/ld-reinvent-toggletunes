@@ -141,9 +141,9 @@ export default function Scoreboard() {
             className="absolute bg-transparent left-[-2rem] top-[-6rem] w-[15rem] h-[15rem] brightness-[100%]"
           />
           <ProgressStatus
-            greenProgress={40}
-            purpleProgress={40}
-            redProgress={20}
+            greenProgress={greenProgress}
+            purpleProgress={purpleProgress}
+            redProgress={redProgress}
             blueProgress={blueProgress}
           />
           <section
