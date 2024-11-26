@@ -17,9 +17,13 @@ import { Label } from "./ui/label";
 import LoginContext from "@/lib/LoginContext";
 import { PERSONA_ROLE_USER, PERSONA_ROLE_DEVELOPER } from "@/lib/constant";
 import { Persona } from "@/lib/typesInterface";
-import { Search, User } from "lucide-react"
+import { Search, User } from "lucide-react";
 
-export default function Navbar() {
+export default function Navbar({
+  releaseReleaseGuardianButton,
+}: {
+  releaseReleaseGuardianButton: boolean;
+}) {
   const { loginUser, userObject, allUsers } = useContext(LoginContext);
 
   const personaClicked = (): void => {
@@ -39,15 +43,14 @@ export default function Navbar() {
       loginUser(foundPersona.personaemail);
     }
   };
-//TODO: the search result here could also be fed into AI
-  const [searchQuery, setSearchQuery] = useState("")
-
+  //TODO: the search result here could also be fed into AI
+  const [searchQuery, setSearchQuery] = useState("");
 
   const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
     // Implement your search logic here
-    console.log("Searching for:", searchQuery)
-  }
+    console.log("Searching for:", searchQuery);
+  };
 
   return (
     <nav className="flex items-center justify-between px-4 pt-2 pb-1 ">
@@ -67,19 +70,25 @@ export default function Navbar() {
           />
         </div>
       </form>
+
       <div className="flex items-center">
-      <h3 className="mr-3">
-        {userObject.personatier}, {userObject.personarole}
-      </h3>
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild onClick={() => personaClicked()}>
-          <Avatar className="cursor-pointer">
-            <AvatarFallback>
-              <img src={userObject.personaimage} className="w-8 h-8 bg-blue-500 rounded-full" />
-            </AvatarFallback>
-          </Avatar>
-        </DropdownMenuTrigger>
-        {/* <DropdownMenuContent align="end" className="w-56 bg-red-500">
+        {releaseReleaseGuardianButton && (
+          <button className="mr-3 p-2 bg-red-500 rounded-full hover:brightness-125 active:bg-red-700">
+            Validate Release Guardian
+          </button>
+        )}
+        <h3 className="mr-3">
+          {userObject.personatier}, {userObject.personarole}
+        </h3>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild onClick={() => personaClicked()}>
+            <Avatar className="cursor-pointer">
+              <AvatarFallback>
+                <img src={userObject.personaimage} className="w-8 h-8 bg-blue-500 rounded-full" />
+              </AvatarFallback>
+            </Avatar>
+          </DropdownMenuTrigger>
+          {/* <DropdownMenuContent align="end" className="w-56 bg-red-500">
           {isLoggedIn ? (
             <>
               <DropdownMenuItem>Profile</DropdownMenuItem>
@@ -103,9 +112,8 @@ export default function Navbar() {
             </form>
           )}
         </DropdownMenuContent> */}
-      </DropdownMenu>
+        </DropdownMenu>
       </div>
-  
     </nav>
   );
 }

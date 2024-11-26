@@ -3,9 +3,9 @@ import MusicApp from "@/components/musicapp";
 import { asyncWithLDProvider } from "launchdarkly-react-client-sdk";
 import { Room } from "@/components/room";
 import { setCookie } from "cookies-next";
-import { PERSONA_TIER_STANARD, PERSONA_ROLE_USER } from "@/lib/constant";
+import { PERSONA_TIER_STANARD, PERSONA_ROLE_USER, RED } from "@/lib/constant";
 import { LoginProvider } from "@/lib/LoginContext";
- 
+import { TEAM2 } from "@/lib/constant";
 
 let Team2;
 
@@ -21,7 +21,7 @@ if (typeof window !== "undefined") {
       kind: "multi",
       user: {
         key: uniqueKey,
-        name: "Team2",
+        name: TEAM2,
         appName: "ToggleTunes",
         tier: PERSONA_TIER_STANARD,
         role: PERSONA_ROLE_USER,
@@ -38,7 +38,7 @@ if (typeof window !== "undefined") {
     const [isConfigured, setIsConfigured] = useState(false);
 
     async function configUser() {
-      await setCookie("team", "Team2");
+      await setCookie("team", TEAM2);
       setIsConfigured(true);
     }
 
@@ -51,7 +51,7 @@ if (typeof window !== "undefined") {
         {isConfigured && (
           <Room>
             <LoginProvider>
-              <MusicApp teamName={"red"} />
+              <MusicApp teamColor={RED} teamName={TEAM2}/>
             </LoginProvider>
           </Room>
         )}

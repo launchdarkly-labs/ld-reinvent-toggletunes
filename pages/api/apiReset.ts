@@ -407,16 +407,6 @@ async function createFlags(projectKey: string) {
         },
       },
       {
-        name: "Meta Llama",
-        description: "This is Meta's Llama AI model for more creative responses",
-        value: {
-          max_gen_len: 0,
-          modelId: "",
-          temperature: 0,
-          top_p: 0,
-        },
-      },
-      {
         name: "Cohere Coral",
         description: "This is Cohere Coral AI model for balance between precision and creativity",
         value: {
@@ -426,9 +416,19 @@ async function createFlags(projectKey: string) {
           temperature: 0,
         },
       },
+      {
+        name: "Meta Llama",
+        description: "This is Meta's Llama AI model for more creative responses",
+        value: {
+          max_gen_len: 0,
+          modelId: "",
+          temperature: 0,
+          top_p: 0,
+        },
+      },
     ],
     defaults: {
-      onVariation: 2,
+      onVariation: 0,
       offVariation: 0,
     },
     temporary: true,

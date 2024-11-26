@@ -39,7 +39,7 @@ import Navbar from "./Navbar";
 
 //TODO: when you go into playlist 1 /2 or whatever, it should be specific per team1/ team 2 etc
 //TODO: i think release should be a really ugly version of spotify from 2012 and then release a new version
-export default function MusicApp({ teamName }: { teamName?: string }) {
+export default function MusicApp({ teamColor, teamName }: { teamColor: string, teamName:string }) {
   const releaseTracklistLDFlag: boolean = useFlags()["release-tracklist"];
   const releaseSavedPlaylistsSidebarLDFlag: boolean = useFlags()["release-saved-playlists-sidebar"];
   const releaseNewUsersPlaylistLDFlag: boolean = useFlags()["release-new-users-playlist"];
@@ -65,6 +65,9 @@ export default function MusicApp({ teamName }: { teamName?: string }) {
   // const [input, setInput] = useState("");
   // const [messages, setMessages] = useState<Message[]>([]);
   const [isLoadingApp, setIsLoadingApp] = useState(false);
+
+  const [releaseReleaseGuardianButton, setReleaseReleaseGuardianButton] = useState(false);
+
 
   // const handleInputChange = (e: any): void => {
   //   setInput(e.target.value);
@@ -213,25 +216,25 @@ export default function MusicApp({ teamName }: { teamName?: string }) {
 
   const broadcast = useBroadcastEvent();
   //TODO: this some reason causes eveyrthing ot load to make sure livelbocks works?
-  const animals = useStorage((root) => root);
-  console.log(animals);
-  console.log(error);
-  console.log(isLoading);
-  console.log(threads);
-  const currentUser = useSelf();
-  console.log(currentUser);
+  // const animals = useStorage((root) => root);
+  // console.log(animals);
+  // console.log(error);
+  // console.log(isLoading);
+  // console.log(threads);
+  // const currentUser = useSelf();
+  // console.log(currentUser);
   const router = useRouter();
 
   const reloadPage = async () => {
     await router.reload();
   };
-  console.log("flagOne", flagOne);
+
   useEffect(() => {
     const triggerSteps = async () => {
-      console.log(currentUser);
+     
       try {
         if (releaseTracklistLDFlag === true && flagOne === false) {
-          broadcast({ type: teamName, complete: "stepOneComplete" });
+          broadcast({ type: teamColor, complete: "stepOneComplete" });
           //console.log("first step running");
           // await triggerStep("first step complete", "stepOneComplete");
           setFlagOne(true);
@@ -240,17 +243,17 @@ export default function MusicApp({ teamName }: { teamName?: string }) {
         }
         //TODO: split into 2 point where first 10 pt is release and 2nd 10 is to turn off
         if (releaseSavedPlaylistsSidebarLDFlag === true && flagTwo === false) {
-          broadcast({ type: teamName, complete: "stepTwoComplete" });
+          broadcast({ type: teamColor, complete: "stepTwoComplete" });
           // console.log("second step running");
           // await triggerStep("second step complete", "stepTwoComplete");
           setFlagTwo(true);
         } else {
           console.log("Step 2 not eligible for evaluation!");
         }
-        //TODO: need to check to see if switch user and release flag
+        //TODO: need to check to see if switch user and release flag - maybe use local storage
         if (releaseNewUsersPlaylistLDFlag === true && flagThree === false) {
           broadcast({
-            type: teamName,
+            type: teamColor,
             complete: "stepThreeComplete",
           });
           // console.log("fourth step running");
@@ -267,12 +270,13 @@ export default function MusicApp({ teamName }: { teamName?: string }) {
           flagFour === false
         ) {
           broadcast({
-            type: teamName,
+            type: teamColor,
             complete: "stepFourComplete",
           });
           // console.log("fifth step running");
           // await triggerStep("fifth step complete", "stepFiveComplete");
           setFlagFour(true);
+          setReleaseReleaseGuardianButton(true)
         } else {
           console.log("Step 4 not eligible for evaluation!");
         }
@@ -280,9 +284,9 @@ export default function MusicApp({ teamName }: { teamName?: string }) {
         console.error(err);
       }
       //TODO: add api call to check to see if metrics exist
-        if (releaseAdSidebarLDFlag && flagFive === false) {
+        if (releaseAdSidebarLDFlag && flagFive === false && releaseReleaseGuardianButton === true) {
           broadcast({
-            type: teamName,
+            type: teamColor,
             complete: "stepFiveComplete",
           });
 
@@ -297,7 +301,7 @@ export default function MusicApp({ teamName }: { teamName?: string }) {
     //   const step = {
     //     event,
     //     team: {
-    //       name: `${teamName}`,
+    //       name: `${teamColor}`,
     //       stepCompleted,
     //     },
     //   };
@@ -359,7 +363,7 @@ export default function MusicApp({ teamName }: { teamName?: string }) {
       <main className="flex flex-col gap-2 font-sohne bg-black overflow-y-visible h-screen lg:overflow-y-hidden">
         {releaseTracklistLDFlag && (
           <section className="w-full flex flex-col ">
-            <Navbar />
+            <Navbar releaseReleaseGuardianButton={releaseReleaseGuardianButton}/>
             <section
               className={`flex flex-col sm:flex-row gap-2 ${
                 releaseTracklistLDFlag &&

@@ -7,6 +7,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { useEffect } from "react";
+import { PURPLE,RED,BLUE,GREEN } from "@/lib/constant";
 
 export function Modal({
   winnerState,
@@ -19,16 +20,16 @@ export function Modal({
     console.log(winnerState);
     const handleKeyDown = (event) => {
       if (event.key === "r") {
-        setWinnerName("red");
+        setWinnerName(RED);
       }
       if (event.key === "b") {
-        setWinnerName("blue");
+        setWinnerName(BLUE);
       }
       if (event.key === "g") {
-        setWinnerName("green");
+        setWinnerName(GREEN);
       }
       if (event.key === "p") {
-        setWinnerName("purple");
+        setWinnerName(PURPLE);
       }
       if (event.key === "Enter") {
         setWinnerName("");
@@ -40,10 +41,15 @@ export function Modal({
       document.removeEventListener("keydown", handleKeyDown);
     };
   }, [winnerName, winnerState]);
-
+// they overwrote alert dialog with the winner gif
+let x;
+useEffect(()=>{
+  const x =  Math.floor(Math.random() * 3)
+},[])
+//winnerState
   return (
     <>
-      <AlertDialog open={winnerState}>
+      <AlertDialog open={true}>
         <AlertDialogTrigger>
           <AlertDialogContent variant={winnerName}>
             <AlertDialogHeader />
