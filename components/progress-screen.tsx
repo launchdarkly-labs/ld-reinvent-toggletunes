@@ -31,7 +31,7 @@ export function ProgressStatus({
       <section
         id="scoreboard-body"
         className=" bg-[url('/images/scoreboard-background-no-bg-line.svg')]
-     bg-cover bg-no-repeat grid- h-full w-full  border-b-[1px] border-zinc-500 z-10"
+     bg-contain bg-no-repeat grid- h-full w-full  border-b-[1px] border-zinc-500 z-10"
         ref={progresBarHeightRef}
       >
         <div className="flex justify-evenly items-end  w-full h-full mx-auto">
