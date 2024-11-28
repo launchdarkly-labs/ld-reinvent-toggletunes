@@ -165,6 +165,7 @@ const AlertDialogTitle = React.forwardRef(
           setAnimationStarted(true);
         }
       };
+      
       document.addEventListener("keydown", handleKeyDown);
 
       if (animationStarted && currentIndex < stringsArray.length) {

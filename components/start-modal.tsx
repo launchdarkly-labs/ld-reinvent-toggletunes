@@ -8,6 +8,8 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 
+import { Dialog, DialogContent,DialogFooter,DialogHeader,DialogTitle,DialogTrigger } from "./ui/dialog";
+
 export function StartModal({
   openStartModal,
   setOpenStartModal,
@@ -24,18 +26,16 @@ export function StartModal({
       <AlertDialog open={openStartModal}>
         <AlertDialogTrigger asChild onClick={handleClick}>
           <AlertDialogContent variant="start">
-            <AlertDialogHeader />
+            {/* <AlertDialogHeader /> */}
             <AlertDialogTitle
-              openStartModal={openStartModal}
               setOpenStartModal={setOpenStartModal}
-              animationStarted={setAnimationStarted}
               setAnimationStarted={setAnimationStarted}
               setIsTimerRunning={setIsTimerRunning}
               animationStarted={animationStarted}
             />
-            <AlertDialogFooter className="flex place-content-center text-center text-6xl pb-4">
+            <div className="flex items-center justify-center text-center text-6xl pb-4"             id = "starter-dialog">
               Get Ready for the Next Round!
-            </AlertDialogFooter>
+            </div>
           </AlertDialogContent>
         </AlertDialogTrigger>
       </AlertDialog>

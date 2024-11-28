@@ -4,7 +4,7 @@ import { Modal } from "@/components/modal";
 import { ProgressStatus } from "@/components/progress-screen";
 import { Room } from "@/components/room";
 import { StartModal } from "@/components/start-modal";
-import { useEventListener } from "@/liveblocks.config";
+import { useEventListener, useStorage, useHistory } from "@/liveblocks.config";
 import { setCookie } from "cookies-next";
 import { memo, useEffect, useState } from "react";
 import {
@@ -18,6 +18,15 @@ import {
   STEPFOURCOMPLETE,
   STEPFIVECOMPLETE,
 } from "@/lib/constant";
+
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 const defaultTimer = 900000; //15 min
 export default function Scoreboard() {
@@ -75,8 +84,13 @@ export default function Scoreboard() {
     return `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
   };
 
-  async function configUser() {
-    await setCookie("team", "Scoreboard");
+  // async function configUser() {
+  //   await setCookie("team", "Scoreboard");
+  // }
+
+  function handleClick() {
+    setOpenStartModal(false);
+    setIsTimerRunning(true);
   }
 
   const endGame = () => {
@@ -102,10 +116,7 @@ export default function Scoreboard() {
         winners.push(PURPLE);
       }
     }
-    // if (maxProgress === blueProgress) {
-    //   winners.push(BLUE);
-    // }
-  
+
     // if (winners.length > 1) {
     //   winnerName = "";
     // } else {
@@ -118,9 +129,9 @@ export default function Scoreboard() {
     setWinnerState(true);
   };
 
-  useEffect(() => {
-    configUser();
-  }, []);
+  // useEffect(() => {
+  //   configUser();
+  // }, []);
 
   useEffect(() => {
     if (
@@ -220,13 +231,13 @@ export default function Scoreboard() {
         winnerName={winnerName}
         setWinnerName={setWinnerName}
       />
-     {/* {openStartModal ? <StartModal
+     <StartModal
         setIsTimerRunning={setIsTimerRunning}
         openStartModal={openStartModal}
         setOpenStartModal={setOpenStartModal}
         animationStarted={animationStarted}
         setAnimationStarted={setAnimationStarted}
-      />: null} */}
+      />
       <KeyboardNavigation
         setGreenProgress={setGreenProgress}
         setRedProgress={setRedProgress}
@@ -279,6 +290,7 @@ const EventListenerComponent = memo(function EventListenerComponent({
             console.log("red score");
             setRedProgress((prevProgress) => prevProgress + event.score);
             setRedCompletionProgress({ ...redCompletionProgress, [event.complete]: 1 }); //to prevent user's from trigging the same flag over and over to get points
+            console.log("redCompletionProgress",redCompletionProgress);
           }
 
           break;
@@ -294,6 +306,7 @@ const EventListenerComponent = memo(function EventListenerComponent({
             console.log("blue score");
             setBlueProgress((prevProgress) => prevProgress + event.score);
             setBlueCompletionProgress({ ...blueCompletionProgress, [event.complete]: 1 }); //to prevent user's from trigging the same flag over and over to get points
+           
           }
           break;
         case "startTimer":

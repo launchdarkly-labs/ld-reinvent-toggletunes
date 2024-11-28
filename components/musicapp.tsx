@@ -276,29 +276,29 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
   useEffect(() => {
     const triggerSteps = async () => {
       try {
-        if (releaseTracklistLDFlag === true) {
+        if (releaseTracklistLDFlag === true && flagOne === false) {
           broadcast({ type: teamColor, complete: STEPONECOMPLETE, score: 20 });
-
+          setFlagOne(true);
           // await triggerStep("first step complete", "stepOneComplete");
         } else {
           console.log("Step 1 not eligible for evaluation!");
         }
         //TODO: split into 2 point where first 10 pt is release and 2nd 10 is to turn off
-        if (releaseSavedPlaylistsSidebarLDFlag === true) {
+        if (releaseSavedPlaylistsSidebarLDFlag === true && flagTwo === false) {
           broadcast({ type: teamColor, complete: STEPTWOCOMPLETE, score: 20 });
-
+          setFlagTwo(true);
           // await triggerStep("second step complete", "stepTwoComplete");
         } else {
           console.log("Step 2 not eligible for evaluation!");
         }
         //TODO: need to check to see if switch user and release flag - maybe use local storage
-        if (releaseNewUsersPlaylistLDFlag === true) {
+        if (releaseNewUsersPlaylistLDFlag === true && flagThree === false) {
           broadcast({
             type: teamColor,
             complete: STEPTHREECOMPLETE,
             score: 20,
           });
-
+          setFlagThree(true);
           // await triggerStep("fourth step complete", "stepFourComplete");
         } else {
           console.log("Step 3 not eligible for evaluation!");
@@ -307,14 +307,14 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
         //TODO: need to divide 25 by 3 in order to send info based on the 3 mini steps done for this point
         if (
           (aiModelName.includes(META) || aiModelName.includes(COHERE)) &&
-          aiPlaylists.length >= 1
+          aiPlaylists.length >= 1 && flagFour === false
         ) {
           broadcast({
             type: teamColor,
             complete: STEPFOURCOMPLETE,
             score: 20,
           });
-
+          setFlagFour(true);
           // await triggerStep("fifth step complete", "stepFiveComplete");
 
           setReleaseReleaseGuardianButton(true);
@@ -324,13 +324,14 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
 
         if (
           (releaseAdSidebarLDFlag || releaseAdSidebarManually) &&
-          releaseReleaseGuardianButton === true
+          releaseReleaseGuardianButton === true && flagFive === false
         ) {
           broadcast({
             type: teamColor,
             complete: STEPFIVECOMPLETE,
             score: 20,
           });
+          setFlagFive(true);
         } else {
           console.log("Step 5 not eligible for evaluation!");
         }
