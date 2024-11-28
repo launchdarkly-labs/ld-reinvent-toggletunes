@@ -83,24 +83,36 @@ export default function Scoreboard() {
     const maxProgress = Math.max(greenProgress, redProgress, purpleProgress, blueProgress);
     let winners = [];
     let winnerName = "";
-    if (maxProgress === greenProgress) {
-      winners.push(GREEN);
+    if (maxProgress === blueProgress) {
+      winners.push(BLUE);
     }
     if (maxProgress === redProgress) {
       winners.push(RED);
     }
     if (maxProgress === purpleProgress) {
       winners.push(PURPLE);
-    }
-    if (maxProgress === blueProgress) {
-      winners.push(BLUE);
-    }
-    // TODO: Nothing happens on tie currently
-    if (winners.length > 1) {
-      winnerName = "";
     } else {
-      winnerName = winners[0];
+      //TIE SCENARIO
+      const ranNum = Math.floor(Math.random() * 3); //0 1 2
+      if (ranNum === 0) { 
+        winners.push(BLUE);
+      } else if (ranNum === 1) {
+        winners.push(RED);
+      } else {
+        winners.push(PURPLE);
+      }
     }
+    // if (maxProgress === blueProgress) {
+    //   winners.push(BLUE);
+    // }
+  
+    // if (winners.length > 1) {
+    //   winnerName = "";
+    // } else {
+    //   winnerName = winners[0];
+    // }
+
+    winnerName = winners[0];
     setIsTimerRunning(false);
     setWinnerName(winnerName);
     setWinnerState(true);
@@ -208,13 +220,13 @@ export default function Scoreboard() {
         winnerName={winnerName}
         setWinnerName={setWinnerName}
       />
-      <StartModal
+     {/* {openStartModal ? <StartModal
         setIsTimerRunning={setIsTimerRunning}
         openStartModal={openStartModal}
         setOpenStartModal={setOpenStartModal}
         animationStarted={animationStarted}
         setAnimationStarted={setAnimationStarted}
-      />
+      />: null} */}
       <KeyboardNavigation
         setGreenProgress={setGreenProgress}
         setRedProgress={setRedProgress}
@@ -246,7 +258,7 @@ const EventListenerComponent = memo(function EventListenerComponent({
   blueCompletionProgress,
   starterCompletionProgressObject,
 }) {
-  console.log("Event listener online");
+  console.log("Event listener online"); 
   useEventListener(({ event, user, connectionId }) => {
     console.log(user);
     console.log(connectionId);

@@ -272,13 +272,13 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
   const reloadPage = async () => {
     await router.reload();
   };
-   
+
   useEffect(() => {
     const triggerSteps = async () => {
       try {
         if (releaseTracklistLDFlag === true) {
           broadcast({ type: teamColor, complete: STEPONECOMPLETE, score: 20 });
-         
+
           // await triggerStep("first step complete", "stepOneComplete");
         } else {
           console.log("Step 1 not eligible for evaluation!");
@@ -286,7 +286,7 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
         //TODO: split into 2 point where first 10 pt is release and 2nd 10 is to turn off
         if (releaseSavedPlaylistsSidebarLDFlag === true) {
           broadcast({ type: teamColor, complete: STEPTWOCOMPLETE, score: 20 });
-    
+
           // await triggerStep("second step complete", "stepTwoComplete");
         } else {
           console.log("Step 2 not eligible for evaluation!");
@@ -298,7 +298,7 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
             complete: STEPTHREECOMPLETE,
             score: 20,
           });
-     
+
           // await triggerStep("fourth step complete", "stepFourComplete");
         } else {
           console.log("Step 3 not eligible for evaluation!");

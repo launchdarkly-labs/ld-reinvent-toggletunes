@@ -18,7 +18,7 @@ const config: Config = {
         "gradient-green-progress-bar": "linear-gradient(0.32deg, #86E7A7 -62.68%, #EBFF38 99.81%)",
         "gradient-red-progress-bar": "linear-gradient(185.03deg, #FF386B 15.14%, #A34FDE 143.04%)",
         "gradient-purple-progress-bar": "linear-gradient(358.14deg, #758CE8 -55%, #A34FDE 70.59%)",
-        "gradient-blue-progress-bar": "background: linear-gradient(0.32deg, #405BFF -62.68%, #3DD6F5 99.81%)",
+        "gradient-blue-progress-bar": "linear-gradient(0.32deg, #405BFF -62.68%, #3DD6F5 99.81%)",
         "gradient-conic": "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
         "gradient-scoreboard-timer-text":
           "linear-gradient(126.05deg, #FFFFFF 50.31%, rgba(255, 255, 255, 0) 123.98%)",

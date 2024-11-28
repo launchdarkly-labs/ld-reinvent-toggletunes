@@ -32,13 +32,6 @@ export const STEPTHREECOMPLETE = "stepThreeComplete";
 export const STEPFOURCOMPLETE = "stepFourComplete";
 export const STEPFIVECOMPLETE = "stepFiveComplete";
 
-export const TEAMCOLORKEYARRAY = [
-  { color: GREEN, team: TEAM1 },
-  { color: RED, team: TEAM2 },
-  { color: PURPLE, team: TEAM3 },
-  { color: BLUE, team: TEAM4 },
-];
-
 export const LDPROJECTKEYSVALUEOBJECTS: {
   [TEAM1]: string;
   [TEAM2]: string;
