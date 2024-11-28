@@ -26,6 +26,12 @@ export const TOGGLETUNESTEAM2 = "toggletunes-team-2";
 export const TOGGLETUNESTEAM3 = "toggletunes-team-3";
 export const TOGGLETUNESTEAM4 = "toggletunes-team-4";
 
+export const STEPONECOMPLETE = "stepOneComplete";
+export const STEPTWOCOMPLETE = "stepTwoComplete";
+export const STEPTHREECOMPLETE = "stepThreeComplete";
+export const STEPFOURCOMPLETE = "stepFourComplete";
+export const STEPFIVECOMPLETE = "stepFiveComplete";
+
 export const TEAMCOLORKEYARRAY = [
   { color: GREEN, team: TEAM1 },
   { color: RED, team: TEAM2 },
@@ -34,13 +40,13 @@ export const TEAMCOLORKEYARRAY = [
 ];
 
 export const LDPROJECTKEYSVALUEOBJECTS: {
-  Team1: string;
-  Team2: string;
-  Team3: string;
-  // Team4: string;
+  [TEAM1]: string;
+  [TEAM2]: string;
+  [TEAM3]: string;
+  // [TEAM4]: string;
 } = {
-  Team1: TOGGLETUNESTEAM1,
-  Team2: TOGGLETUNESTEAM2,
-  Team3: TOGGLETUNESTEAM3,
-  // Team4: TOGGLETUNESTEAM4,
+  [TEAM1]: TOGGLETUNESTEAM1,
+  [TEAM2]: TOGGLETUNESTEAM2,
+  [TEAM3]: TOGGLETUNESTEAM3,
+  // [TEAM4]: TOGGLETUNESTEAM4,
 };

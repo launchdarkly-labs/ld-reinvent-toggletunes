@@ -22,12 +22,6 @@ export function ProgressStatus({
     setProgressBarHeight(progresBarHeightRef?.current?.clientHeight);
   }, []);
 
-  const segments = 20;
-  const gap = 10; // Gap between segments in pixels
-  const segmentHeight = Math.ceil(progressBarHeight / segments);
-  console.log(segmentHeight);
-  const filledSegments = (colorProgress: number) => Math.ceil((colorProgress / 100) * segments); //convert from 60% to 12 /20 segment
-
   return (
     <>
       <section

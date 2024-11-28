@@ -34,7 +34,17 @@ import { RingLoader } from "react-spinners";
 import { PlaylistInterface, AIModelInterface, SongInterface } from "@/lib/typesInterface";
 import { defaultListOfCohereGeneratedSongs, defaultListOfClaudeGeneratedSongs } from "@/lib/data";
 import { parseJSONArray } from "parse-json-object";
-import { META, COHERE, CLAUDE, LDPROJECTKEYSVALUEOBJECTS } from "@/lib/constant";
+import {
+  META,
+  COHERE,
+  CLAUDE,
+  LDPROJECTKEYSVALUEOBJECTS,
+  STEPONECOMPLETE,
+  STEPTWOCOMPLETE,
+  STEPTHREECOMPLETE,
+  STEPFOURCOMPLETE,
+  STEPFIVECOMPLETE,
+} from "@/lib/constant";
 import Navbar from "./Navbar";
 
 //TODO: when you go into playlist 1 /2 or whatever, it should be specific per team1/ team 2 etc
@@ -262,36 +272,34 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
   const reloadPage = async () => {
     await router.reload();
   };
-
+   
   useEffect(() => {
     const triggerSteps = async () => {
       try {
-        if (releaseTracklistLDFlag === true && flagOne === false) {
-          broadcast({ type: teamColor, complete: "stepOneComplete" });
-          //console.log("first step running");
+        if (releaseTracklistLDFlag === true) {
+          broadcast({ type: teamColor, complete: STEPONECOMPLETE, score: 20 });
+         
           // await triggerStep("first step complete", "stepOneComplete");
-          setFlagOne(true);
         } else {
           console.log("Step 1 not eligible for evaluation!");
         }
         //TODO: split into 2 point where first 10 pt is release and 2nd 10 is to turn off
-        if (releaseSavedPlaylistsSidebarLDFlag === true && flagTwo === false) {
-          broadcast({ type: teamColor, complete: "stepTwoComplete" });
-          // console.log("second step running");
+        if (releaseSavedPlaylistsSidebarLDFlag === true) {
+          broadcast({ type: teamColor, complete: STEPTWOCOMPLETE, score: 20 });
+    
           // await triggerStep("second step complete", "stepTwoComplete");
-          setFlagTwo(true);
         } else {
           console.log("Step 2 not eligible for evaluation!");
         }
         //TODO: need to check to see if switch user and release flag - maybe use local storage
-        if (releaseNewUsersPlaylistLDFlag === true && flagThree === false) {
+        if (releaseNewUsersPlaylistLDFlag === true) {
           broadcast({
             type: teamColor,
-            complete: "stepThreeComplete",
+            complete: STEPTHREECOMPLETE,
+            score: 20,
           });
-          // console.log("fourth step running");
+     
           // await triggerStep("fourth step complete", "stepFourComplete");
-          setFlagThree(true);
         } else {
           console.log("Step 3 not eligible for evaluation!");
         }
@@ -299,37 +307,35 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
         //TODO: need to divide 25 by 3 in order to send info based on the 3 mini steps done for this point
         if (
           (aiModelName.includes(META) || aiModelName.includes(COHERE)) &&
-          aiPlaylists.length >= 1 &&
-          flagFour === false
+          aiPlaylists.length >= 1
         ) {
           broadcast({
             type: teamColor,
-            complete: "stepFourComplete",
+            complete: STEPFOURCOMPLETE,
+            score: 20,
           });
-          // console.log("fifth step running");
+
           // await triggerStep("fifth step complete", "stepFiveComplete");
-          setFlagFour(true);
+
           setReleaseReleaseGuardianButton(true);
         } else {
           console.log("Step 4 not eligible for evaluation!");
         }
+
+        if (
+          (releaseAdSidebarLDFlag || releaseAdSidebarManually) &&
+          releaseReleaseGuardianButton === true
+        ) {
+          broadcast({
+            type: teamColor,
+            complete: STEPFIVECOMPLETE,
+            score: 20,
+          });
+        } else {
+          console.log("Step 5 not eligible for evaluation!");
+        }
       } catch (err) {
         console.error(err);
-      }
-      //TODO: add api call to check to see if metrics exist
-      if (
-        (releaseAdSidebarLDFlag || releaseAdSidebarManually) &&
-        flagFive === false &&
-        releaseReleaseGuardianButton === true
-      ) {
-        broadcast({
-          type: teamColor,
-          complete: "stepFiveComplete",
-        });
-
-        setFlagFive(true);
-      } else {
-        console.log("Step 5 not eligible for evaluation!");
       }
     };
 
@@ -436,7 +442,8 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
                 className={` p-4 bg-ldbackground overflow-y-auto scrollbar-hide w-full flex flex-col gap-6
                  ${
                    releaseSavedPlaylistsSidebarLDFlag &&
-                   (releaseAdSidebarLDFlag || releaseAdSidebarManually)
+                   (releaseAdSidebarLDFlag || releaseAdSidebarManually) &&
+                   releaseReleaseGuardianButton
                      ? "sm:w-3/5 rounded-md"
                      : releaseSavedPlaylistsSidebarLDFlag || releaseNewUsersPlaylistLDFlag
                      ? "sm:w-4/5 rounded-md"
@@ -647,7 +654,8 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
                 )}
               </motion.section>
 
-              {(releaseAdSidebarLDFlag || releaseAdSidebarManually) && <AdSection />}
+              {(releaseAdSidebarLDFlag || releaseAdSidebarManually) &&
+                releaseReleaseGuardianButton && <AdSection />}
             </section>
             <MusicPlayingBar />
           </section>

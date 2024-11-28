@@ -7,14 +7,44 @@ import { StartModal } from "@/components/start-modal";
 import { useEventListener } from "@/liveblocks.config";
 import { setCookie } from "cookies-next";
 import { memo, useEffect, useState } from "react";
-import { RED, BLUE, PURPLE, GREEN } from "@/lib/constant";
+import {
+  RED,
+  BLUE,
+  PURPLE,
+  GREEN,
+  STEPONECOMPLETE,
+  STEPTWOCOMPLETE,
+  STEPTHREECOMPLETE,
+  STEPFOURCOMPLETE,
+  STEPFIVECOMPLETE,
+} from "@/lib/constant";
 
 const defaultTimer = 900000; //15 min
 export default function Scoreboard() {
+  const starterCompletionProgressObject = {
+    [STEPONECOMPLETE]: 0,
+    [STEPTWOCOMPLETE]: 0,
+    [STEPTHREECOMPLETE]: 0,
+    [STEPFOURCOMPLETE]: 0,
+    [STEPFIVECOMPLETE]: 0,
+  };
+
   const [redProgress, setRedProgress] = useState<number>(0);
   const [purpleProgress, setPurpleProgress] = useState<number>(0);
   const [blueProgress, setBlueProgress] = useState<number>(0);
   const [greenProgress, setGreenProgress] = useState<number>(0);
+  const [redCompletionProgress, setRedCompletionProgress] = useState(
+    starterCompletionProgressObject
+  );
+  const [purpleCompletionProgress, setPurpleCompletionProgress] = useState<number>(
+    starterCompletionProgressObject
+  );
+  const [blueCompletionProgress, setBlueCompletionProgress] = useState<number>(
+    starterCompletionProgressObject
+  );
+  const [greenCompletionProgress, setGreenCompletionProgress] = useState<number>(
+    starterCompletionProgressObject
+  );
   const [winnerState, setWinnerState] = useState(false);
   const [winnerName, setWinnerName] = useState("");
   const [isTimerRunning, setIsTimerRunning] = useState(false);
@@ -104,6 +134,15 @@ export default function Scoreboard() {
         setAnimationStarted={setAnimationStarted}
         setWinnerState={setWinnerState}
         setWinnerName={setWinnerName}
+        setGreenCompletionProgress={setGreenCompletionProgress}
+        setRedCompletionProgress={setRedCompletionProgress}
+        setPurpleCompletionProgress={setPurpleCompletionProgress}
+        setBlueCompletionProgress={setBlueCompletionProgress}
+        greenCompletionProgress={greenCompletionProgress}
+        redCompletionProgress={redCompletionProgress}
+        purpleCompletionProgress={purpleCompletionProgress}
+        blueCompletionProgress={blueCompletionProgress}
+        starterCompletionProgressObject={starterCompletionProgressObject}
       />
       <main
         className="  
@@ -197,6 +236,15 @@ const EventListenerComponent = memo(function EventListenerComponent({
   setAnimationStarted,
   setWinnerState,
   setWinnerName,
+  setGreenCompletionProgress,
+  setRedCompletionProgress,
+  setPurpleCompletionProgress,
+  setBlueCompletionProgress,
+  greenCompletionProgress,
+  redCompletionProgress,
+  purpleCompletionProgress,
+  blueCompletionProgress,
+  starterCompletionProgressObject,
 }) {
   console.log("Event listener online");
   useEventListener(({ event, user, connectionId }) => {
@@ -204,24 +252,37 @@ const EventListenerComponent = memo(function EventListenerComponent({
     console.log(connectionId);
     // type: teamName, complete: "stepThreeComplete", value: 20
     console.log(event);
-    //TODO: here you can change event.type or event.complete or event.step and change type of progress for semi steps
     async function scoreRequest(event) {
       switch (event.type) {
         case GREEN:
-          console.log("green score");
-          setGreenProgress((prevProgress) => prevProgress + 20);
+          if (greenCompletionProgress[event.complete] === 0) {
+            console.log("green score");
+            setGreenProgress((prevProgress) => prevProgress + event.score);
+            setGreenCompletionProgress({ ...greenCompletionProgress, [event.complete]: 1 }); //to prevent user's from trigging the same flag over and over to get points
+            console.log("greenCompletionProgress", greenCompletionProgress);
+          }
           break;
         case RED:
-          console.log("red score");
-          setRedProgress((prevProgress) => prevProgress + 20);
+          if (redCompletionProgress[event.complete] === 0) {
+            console.log("red score");
+            setRedProgress((prevProgress) => prevProgress + event.score);
+            setRedCompletionProgress({ ...redCompletionProgress, [event.complete]: 1 }); //to prevent user's from trigging the same flag over and over to get points
+          }
+
           break;
         case PURPLE:
-          console.log("purple score");
-          setPurpleProgress((prevProgress) => prevProgress + 20);
+          if (purpleCompletionProgress[event.complete] === 0) {
+            console.log("purple score");
+            setPurpleProgress((prevProgress) => prevProgress + event.score);
+            setPurpleCompletionProgress({ ...purpleCompletionProgress, [event.complete]: 1 }); //to prevent user's from trigging the same flag over and over to get points
+          }
           break;
         case BLUE:
-          console.log("blue score");
-          setBlueProgress((prevProgress) => prevProgress + 20);
+          if (blueCompletionProgress[event.complete] === 0) {
+            console.log("blue score");
+            setBlueProgress((prevProgress) => prevProgress + event.score);
+            setBlueCompletionProgress({ ...blueCompletionProgress, [event.complete]: 1 }); //to prevent user's from trigging the same flag over and over to get points
+          }
           break;
         case "startTimer":
           console.log("starting timer");
@@ -243,6 +304,10 @@ const EventListenerComponent = memo(function EventListenerComponent({
           setRedProgress(0);
           setBlueProgress(0);
           setPurpleProgress(0);
+          setGreenCompletionProgress(starterCompletionProgressObject);
+          setRedCompletionProgress(starterCompletionProgressObject);
+          setPurpleCompletionProgress(starterCompletionProgressObject);
+          setBlueCompletionProgress(starterCompletionProgressObject);
           break;
         default:
           console.log(event.type);
