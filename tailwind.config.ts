@@ -34,7 +34,7 @@ const config: Config = {
         ldred: "#FF386B",
         lddred: "#C547B4",
         ldpurple: "#A34FDE",
-        lddpurple: "#7B85E7",
+        lddpurple: "#758CE8",
         ldyellow: "#EBFF38",
         ldgray: "#282828",
         ldgraytext: "#BCBEC0",

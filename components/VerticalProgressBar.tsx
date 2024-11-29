@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import { RED, BLUE, PURPLE } from "@/lib/constant";
 
 const VerticalProgressBar = ({
   progressBarHeight,
@@ -11,12 +12,16 @@ const VerticalProgressBar = ({
   barColor: string;
   color: string;
 }) => {
-
-
   const segments = 20;
   const gap = 10; // Gap between segments in pixels
   const segmentHeight = Math.ceil(progressBarHeight / segments);
   const filledSegments = (colorProgress: number) => Math.ceil((colorProgress / 100) * segments); //convert from 60% to 12 /20 segment
+  // @ts-ignore
+  const borderColor: string = {
+    [RED]: "border-ldred",
+    [BLUE]: "border-ldblue",
+    [PURPLE]: "border-ldpurple",
+  };
 
   return (
     <div
@@ -28,9 +33,12 @@ const VerticalProgressBar = ({
         return (
           <div
             key={index}
-            className={`${(index+1)%4 === 0 ? "w-full" : "w-[70%]"} rounded-none transition-all duration-300 ease-out ${
+            className={`${
+              (index + 1) % 4 === 0 ? "w-full" : "w-[70%]"
+            } rounded-none transition-all duration-300 ease-out ${
               index < filledSegments(colorProgress) ? barColor : "bg-zinc-500/20"
-            }`}
+              // @ts-ignore
+            } ${borderColor[color]} border-2`}
             style={{
               height: `${segmentHeight - gap}px`,
               marginBottom: `${index == 0 ? 30 : gap}px`,
