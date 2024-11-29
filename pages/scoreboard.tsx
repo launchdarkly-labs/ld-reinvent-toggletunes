@@ -266,9 +266,8 @@ const EventListenerComponent = memo(function EventListenerComponent({
           break;
         case "startTimer":
           console.log("starting timer");
-    
- 
-          const updatedTimeLeft =  document.getElementById("timer-time")?.innerHTML;
+
+          const updatedTimeLeft = document.getElementById("timer-time")?.innerHTML;
           if (updatedTimeLeft < formatTime(duration)) {
             document.getElementById("timer-play-button")?.click();
           }
@@ -277,7 +276,6 @@ const EventListenerComponent = memo(function EventListenerComponent({
             setAnimationStarted(true);
           }
 
-          // startTimer();
           break;
         case "stopTimer":
           console.log("stopping timer");
