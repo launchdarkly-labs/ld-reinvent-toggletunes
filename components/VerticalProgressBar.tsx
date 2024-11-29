@@ -22,7 +22,7 @@ const VerticalProgressBar = ({
     [BLUE]: "border-ldblue",
     [PURPLE]: "border-ldpurple",
   };
-
+//TODO: could do a line through the bar for each 4 to show progress
   return (
     <div
       className="w-[20%] bg-transparent rounded-none overflow-hidden relative flex flex-col-reverse justify-start items-center"
@@ -35,7 +35,7 @@ const VerticalProgressBar = ({
             key={index}
             className={`${
               (index + 1) % 4 === 0 ? "w-full" : "w-[70%]"
-            } rounded-none transition-all duration-300 ease-out ${
+            } rounded-none transition-all duration-300 ease-out  ${
               index < filledSegments(colorProgress) ? barColor : "bg-zinc-500/20"
               // @ts-ignore
             } ${borderColor[color]} border-2`}
