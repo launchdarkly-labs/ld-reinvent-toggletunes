@@ -30,9 +30,11 @@ export const STEPONECOMPLETE = "stepOneComplete";
 export const STEPTWOONECOMPLETE = "stepTwoOneComplete";
 export const STEPTWOCOMPLETE = "stepTwoComplete";
 
-
 export const STEPTHREECOMPLETE = "stepThreeComplete";
+
+export const STEPFOURONECOMPLETE = "stepFourOneComplete";
 export const STEPFOURCOMPLETE = "stepFourComplete";
+
 export const STEPFIVECOMPLETE = "stepFiveComplete";
 
 export const LDPROJECTKEYSVALUEOBJECTS: {

@@ -43,10 +43,13 @@ import {
   STEPTWOONECOMPLETE,
   STEPTWOCOMPLETE,
   STEPTHREECOMPLETE,
+  STEPFOURONECOMPLETE,
   STEPFOURCOMPLETE,
   STEPFIVECOMPLETE,
+  PERSONA_ROLE_DEVELOPER
 } from "@/lib/constant";
 import Navbar from "./Navbar";
+import LoginContext from "@/lib/LoginContext";
 
 //TODO: when you go into playlist 1 /2 or whatever, it should be specific per team1/ team 2 etc
 //TODO: i think release should be a really ugly version of spotify from 2012 and then release a new version
@@ -71,8 +74,10 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
   const [flagTwoOne, setFlagTwoOne] = useState(false);
   const [flagTwo, setFlagTwo] = useState(false);
   const [flagThree, setFlagThree] = useState(false);
+  const [flagFourOne, setFlagFourOne] = useState(false);
   const [flagFour, setFlagFour] = useState(false);
   const [flagFive, setFlagFive] = useState(false);
+  const [totalPointAccumulation, setTotalPointAccumulation] = useState(0);
   const [isLoadingApp, setIsLoadingApp] = useState(false);
 
   const [releaseReleaseGuardianButton, setReleaseReleaseGuardianButton] = useState(false);
@@ -81,9 +86,12 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
 
   const API_KEY: string = process.env.NEXT_PUBLIC_LD_API_KEY as string;
 
+  const { userObject } = useContext(LoginContext);
+
   // const handleInputChange = (e: any): void => {
   //   setInput(e.target.value);
   // };
+  console.log("userObject",userObject)
 
   const randomNumberGen = (array: SongInterface[] | SongInterface[][]): number => {
     return Math.floor(Math.random() * array.length); //0 to 2 index
@@ -91,13 +99,14 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
 
   let aiModelName: string = "";
 
+  console.log(releaseAIPlaylistCreatorLDFlag)
   if (releaseAIPlaylistCreatorLDFlag?.modelId?.includes("cohere")) {
     aiModelName = "Cohere Coral";
   } else if (releaseAIPlaylistCreatorLDFlag?.modelId?.includes("meta")) {
     aiModelName = "Meta Llama";
-  } else {
+  } else if (releaseAIPlaylistCreatorLDFlag?.modelId?.includes("claude")) {
     aiModelName = "Anthropic Claude";
-  }
+  } 
 
   async function submitAIQuery(): Promise<void> {
     // const userInput = input;
@@ -262,8 +271,6 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
     submitReleaseGuardianQuery();
   }, []);
 
-
-
   const broadcast = useBroadcastEvent();
   //TODO: this some reason causes eveyrthing ot load to make sure livelbocks works?
   // const animals = useStorage((root) => root);
@@ -278,7 +285,6 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
   useEffect(() => {
     const triggerSteps = async () => {
       try {
-
         if (releaseTracklistLDFlag === true && flagOne === false) {
           broadcast({ type: teamColor, complete: STEPONECOMPLETE, score: 20 });
           setFlagOne(true);
@@ -287,18 +293,21 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
           console.log("Step 1 not eligible for evaluation!");
         }
 
-         //TODO: split into 2 point where first 10 pt is release and 2nd 10 is to turn off
-         if (releaseSavedPlaylistsSidebarLDFlag === true && flagTwoOne === false) {
+        //TODO: split into 2 point where first 10 pt is release and 2nd 10 is to turn off
+        if (releaseSavedPlaylistsSidebarLDFlag === true && flagTwoOne === false) {
           broadcast({ type: teamColor, complete: STEPTWOONECOMPLETE, score: 10 });
           setFlagTwoOne(true);
           // await triggerStep("second step complete", "stepTwoComplete");
         } else {
           console.log("Step 2.1 not eligible for evaluation!");
         }
-      
 
-  //turn the flag off once you turn back on
-        if (flagTwoOne === true && releaseSavedPlaylistsSidebarLDFlag === false && flagTwo === false) {
+        //turn the flag off once you turn back on
+        if (
+          flagTwoOne === true &&
+          releaseSavedPlaylistsSidebarLDFlag === false &&
+          flagTwo === false
+        ) {
           broadcast({ type: teamColor, complete: STEPTWOCOMPLETE, score: 10 });
           setFlagTwo(true);
           // await triggerStep("second step complete", "stepTwoComplete");
@@ -306,8 +315,7 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
           console.log("Step 2 not eligible for evaluation!");
         }
 
-        //TODO: need to check to see if switch user and release flag - maybe use local storage
-        if (releaseNewUsersPlaylistLDFlag === true && flagThree === false) {
+        if (releaseNewUsersPlaylistLDFlag === true && flagThree === false && userObject.personarole === PERSONA_ROLE_DEVELOPER) {
           broadcast({
             type: teamColor,
             complete: STEPTHREECOMPLETE,
@@ -319,15 +327,34 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
           console.log("Step 3 not eligible for evaluation!");
         }
 
-        //TODO: need to divide 25 by 3 in order to send info based on the 3 mini steps done for this point
+        if (
+          (aiModelName.includes(CLAUDE)) &&
+          aiPlaylists.length >= 1 &&
+          flagFourOne === false
+        ) {
+          broadcast({
+            type: teamColor,
+            complete: STEPFOURONECOMPLETE,
+            score: 10,
+          });
+          setFlagFourOne(true);
+          // await triggerStep("fifth step complete", "stepFiveComplete");
+
+
+        } else {
+          console.log("Step 4.1 not eligible for evaluation!");
+        }
+
+       
         if (
           (aiModelName.includes(META) || aiModelName.includes(COHERE)) &&
-          aiPlaylists.length >= 1 && flagFour === false
+          aiPlaylists.length >= 1 &&
+          flagFour === false && flagFourOne === true
         ) {
           broadcast({
             type: teamColor,
             complete: STEPFOURCOMPLETE,
-            score: 20,
+            score: 10,
           });
           setFlagFour(true);
           // await triggerStep("fifth step complete", "stepFiveComplete");
@@ -339,7 +366,8 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
 
         if (
           (releaseAdSidebarLDFlag || releaseAdSidebarManually) &&
-          releaseReleaseGuardianButton === true && flagFive === false
+          releaseReleaseGuardianButton === true &&
+          flagFive === false
         ) {
           broadcast({
             type: teamColor,
@@ -350,8 +378,6 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
         } else {
           console.log("Step 5 not eligible for evaluation!");
         }
-
-
       } catch (err) {
         console.error(err);
       }
@@ -541,8 +567,8 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
                     >
                       <button
                         onClick={() => submitAIQuery()}
-                        className={`${isLoadingApp ? "cursor-auto" : "cursor-pointer"}`}
-                        disabled={isLoadingApp ? true : false}
+                        className={`${isLoadingApp || releaseAIPlaylistCreatorLDFlag.modelId ==="" ? "cursor-auto" : "cursor-pointer"}`}
+                        disabled={isLoadingApp || releaseAIPlaylistCreatorLDFlag.modelId ==="" ? true : false}
                       >
                         <motion.div
                           initial={{ opacity: 0, scale: 0.25 }}
@@ -552,8 +578,8 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
                             ease: [0, 0.71, 0.2, 1.01],
                             delay: 1 * 0.2,
                           }}
-                          className="place-items-center border-white bg-ldinputback 
-                            rounded-md hover:bg-gray-900/50  inline-block p-4"
+                          className={`place-items-center border-white bg-ldinputback 
+                            rounded-md hover:bg-gray-900/50  inline-block p-4  ${releaseAIPlaylistCreatorLDFlag.modelId ==="" && "brightness-[25%]" }`}
                         >
                           {isLoadingApp ? (
                             <>
@@ -571,7 +597,8 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
                             </>
                           ) : (
                             <>
-                              <div className="flex items-center justify-center object-cover transition-all hover:scale-105 mb-4 h-48 w-48 rounded-lg px-3 py-2 text-sm bg-gray-100 dark:bg-blue-700">
+                              <div className="flex items-center justify-center object-cover transition-all hover:scale-105 mb-4 h-48 w-48 rounded-lg px-3 py-2 text-sm 
+                              bg-blue-700">
                                 <BotIcon className="h-24 w-24 text-green-500" />
                               </div>
                               <div className="flex flex-col gap-y-2 items-center align-center break-words  max-w-[180px]">

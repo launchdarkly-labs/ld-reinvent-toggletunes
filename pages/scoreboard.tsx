@@ -16,6 +16,7 @@ import {
   STEPTWOONECOMPLETE,
   STEPTWOCOMPLETE,
   STEPTHREECOMPLETE,
+  STEPFOURONECOMPLETE,
   STEPFOURCOMPLETE,
   STEPFIVECOMPLETE,
 } from "@/lib/constant";
@@ -29,6 +30,7 @@ export default function Scoreboard() {
     [STEPTWOONECOMPLETE]: 0,
     [STEPTWOCOMPLETE]: 0,
     [STEPTHREECOMPLETE]: 0,
+    [STEPFOURONECOMPLETE]: 0,
     [STEPFOURCOMPLETE]: 0,
     [STEPFIVECOMPLETE]: 0,
   };
@@ -92,7 +94,7 @@ export default function Scoreboard() {
     setWinnerState(true);
   };
 
-
+//todo: maybe change this to if all task completed for the object
   useEffect(() => {
     if (
       greenProgress >= 100 ||

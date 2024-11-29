@@ -28,7 +28,7 @@ const VerticalProgressBar = ({
         return (
           <div
             key={index}
-            className={`w-full rounded-none transition-all duration-300 ease-out ${
+            className={`${(index+1)%4 === 0 ? "w-full" : "w-[70%]"} rounded-none transition-all duration-300 ease-out ${
               index < filledSegments(colorProgress) ? barColor : "bg-zinc-500/20"
             }`}
             style={{
