@@ -41,10 +41,10 @@ export const LDPROJECTKEYSVALUEOBJECTS: {
   [TEAM1]: string;
   [TEAM2]: string;
   [TEAM3]: string;
-  // [TEAM4]: string;
+  [TEAM4]: string;
 } = {
   [TEAM1]: TOGGLETUNESTEAM1,
   [TEAM2]: TOGGLETUNESTEAM2,
   [TEAM3]: TOGGLETUNESTEAM3,
-  // [TEAM4]: TOGGLETUNESTEAM4,
+  [TEAM4]: TOGGLETUNESTEAM4,
 };
