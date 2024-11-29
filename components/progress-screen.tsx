@@ -27,7 +27,7 @@ export function ProgressStatus({
       <section
         id="scoreboard-body"
         className=" bg-[url('/images/scoreboard-background-no-bg-line.svg')]
-     bg-contain bg-no-repeat grid- h-full w-full  border-b-[1px] border-zinc-500 z-10"
+     bg-contain bg-no-repeat grid- h-full w-full  border-b-[1px] border-zinc-500 z-10 font-audimat"
         ref={progresBarHeightRef}
       >
         <div className="flex justify-evenly items-end  w-full h-full mx-auto">
@@ -50,6 +50,11 @@ export function ProgressStatus({
             color={PURPLE}
           />
         </div>
+        {/* <div className="flex justify-evenly">
+          <p>Red Team</p>
+          <p>Blue Team</p>
+          <p>Purple Team</p>
+        </div> */}
       </section>
     </>
   );

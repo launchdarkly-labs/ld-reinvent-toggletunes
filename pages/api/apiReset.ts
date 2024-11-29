@@ -45,6 +45,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       // }
       //createMetrics(projectKey);
       createFlags(projectKey);
+      await sleep(delay);
     }
   } catch (e: any) {
     return res.status(500).json({ error: e.message });
