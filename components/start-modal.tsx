@@ -7,34 +7,60 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-
-import { Dialog, DialogContent,DialogFooter,DialogHeader,DialogTitle,DialogTrigger } from "./ui/dialog";
+import { useTimer } from "@/lib/useTimer";
 
 export function StartModal({
   openStartModal,
   setOpenStartModal,
-  setIsTimerRunning,
+  //setIsTimerRunning,
   animationStarted,
   setAnimationStarted,
 }) {
+  const onComplete = () => {
+    // Play notification sound
+    const audio = new Audio("/notification.mp3");
+    audio.play();
+  };
+  const { timeLeft, isActive, startTimer, pauseTimer, resetTimer, duration } = useTimer();
+
   function handleClick() {
+    console.log("awefawefawef");
     setOpenStartModal(false);
-    setIsTimerRunning(true);
+    //setIsTimerRunning(true);
+    document.getElementById("timer-play-button")?.click();
   }
+
   return (
     <>
       <AlertDialog open={openStartModal}>
         <AlertDialogTrigger asChild onClick={handleClick}>
           <AlertDialogContent variant="start">
             {/* <AlertDialogHeader /> */}
-            <AlertDialogTitle
-              setOpenStartModal={setOpenStartModal}
-              setAnimationStarted={setAnimationStarted}
-              setIsTimerRunning={setIsTimerRunning}
-              animationStarted={animationStarted}
-            />
-            <div className="flex items-center justify-center text-center text-6xl pb-4"             id = "starter-dialog">
-              Get Ready for the Next Round!
+            <div className={`flex flex-col gap-y-0`}>
+              <img src="/images/ld-logo.svg" alt="ld-logo" className="h-20 xl:h-20" />
+              {animationStarted ? (
+                <div className="w-full h-full">
+                  <AlertDialogTitle
+                    setOpenStartModal={setOpenStartModal}
+                    setAnimationStarted={setAnimationStarted}
+                    //setIsTimerRunning={setIsTimerRunning}
+                    animationStarted={animationStarted}
+                  />
+                  <p
+                    className="flex h-full w-full items-center justify-center text-6xl pb-4"
+                    id="starter-dialog"
+                  >
+                    Get Ready for the Next Round!
+                  </p>
+                </div>
+              ) : (
+                <p
+                  className="flex h-full w-full items-center justify-center text-6xl pb-4"
+                  id="starter-dialog"
+                >
+                  Get Ready for the Next Round!
+                </p>
+              )}
             </div>
           </AlertDialogContent>
         </AlertDialogTrigger>

@@ -18,15 +18,8 @@ import {
   STEPFOURCOMPLETE,
   STEPFIVECOMPLETE,
 } from "@/lib/constant";
-
-import {
-  AlertDialog,
-  AlertDialogContent,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+import Timer from "@/components/Timer";
+import { useTimer } from "@/lib/useTimer";
 
 const defaultTimer = 900000; //15 min
 export default function Scoreboard() {
@@ -61,18 +54,19 @@ export default function Scoreboard() {
   const [openStartModal, setOpenStartModal] = useState(true);
   const [animationStarted, setAnimationStarted] = useState(false);
 
-  const decreaseMainTimer = () => {
-    if (isTimerRunning) {
-      setTimer((timer) => timer - 100);
-    }
-  };
+  // const decreaseMainTimer = () => {
+  //   if (isTimerRunning) {
+  //     setTimer((timer) => timer - 100);
+  //   }
+  // };
+  const { timeLeft, isActive, startTimer, pauseTimer, resetTimer, duration } = useTimer();
 
-  useEffect(() => {
-    const timerInterval = setInterval(decreaseMainTimer, 100);
-    return () => {
-      clearInterval(timerInterval);
-    };
-  }, [isTimerRunning]);
+  // useEffect(() => {
+  //   const timerInterval = setInterval(decreaseMainTimer, 100);
+  //   return () => {
+  //     clearInterval(timerInterval);
+  //   };
+  // }, [isTimerRunning]);
 
   const timerToMinutesSecondsMilliseconds = (timer: number): string => {
     if (timer <= 0 && isTimerRunning) {
@@ -87,11 +81,6 @@ export default function Scoreboard() {
   // async function configUser() {
   //   await setCookie("team", "Scoreboard");
   // }
-
-  function handleClick() {
-    setOpenStartModal(false);
-    setIsTimerRunning(true);
-  }
 
   const endGame = () => {
     const maxProgress = Math.max(greenProgress, redProgress, purpleProgress, blueProgress);
@@ -108,7 +97,7 @@ export default function Scoreboard() {
     } else {
       //TIE SCENARIO
       const ranNum = Math.floor(Math.random() * 3); //0 1 2
-      if (ranNum === 0) { 
+      if (ranNum === 0) {
         winners.push(BLUE);
       } else if (ranNum === 1) {
         winners.push(RED);
@@ -166,12 +155,10 @@ export default function Scoreboard() {
         purpleCompletionProgress={purpleCompletionProgress}
         blueCompletionProgress={blueCompletionProgress}
         starterCompletionProgressObject={starterCompletionProgressObject}
+        startTimer={startTimer}
+        resetTimer={resetTimer}
       />
-      <main
-        className="  
-       h-screen
-          bg-black"
-      >
+      <main className="h-screen bg-black">
         <div
           className="flex flex-col bg-[#191919] mx-auto max-w-8xl h-screen gap-y-10
         items-center justify-center py-4 px-10"
@@ -209,18 +196,21 @@ export default function Scoreboard() {
             redProgress={redProgress}
             blueProgress={blueProgress}
           />
+
           <section
             id="scoreboard-wrapper"
             className="flex sticky 
   place-items-center border border-zinc-500 
-  w-1/3 xl:w-1/6 bg-gradient-scoreboard-timer-background justify-center rounded-md"
+  w-1/3 xl:w-1/6 bg-gradient-scoreboard-timer-background justify-center rounded-md z-[100]"
           >
-            <div
+            {/* <div
               id="scoreboard-text"
               className="flex text-8xl sm:text-6xl font-bold bg-transparent bg-gradient-scoreboard-timer-text text-transparent bg-clip-text font-audimat mt-4"
             >
               {timerToMinutesSecondsMilliseconds(timer)}
-            </div>
+              
+            </div> */}
+            <Timer endGame={endGame} />
           </section>
         </div>
       </main>
@@ -231,8 +221,8 @@ export default function Scoreboard() {
         winnerName={winnerName}
         setWinnerName={setWinnerName}
       />
-     <StartModal
-        setIsTimerRunning={setIsTimerRunning}
+      <StartModal
+        //setIsTimerRunning={setIsTimerRunning}
         openStartModal={openStartModal}
         setOpenStartModal={setOpenStartModal}
         animationStarted={animationStarted}
@@ -253,7 +243,7 @@ const EventListenerComponent = memo(function EventListenerComponent({
   setRedProgress,
   setBlueProgress,
   setPurpleProgress,
-  setIsTimerRunning,
+  // setIsTimerRunning,
   setTimer,
   setOpenStartModal,
   setAnimationStarted,
@@ -268,8 +258,10 @@ const EventListenerComponent = memo(function EventListenerComponent({
   purpleCompletionProgress,
   blueCompletionProgress,
   starterCompletionProgressObject,
+  startTimer,
+  resetTimer
 }) {
-  console.log("Event listener online"); 
+  console.log("Event listener online");
   useEventListener(({ event, user, connectionId }) => {
     console.log(user);
     console.log(connectionId);
@@ -290,7 +282,7 @@ const EventListenerComponent = memo(function EventListenerComponent({
             console.log("red score");
             setRedProgress((prevProgress) => prevProgress + event.score);
             setRedCompletionProgress({ ...redCompletionProgress, [event.complete]: 1 }); //to prevent user's from trigging the same flag over and over to get points
-            console.log("redCompletionProgress",redCompletionProgress);
+            console.log("redCompletionProgress", redCompletionProgress);
           }
 
           break;
@@ -306,21 +298,24 @@ const EventListenerComponent = memo(function EventListenerComponent({
             console.log("blue score");
             setBlueProgress((prevProgress) => prevProgress + event.score);
             setBlueCompletionProgress({ ...blueCompletionProgress, [event.complete]: 1 }); //to prevent user's from trigging the same flag over and over to get points
-           
           }
           break;
         case "startTimer":
           console.log("starting timer");
-          setIsTimerRunning(true);
+          // setIsTimerRunning(true);
           setAnimationStarted(true);
+          // document.getElementById("timer-play-button")?.click();
+          // startTimer();
           break;
         case "stopTimer":
           console.log("stopping timer");
-          setIsTimerRunning(false);
+          //setIsTimerRunning(false);
+          document.getElementById("timer-pause-button")?.click();
           break;
         case "resetTimer":
           console.log("resetting scoreboard");
-          setIsTimerRunning(false);
+          //setIsTimerRunning(false);
+          document.getElementById("timer-reset-button")?.click();
           setOpenStartModal(true);
           setTimer(defaultTimer);
           setWinnerState(false);

@@ -135,7 +135,7 @@ const AlertDialogTitle = React.forwardRef(
       animationStarted,
       setAnimationStarted,
       setOpenStartModal,
-      setIsTimerRunning,
+      //setIsTimerRunning,
       ...props
     },
     ref
@@ -154,8 +154,9 @@ const AlertDialogTitle = React.forwardRef(
       });
       if (stringsArray[currentIndex] === "GO!") {
         setOpenStartModal(false);
-        setIsTimerRunning(true);
+        //setIsTimerRunning(true);
         setAnimationStarted(false);
+        document.getElementById("timer-play-button")?.click();
       }
     };
 
