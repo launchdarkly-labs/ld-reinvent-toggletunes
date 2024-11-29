@@ -1,53 +1,73 @@
-import { createContext, useState, useEffect } from "react";
-// @ts-ignore
-const TimerContext = createContext();
+// import { createContext, useState, useRef, useCallback, useEffect } from "react";
 
-export default TimerContext;
-//TODO: in order for timer to sync between scoreboard and admin, i think you need liveblocks as a place to store the value
-export const TimerProvider = ({ children }: { children: any }) => {
-  const [isTimerRunning, setIsTimerRunning] = useState(false);
-  const [timer, setTimer] = useState(600000);
-  const [openStartModal, setOpenStartModal] = useState(true);
-  //const [timerIntervalID, setTimerIntervalID] = useState(null);
+// const TimeContext = createContext();
 
-  const decreaseMainTimer = () => {
-    if (isTimerRunning) {
-      setTimer((timer) => timer - 100);
-    }
-  };
+// export default TimeContext;
 
-  useEffect(() => {
-    const timerInterval = setInterval(decreaseMainTimer, 100);
-    return () => {
-      clearInterval(timerInterval);
-    };
-  }, [isTimerRunning]);
+// export const TimerProvider = ({ children }) => {
+//   const defaultTime = 15 * 60; //15 min
+//   const [timeLeft, setTimeLeft] = useState(defaultTime);
+//   const [isActive, setIsActive] = useState(false);
+//   const [duration, setDuration] = useState(defaultTime);
+//   const intervalRef = (useRef < NodeJS.Timeout) | (null > null);
 
-  const timerToMinutesSecondsMilliseconds = (timer:number, endGame:any):string => {
-    if (timer <= 0 && isTimerRunning) {
-      setIsTimerRunning(false);
-      endGame();
-    }
-    const minutes = Math.floor(timer / 60000);
-    const seconds = Math.floor((timer % 60000) / 1000);
-    return `${minutes.toString().padStart(2, "0")}:${seconds
-      .toString()
-      .padStart(2, "0")}`;
-  };
+//   const startTimer = useCallback(() => {
+//     if (timeLeft > 0) {
+//       setIsActive(true);
 
-  return (
-    <TimerContext.Provider
-      value={{
-        timer,
-        isTimerRunning,
-        setIsTimerRunning,
-        setTimer,
-        timerToMinutesSecondsMilliseconds,
-        setOpenStartModal,
-        openStartModal,
-      }}
-    >
-      {children}
-    </TimerContext.Provider>
-  );
-};
+//       intervalRef.current = setInterval(() => {
+//         setTimeLeft((time) => {
+//           if (time <= 1) {
+//             if (intervalRef.current) clearInterval(intervalRef.current);
+//             setIsActive(false);
+//             onComplete?.();
+//             return 0;
+//           }
+//           return time - 1;
+//         });
+//       }, 1000);
+//     }
+//   }, [timeLeft, onComplete]);
+
+//   const pauseTimer = useCallback(() => {
+//     if (intervalRef.current) {
+//       clearInterval(intervalRef.current);
+//       setIsActive(false);
+//     }
+//   }, []);
+
+//   const resetTimer = useCallback(() => {
+//     if (intervalRef.current) clearInterval(intervalRef.current);
+//     setTimeLeft(duration);
+//     setIsActive(false);
+//   }, [duration]);
+
+//   //   const setTime = useCallback((minutes: number) => {
+//   //     const newDuration = minutes * 60;
+//   //     console.log("newDuration",newDuration)
+//   //     setDuration(newDuration)
+//   //     setTimeLeft(newDuration)
+//   //   }, [])
+
+//   useEffect(() => {
+//     return () => {
+//       if (intervalRef.current) clearInterval(intervalRef.current);
+//     };
+//   }, []);
+
+//   return (
+//     <TimeContext.Provider
+//       value={{
+//         timeLeft,
+//         isActive,
+//         startTimer,
+//         pauseTimer,
+//         resetTimer,
+//         // setTime,
+//         duration,
+//       }}
+//     >
+//       {children}
+//     </TimeContext.Provider>
+//   );
+// };

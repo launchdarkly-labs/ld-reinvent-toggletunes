@@ -6,7 +6,7 @@ import { Room } from "@/components/room";
 import { StartModal } from "@/components/start-modal";
 import { useEventListener, useStorage, useHistory } from "@/liveblocks.config";
 import { setCookie } from "cookies-next";
-import { memo, useEffect, useState } from "react";
+import { memo, useEffect, useState, useContext } from "react";
 import {
   RED,
   BLUE,
@@ -20,8 +20,8 @@ import {
 } from "@/lib/constant";
 import Timer from "@/components/Timer";
 import { useTimer } from "@/lib/useTimer";
+import { formatTime } from "@/lib/utils";
 
-const defaultTimer = 900000; //15 min
 export default function Scoreboard() {
   const starterCompletionProgressObject = {
     [STEPONECOMPLETE]: 0,
@@ -49,15 +49,10 @@ export default function Scoreboard() {
   );
   const [winnerState, setWinnerState] = useState(false);
   const [winnerName, setWinnerName] = useState("");
-  const [timer, setTimer] = useState(defaultTimer);
   const [openStartModal, setOpenStartModal] = useState(true);
   const [animationStarted, setAnimationStarted] = useState(false);
 
   const { timeLeft, isActive, startTimer, pauseTimer, resetTimer, duration } = useTimer();
-
-  // async function configUser() {
-  //   await setCookie("team", "Scoreboard");
-  // }
 
   const endGame = () => {
     const maxProgress = Math.max(greenProgress, redProgress, purpleProgress, blueProgress);
@@ -117,7 +112,6 @@ export default function Scoreboard() {
         setRedProgress={setRedProgress}
         setPurpleProgress={setPurpleProgress}
         setBlueProgress={setBlueProgress}
-        setTimer={setTimer}
         setOpenStartModal={setOpenStartModal}
         setAnimationStarted={setAnimationStarted}
         setWinnerState={setWinnerState}
@@ -133,6 +127,8 @@ export default function Scoreboard() {
         starterCompletionProgressObject={starterCompletionProgressObject}
         startTimer={startTimer}
         resetTimer={resetTimer}
+        timeLeft={timeLeft}
+        duration={duration}
       />
       <main className="h-screen bg-black">
         <div
@@ -211,7 +207,6 @@ const EventListenerComponent = memo(function EventListenerComponent({
   setRedProgress,
   setBlueProgress,
   setPurpleProgress,
-  setTimer,
   setOpenStartModal,
   setAnimationStarted,
   setWinnerState,
@@ -226,13 +221,15 @@ const EventListenerComponent = memo(function EventListenerComponent({
   blueCompletionProgress,
   starterCompletionProgressObject,
   startTimer,
-  resetTimer
+  resetTimer,
+  timeLeft,
+  duration,
 }) {
   console.log("Event listener online");
+
   useEventListener(({ event, user, connectionId }) => {
     console.log(user);
     console.log(connectionId);
-    // type: teamName, complete: "stepThreeComplete", value: 20
     console.log(event);
     async function scoreRequest(event) {
       switch (event.type) {
@@ -269,8 +266,17 @@ const EventListenerComponent = memo(function EventListenerComponent({
           break;
         case "startTimer":
           console.log("starting timer");
-          setAnimationStarted(true);
-          // document.getElementById("timer-play-button")?.click();
+    
+ 
+          const updatedTimeLeft =  document.getElementById("timer-time")?.innerHTML;
+          if (updatedTimeLeft < formatTime(duration)) {
+            document.getElementById("timer-play-button")?.click();
+          }
+
+          if (updatedTimeLeft == formatTime(duration)) {
+            setAnimationStarted(true);
+          }
+
           // startTimer();
           break;
         case "stopTimer":
@@ -281,7 +287,6 @@ const EventListenerComponent = memo(function EventListenerComponent({
           console.log("resetting scoreboard");
           document.getElementById("timer-reset-button")?.click();
           setOpenStartModal(true);
-          setTimer(defaultTimer);
           setWinnerState(false);
           setWinnerName("");
           setGreenProgress(0);

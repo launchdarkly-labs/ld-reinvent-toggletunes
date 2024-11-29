@@ -69,7 +69,7 @@ export default function Timer({ endGame }: { endGame: any }) {
 
         <div className="space-y-6">
           <div className="text-center">
-            <div className="text-6xl font-bold bg-transparent bg-gradient-scoreboard-timer-text text-transparent bg-clip-text font-audimat">
+            <div className="text-6xl font-bold bg-transparent bg-gradient-scoreboard-timer-text text-transparent bg-clip-text font-audimat" id ="timer-time">
               {formatTime(timeLeft)}
             </div>
           </div>
@@ -82,7 +82,6 @@ export default function Timer({ endGame }: { endGame: any }) {
               size="icon"
               onClick={startTimer}
               disabled={timeLeft === 0 || isActive}
-              className="hidden"
               id="timer-play-button"
             >
               <Play className="h-4 w-4" />
@@ -93,7 +92,6 @@ export default function Timer({ endGame }: { endGame: any }) {
               size="icon"
               onClick={pauseTimer}
               disabled={timeLeft === 0 || !isActive}
-              className="hidden"
               id="timer-pause-button"
             >
               <Pause className="h-4 w-4" />
@@ -103,7 +101,6 @@ export default function Timer({ endGame }: { endGame: any }) {
               size="icon"
               onClick={resetTimer}
               disabled={timeLeft === duration}
-              className="hidden"
               id="timer-reset-button"
             >
               <RotateCcw className="h-4 w-4" />
