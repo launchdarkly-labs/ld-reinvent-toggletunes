@@ -23,7 +23,7 @@ import MusicPlayingBar from "./MusicPlayingBar";
 import PlaylistTableSection from "./PlaylistTableSection";
 import AdSection from "./AdSection";
 import { playlists, moreNewPlaylists, moreNewSongs, songs } from "@/lib/data";
-import { aiModelColors, formatForJSON, wait } from "@/lib/utils";
+import { aiModelColors, formatForJSON } from "@/lib/utils";
 import { v4 as uuidv4 } from "uuid";
 import Link from "next/link";
 import AIGeneratedPlaylistContext from "@/lib/AIGeneratedPlaylistContext";
@@ -287,15 +287,16 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
       try {
         if (releaseTracklistLDFlag === true && flagOne === false) {
           broadcast({ type: teamColor, complete: STEPONECOMPLETE, score: 20 });
+          setTotalPointAccumulation(prevPoints=>prevPoints+20);
           setFlagOne(true);
           // await triggerStep("first step complete", "stepOneComplete");
         } else {
           console.log("Step 1 not eligible for evaluation!");
         }
 
-        //TODO: split into 2 point where first 10 pt is release and 2nd 10 is to turn off
         if (releaseSavedPlaylistsSidebarLDFlag === true && flagTwoOne === false) {
           broadcast({ type: teamColor, complete: STEPTWOONECOMPLETE, score: 10 });
+          setTotalPointAccumulation(prevPoints=>prevPoints+10);
           setFlagTwoOne(true);
           // await triggerStep("second step complete", "stepTwoComplete");
         } else {
@@ -309,6 +310,7 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
           flagTwo === false
         ) {
           broadcast({ type: teamColor, complete: STEPTWOCOMPLETE, score: 10 });
+          setTotalPointAccumulation(prevPoints=>prevPoints+10);
           setFlagTwo(true);
           // await triggerStep("second step complete", "stepTwoComplete");
         } else {
@@ -321,6 +323,7 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
             complete: STEPTHREECOMPLETE,
             score: 20,
           });
+          setTotalPointAccumulation(prevPoints=>prevPoints+20);
           setFlagThree(true);
           // await triggerStep("fourth step complete", "stepFourComplete");
         } else {
@@ -337,6 +340,7 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
             complete: STEPFOURONECOMPLETE,
             score: 10,
           });
+          setTotalPointAccumulation(prevPoints=>prevPoints+10);
           setFlagFourOne(true);
           // await triggerStep("fifth step complete", "stepFiveComplete");
 
@@ -356,6 +360,7 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
             complete: STEPFOURCOMPLETE,
             score: 10,
           });
+          setTotalPointAccumulation(prevPoints=>prevPoints+10);
           setFlagFour(true);
           // await triggerStep("fifth step complete", "stepFiveComplete");
 
@@ -374,6 +379,7 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
             complete: STEPFIVECOMPLETE,
             score: 20,
           });
+          setTotalPointAccumulation(prevPoints=>prevPoints+20);
           setFlagFive(true);
         } else {
           console.log("Step 5 not eligible for evaluation!");
@@ -453,6 +459,7 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
             <Navbar
               releaseReleaseGuardianButton={releaseReleaseGuardianButton}
               submitReleaseGuardianQuery={submitReleaseGuardianQuery}
+              totalPointAccumulation={totalPointAccumulation}
             />
             <section
               className={`flex flex-col sm:flex-row gap-2 ${
