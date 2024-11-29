@@ -12,7 +12,6 @@ import { useTimer } from "@/lib/useTimer";
 export function StartModal({
   openStartModal,
   setOpenStartModal,
-  //setIsTimerRunning,
   animationStarted,
   setAnimationStarted,
 }) {
@@ -24,9 +23,7 @@ export function StartModal({
   const { timeLeft, isActive, startTimer, pauseTimer, resetTimer, duration } = useTimer();
 
   function handleClick() {
-    console.log("awefawefawef");
     setOpenStartModal(false);
-    //setIsTimerRunning(true);
     document.getElementById("timer-play-button")?.click();
   }
 
@@ -43,7 +40,6 @@ export function StartModal({
                   <AlertDialogTitle
                     setOpenStartModal={setOpenStartModal}
                     setAnimationStarted={setAnimationStarted}
-                    //setIsTimerRunning={setIsTimerRunning}
                     animationStarted={animationStarted}
                   />
                   <p

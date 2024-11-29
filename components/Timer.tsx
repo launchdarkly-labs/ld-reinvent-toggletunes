@@ -45,8 +45,8 @@ export default function Timer({ endGame }: { endGame: any }) {
   }, [showNotification]);
 
   return (
-    <Card className="w-full max-w-md mx-auto z-[500]">
-      <CardContent className="pt-6">
+    <Card className="w-full max-w-md mx-auto border-none ">
+      <CardContent className="!p-4">
         {/* <form onSubmit={handleSubmit} className="space-y-4 mb-6">
           <div className="flex items-end gap-4">
             <div className="flex-1">
@@ -69,17 +69,20 @@ export default function Timer({ endGame }: { endGame: any }) {
 
         <div className="space-y-6">
           <div className="text-center">
-            <div className="text-6xl font-mono font-bold tabular-nums">{formatTime(timeLeft)}</div>
+            <div className="text-6xl font-bold bg-transparent bg-gradient-scoreboard-timer-text text-transparent bg-clip-text font-audimat">
+              {formatTime(timeLeft)}
+            </div>
           </div>
 
           {/* <Progress value={progress} className="h-2" /> */}
 
-          <div className="flex justify-center gap-4">
+          <div className=" justify-center hidden">
             <Button
               variant="outline"
               size="icon"
               onClick={startTimer}
               disabled={timeLeft === 0 || isActive}
+              className="hidden"
               id="timer-play-button"
             >
               <Play className="h-4 w-4" />
@@ -90,6 +93,7 @@ export default function Timer({ endGame }: { endGame: any }) {
               size="icon"
               onClick={pauseTimer}
               disabled={timeLeft === 0 || !isActive}
+              className="hidden"
               id="timer-pause-button"
             >
               <Pause className="h-4 w-4" />
@@ -99,6 +103,7 @@ export default function Timer({ endGame }: { endGame: any }) {
               size="icon"
               onClick={resetTimer}
               disabled={timeLeft === duration}
+              className="hidden"
               id="timer-reset-button"
             >
               <RotateCcw className="h-4 w-4" />
