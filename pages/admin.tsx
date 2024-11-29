@@ -145,18 +145,18 @@ function GameAdminDashboard() {
     }
   };
 
-  const handleReload = async () => {
-    broadcast({ type: "reload" });
-  };
+  // const handleReload = async () => {
+  //   broadcast({ type: "reload" });
+  // };
 
-  const handleArchived = async () => {
-    setArchivedMessage("");
-    const resp = await fetch("/api/archived");
-    if (resp.ok) {
-      const data = await resp.json();
-      setArchivedMessage(data.message);
-    }
-  };
+  // const handleArchived = async () => {
+  //   setArchivedMessage("");
+  //   const resp = await fetch("/api/archived");
+  //   if (resp.ok) {
+  //     const data = await resp.json();
+  //     setArchivedMessage(data.message);
+  //   }
+  // };
 
   return (
     <div className="flex h-screen bg-gray-900 text-white font-mono">
@@ -266,22 +266,22 @@ function GameAdminDashboard() {
                 >
                   <RotateCcw className="mr-2 h-4 w-4" /> Reset
                 </Button>
-                <Button
+                {/* <Button
                   className="flex items-center bg-blue-600 hover:bg-blue-700 text-white"
                   onClick={() => handleReload()}
                   id="admin-reload"
                   disabled={isDisabled}
                 >
                   <RefreshCw className="mr-2 h-4 w-4" /> Reload
-                </Button>
-                <Button
+                </Button> */}
+                {/* <Button
                   className="flex items-center bg-purple-600 hover:bg-purple-700 text-white"
                   onClick={() => handleArchived()}
                   id="admin-archive"
                   disabled={isDisabled}
                 >
                   <Archive className="mr-2 h-4 w-4" /> Archive
-                </Button>
+                </Button> */}
               </div>
             </div>
 

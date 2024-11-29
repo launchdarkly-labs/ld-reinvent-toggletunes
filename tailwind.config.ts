@@ -27,7 +27,7 @@ const config: Config = {
       },
       colors: {
         context: "var(--context-color)",
-        aws: "#FF9900",
+        amazonColor: "#FF9900",
         ldblue: "#3DD6F5",
         lddblue: "#3F8FFB",
         ldgreen: "#86E7A7",

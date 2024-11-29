@@ -266,7 +266,10 @@ console.log("release guardian data",data)
   }
 
   useEffect(() => {
-    submitReleaseGuardianQuery();
+    if(router.pathname !== "/"){
+      submitReleaseGuardianQuery();
+    }
+
   }, []);
 
   const broadcast = useBroadcastEvent();
@@ -563,6 +566,7 @@ console.log("release guardian data",data)
                         >
                           {aiModelName}
                         </span>
+                        {" "}<span className="text-amazonColor">with Amazon Bedrock</span>
                       </span>
                     </h2>
 
