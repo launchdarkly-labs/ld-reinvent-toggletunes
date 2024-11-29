@@ -91,7 +91,6 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
   // const handleInputChange = (e: any): void => {
   //   setInput(e.target.value);
   // };
-  console.log("userObject",userObject)
 
   const randomNumberGen = (array: SongInterface[] | SongInterface[][]): number => {
     return Math.floor(Math.random() * array.length); //0 to 2 index
@@ -99,7 +98,6 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
 
   let aiModelName: string = "";
 
-  console.log(releaseAIPlaylistCreatorLDFlag)
   if (releaseAIPlaylistCreatorLDFlag?.modelId?.includes("cohere")) {
     aiModelName = "Cohere Coral";
   } else if (releaseAIPlaylistCreatorLDFlag?.modelId?.includes("meta")) {
@@ -252,7 +250,7 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
       }
     );
     const data = await response.json();
-
+console.log("release guardian data",data)
     setIsLoadingApp(false);
 
     try {

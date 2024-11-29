@@ -85,7 +85,8 @@ function GameAdminDashboard() {
         } else if (40 < newProgress && newProgress <= 60) {
           setResetProgressMessage("Resetting Team 3 LD Env...");
         } else if (60 < newProgress && newProgress <= 80) {
-          setResetProgressMessage("Resetting Team 4 LD Env...");
+          setResetProgressMessage("Tying things up...");
+         // setResetProgressMessage("Resetting Team 4 LD Env...");
         } else {
           setResetProgressMessage("Tying things up...");
         }

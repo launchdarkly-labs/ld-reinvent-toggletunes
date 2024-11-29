@@ -61,7 +61,7 @@ export default function Navbar({
       {/* <Link href="/" className="text-2xl font-bold">
         Logo
       </Link> */}
-      <div className="text-xl">Total Points: <span className="text-ldgreen">{totalPointAccumulation}</span>/100</div>
+      <div className="text-xl">Total Points: <span className="text-ldgreen text-2xl">{totalPointAccumulation}</span>/100</div>
       <form onSubmit={handleSearch} className="flex-1 max-w-md mx-4 ml-[14rem]">
         <div className="relative">
           <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
