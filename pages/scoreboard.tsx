@@ -13,6 +13,7 @@ import {
   PURPLE,
   GREEN,
   STEPONECOMPLETE,
+  STEPTWOONECOMPLETE,
   STEPTWOCOMPLETE,
   STEPTHREECOMPLETE,
   STEPFOURCOMPLETE,
@@ -25,6 +26,7 @@ import { formatTime } from "@/lib/utils";
 export default function Scoreboard() {
   const starterCompletionProgressObject = {
     [STEPONECOMPLETE]: 0,
+    [STEPTWOONECOMPLETE]: 0,
     [STEPTWOCOMPLETE]: 0,
     [STEPTHREECOMPLETE]: 0,
     [STEPFOURCOMPLETE]: 0,
@@ -90,9 +92,6 @@ export default function Scoreboard() {
     setWinnerState(true);
   };
 
-  // useEffect(() => {
-  //   configUser();
-  // }, []);
 
   useEffect(() => {
     if (

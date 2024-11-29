@@ -40,6 +40,7 @@ import {
   CLAUDE,
   LDPROJECTKEYSVALUEOBJECTS,
   STEPONECOMPLETE,
+  STEPTWOONECOMPLETE,
   STEPTWOCOMPLETE,
   STEPTHREECOMPLETE,
   STEPFOURCOMPLETE,
@@ -67,6 +68,7 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
   const [songsAPI, setSongsAPI] = useState(songs);
   // const [setUpgradeAd] = useState(true);
   const [flagOne, setFlagOne] = useState(false);
+  const [flagTwoOne, setFlagTwoOne] = useState(false);
   const [flagTwo, setFlagTwo] = useState(false);
   const [flagThree, setFlagThree] = useState(false);
   const [flagFour, setFlagFour] = useState(false);
@@ -260,7 +262,7 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
     submitReleaseGuardianQuery();
   }, []);
 
-  // const apiURL = "/api/sb-score-add/";
+
 
   const broadcast = useBroadcastEvent();
   //TODO: this some reason causes eveyrthing ot load to make sure livelbocks works?
@@ -276,6 +278,7 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
   useEffect(() => {
     const triggerSteps = async () => {
       try {
+
         if (releaseTracklistLDFlag === true && flagOne === false) {
           broadcast({ type: teamColor, complete: STEPONECOMPLETE, score: 20 });
           setFlagOne(true);
@@ -283,14 +286,26 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
         } else {
           console.log("Step 1 not eligible for evaluation!");
         }
-        //TODO: split into 2 point where first 10 pt is release and 2nd 10 is to turn off
-        if (releaseSavedPlaylistsSidebarLDFlag === true && flagTwo === false) {
-          broadcast({ type: teamColor, complete: STEPTWOCOMPLETE, score: 20 });
+
+         //TODO: split into 2 point where first 10 pt is release and 2nd 10 is to turn off
+         if (releaseSavedPlaylistsSidebarLDFlag === true && flagTwoOne === false) {
+          broadcast({ type: teamColor, complete: STEPTWOONECOMPLETE, score: 10 });
+          setFlagTwoOne(true);
+          // await triggerStep("second step complete", "stepTwoComplete");
+        } else {
+          console.log("Step 2.1 not eligible for evaluation!");
+        }
+      
+
+  //turn the flag off once you turn back on
+        if (flagTwoOne === true && releaseSavedPlaylistsSidebarLDFlag === false && flagTwo === false) {
+          broadcast({ type: teamColor, complete: STEPTWOCOMPLETE, score: 10 });
           setFlagTwo(true);
           // await triggerStep("second step complete", "stepTwoComplete");
         } else {
           console.log("Step 2 not eligible for evaluation!");
         }
+
         //TODO: need to check to see if switch user and release flag - maybe use local storage
         if (releaseNewUsersPlaylistLDFlag === true && flagThree === false) {
           broadcast({
@@ -335,6 +350,8 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
         } else {
           console.log("Step 5 not eligible for evaluation!");
         }
+
+
       } catch (err) {
         console.error(err);
       }

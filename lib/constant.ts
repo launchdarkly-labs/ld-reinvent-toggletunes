@@ -27,7 +27,10 @@ export const TOGGLETUNESTEAM3 = "toggletunes-team-3";
 export const TOGGLETUNESTEAM4 = "toggletunes-team-4";
 
 export const STEPONECOMPLETE = "stepOneComplete";
+export const STEPTWOONECOMPLETE = "stepTwoOneComplete";
 export const STEPTWOCOMPLETE = "stepTwoComplete";
+
+
 export const STEPTHREECOMPLETE = "stepThreeComplete";
 export const STEPFOURCOMPLETE = "stepFourComplete";
 export const STEPFIVECOMPLETE = "stepFiveComplete";
