@@ -103,7 +103,7 @@ function GameAdminDashboard() {
 
       respJson = await resp.json();
       console.log(respJson);
-      handleReload();
+      // handleReload();
       setCodeLogs((prevLogs) => [
         ...prevLogs,
         `Status: ${resp.status}, 
