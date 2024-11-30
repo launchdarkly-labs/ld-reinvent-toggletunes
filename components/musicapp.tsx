@@ -558,7 +558,7 @@ console.log("release guardian data",data)
                   <section className={`flex flex-col gap-y-4 `}>
                     <h2 className="text-2xl font-bold">
                       Made For You{" "}
-                      <span className="text-base text-gray-500 ml-2">
+                      {aiModelName !== "" && <span className="text-base text-gray-500 ml-2">
                         Powered by{" "}
                         <span
                           style={{ color: aiModelColors(releaseAIPlaylistCreatorLDFlag?.modelId) }}
@@ -566,8 +566,8 @@ console.log("release guardian data",data)
                         >
                           {aiModelName}
                         </span>
-                        {" "}<span className="text-amazonColor">with Amazon Bedrock</span>
-                      </span>
+                        {" "}with <span className="text-amazonColor"> Amazon Bedrock</span>
+                      </span>}
                     </h2>
 
                     <div
