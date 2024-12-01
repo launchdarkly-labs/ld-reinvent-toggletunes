@@ -33,15 +33,15 @@ export function ProgressStatus({
         <div className="flex justify-evenly items-end  w-full h-full mx-auto">
           <VerticalProgressBar
             progressBarHeight={progressBarHeight}
-            colorProgress={redProgress}
-            barColor="bg-gradient-red-progress-bar"
-            color={RED}
-          />
-          <VerticalProgressBar
-            progressBarHeight={progressBarHeight}
             colorProgress={blueProgress}
             barColor="bg-gradient-blue-progress-bar"
             color={BLUE}
+          />
+          <VerticalProgressBar
+            progressBarHeight={progressBarHeight}
+            colorProgress={redProgress}
+            barColor="bg-gradient-red-progress-bar"
+            color={RED}
           />
           <VerticalProgressBar
             progressBarHeight={progressBarHeight}
