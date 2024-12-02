@@ -25,6 +25,7 @@ import Timer from "@/components/Timer";
 import { useTimer } from "@/lib/useTimer";
 import { formatTime } from "@/lib/utils";
 
+
 export default function Scoreboard() {
   const starterCompletionProgressObject = {
     [STEPONECOMPLETE]: 0,
@@ -58,7 +59,9 @@ export default function Scoreboard() {
   const [animationStarted, setAnimationStarted] = useState(false);
 
   const { timeLeft, isActive, startTimer, pauseTimer, resetTimer, duration } = useTimer();
+  // const layerIds = useStorage((root) => root);
 
+  // console.log("layerIds", layerIds);
   const endGame = () => {
     const maxProgress = Math.max(greenProgress, redProgress, purpleProgress, blueProgress);
     let winners = [];
@@ -122,7 +125,7 @@ export default function Scoreboard() {
  
 
   return (
-    <Room>
+    <>
       <EventListenerComponent
         setGreenProgress={setGreenProgress}
         setRedProgress={setRedProgress}
@@ -208,7 +211,7 @@ export default function Scoreboard() {
         setAnimationStarted={setAnimationStarted}
       />
   
-    </Room>
+    </>
   );
 }
 

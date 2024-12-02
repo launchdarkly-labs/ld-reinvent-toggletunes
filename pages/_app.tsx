@@ -1,7 +1,7 @@
 import "@/styles/globals.css";
 import type { AppProps } from "next/app";
 import NoSSRWrapper from "@/components/nossr";
-
+import { Room } from "@/components/room";
 import { AIGeneratedPlaylistProvider } from "@/lib/AIGeneratedPlaylistContext";
 
 let c;
@@ -11,7 +11,9 @@ if (typeof window !== "undefined") {
     return (
       <NoSSRWrapper>
         <AIGeneratedPlaylistProvider>
-          <Component {...pageProps} />
+          <Room>
+            <Component {...pageProps} />
+          </Room>
         </AIGeneratedPlaylistProvider>
       </NoSSRWrapper>
     );
