@@ -18,6 +18,8 @@ import {
   Home,
   Archive,
   X,
+  Award,
+  Crown,Trophy
 } from "lucide-react";
 import Link from "next/link";
 
@@ -55,6 +57,11 @@ function GameAdminDashboard() {
   const handleStop = async () => {
     broadcast({ type: "stopTimer" });
   };
+
+  const handleColorWinner = async (winnerColor: string) => {
+    broadcast({ type: winnerColor });
+  };
+
   //40 sec and then go to the end when finish
   const handleReset = async () => {
     setArchivedMessage("");
@@ -86,7 +93,7 @@ function GameAdminDashboard() {
           setResetProgressMessage("Resetting Team 3 LD Env...");
         } else if (60 < newProgress && newProgress <= 80) {
           setResetProgressMessage("Tying things up...");
-         // setResetProgressMessage("Resetting Team 4 LD Env...");
+          // setResetProgressMessage("Resetting Team 4 LD Env...");
         } else {
           setResetProgressMessage("Tying things up...");
         }
@@ -266,14 +273,7 @@ function GameAdminDashboard() {
                 >
                   <RotateCcw className="mr-2 h-4 w-4" /> Reset
                 </Button>
-                {/* <Button
-                  className="flex items-center bg-blue-600 hover:bg-blue-700 text-white"
-                  onClick={() => handleReload()}
-                  id="admin-reload"
-                  disabled={isDisabled}
-                >
-                  <RefreshCw className="mr-2 h-4 w-4" /> Reload
-                </Button> */}
+
                 {/* <Button
                   className="flex items-center bg-purple-600 hover:bg-purple-700 text-white"
                   onClick={() => handleArchived()}
@@ -282,6 +282,35 @@ function GameAdminDashboard() {
                 >
                   <Archive className="mr-2 h-4 w-4" /> Archive
                 </Button> */}
+              </div>
+            </div>
+
+            <div className="bg-gray-800 shadow rounded-lg p-4 mb-8">
+              <h2 className="text-xl font-semibold text-white mb-4">Manually Triggering Winner</h2>
+
+              <div className="flex flex-wrap gap-8">
+                <Button
+                  className="flex items-center bg-gradient-blue-progress-bar hover:bg-ldblue text-white"
+                  onClick={() => handleColorWinner("blueWinner")}
+                  id="admin-blueWinner"
+                >
+                  <Award className="mr-2 h-4 w-4" /> Trigger Blue Winner
+                </Button>
+                <Button
+                  className="flex items-center bg-gradient-red-progress-bar hover:bg-ldred text-white"
+                  onClick={() => handleColorWinner("redWinner")}
+                  id="admin-redWinner"
+                >
+                  <Trophy className="mr-2 h-4 w-4" /> Trigger Red Winner
+                </Button>
+
+                <Button
+                  className="flex items-center bg-gradient-purple-progress-bar hover:bg-ldpurple text-white"
+                  onClick={() => handleColorWinner("purpleWinner")}
+                  id="admin-purpleWinner"
+                >
+                  <Crown className="mr-2 h-4 w-4" /> Trigger Purple Winner
+                </Button>
               </div>
             </div>
 

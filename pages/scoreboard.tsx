@@ -94,7 +94,7 @@ export default function Scoreboard() {
     setWinnerState(true);
   };
 
-//todo: maybe change this to if all task completed for the object
+  //todo: maybe change this to if all task completed for the object
   useEffect(() => {
     if (
       greenProgress >= 100 ||
@@ -193,12 +193,12 @@ export default function Scoreboard() {
         animationStarted={animationStarted}
         setAnimationStarted={setAnimationStarted}
       />
-      <KeyboardNavigation
+      {/* <KeyboardNavigation
         setGreenProgress={setGreenProgress}
         setRedProgress={setRedProgress}
         setPurpleProgress={setPurpleProgress}
         setBlueProgress={setBlueProgress}
-      />
+      /> */}
     </Room>
   );
 }
@@ -281,6 +281,15 @@ const EventListenerComponent = memo(function EventListenerComponent({
         case "stopTimer":
           console.log("stopping timer");
           document.getElementById("timer-pause-button")?.click();
+          break;
+        case "redWinner":
+          setWinnerName(RED);
+          break;
+        case "blueWinner":
+          setWinnerName(BLUE);
+          break;
+        case "purpleWinner":
+          setWinnerName(PURPLE);
           break;
         case "resetTimer":
           console.log("resetting scoreboard");
