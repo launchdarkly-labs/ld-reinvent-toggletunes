@@ -48,3 +48,5 @@ export const LDPROJECTKEYSVALUEOBJECTS: {
   [TEAM3]: TOGGLETUNESTEAM3,
   // [TEAM4]: TOGGLETUNESTEAM4,
 };
+
+export const WINNER = "Winner";

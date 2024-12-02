@@ -26,6 +26,7 @@ import Link from "next/link";
 import { Room } from "@/components/room";
 import { useBroadcastEvent } from "@/liveblocks.config";
 import { wait } from "@/lib/utils";
+import { WINNER, BLUE, RED, PURPLE } from "@/lib/constant";
 
 export default function Admin() {
   return (
@@ -291,14 +292,14 @@ function GameAdminDashboard() {
               <div className="flex flex-wrap gap-8">
                 <Button
                   className="flex items-center bg-gradient-blue-progress-bar hover:bg-ldblue text-white"
-                  onClick={() => handleColorWinner("blueWinner")}
+                  onClick={() => handleColorWinner(`${BLUE}${WINNER}`)}
                   id="admin-blueWinner"
                 >
                   <Award className="mr-2 h-4 w-4" /> Trigger Blue Winner
                 </Button>
                 <Button
                   className="flex items-center bg-gradient-red-progress-bar hover:bg-ldred text-white"
-                  onClick={() => handleColorWinner("redWinner")}
+                  onClick={() => handleColorWinner(`${RED}${WINNER}`)}
                   id="admin-redWinner"
                 >
                   <Trophy className="mr-2 h-4 w-4" /> Trigger Red Winner
@@ -306,7 +307,7 @@ function GameAdminDashboard() {
 
                 <Button
                   className="flex items-center bg-gradient-purple-progress-bar hover:bg-ldpurple text-white"
-                  onClick={() => handleColorWinner("purpleWinner")}
+                  onClick={() => handleColorWinner(`${PURPLE}${WINNER}`)}
                   id="admin-purpleWinner"
                 >
                   <Crown className="mr-2 h-4 w-4" /> Trigger Purple Winner

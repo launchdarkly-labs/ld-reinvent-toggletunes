@@ -19,6 +19,7 @@ import {
   STEPFOURONECOMPLETE,
   STEPFOURCOMPLETE,
   STEPFIVECOMPLETE,
+  WINNER
 } from "@/lib/constant";
 import Timer from "@/components/Timer";
 import { useTimer } from "@/lib/useTimer";
@@ -282,13 +283,13 @@ const EventListenerComponent = memo(function EventListenerComponent({
           console.log("stopping timer");
           document.getElementById("timer-pause-button")?.click();
           break;
-        case "redWinner":
+        case `${RED}${WINNER}`:
           setWinnerName(RED);
           break;
-        case "blueWinner":
+        case `${BLUE}${WINNER}`:
           setWinnerName(BLUE);
           break;
-        case "purpleWinner":
+        case `${PURPLE}${WINNER}`:
           setWinnerName(PURPLE);
           break;
         case "resetTimer":
