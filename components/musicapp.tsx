@@ -89,9 +89,9 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
   const [showLostConnectionModal, setShowLostConnectionModal] = useState(false);
   const layerIds = useStorage((root) => root);
   // @ts-ignore
-  const layerIds2 = useStorage((root) => root.totalPoints);
+  // const layerIds2 = useStorage((root) => root.totalPoints);
   console.log("layerIds", layerIds);
-  console.log("layerIds2", layerIds2);
+  // console.log("layerIds2", layerIds2);
   const API_KEY: string = process.env.NEXT_PUBLIC_LD_API_KEY as string;
 
   const { userObject } = useContext(LoginContext);

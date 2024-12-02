@@ -21,33 +21,41 @@ export function Room({ children }: { children: ReactNode }) {
             }),
           ],
         ]),
-        totalPoints: new LiveMap([
-          [
-            RED,
-            new LiveObject({
-              name: RED,
-              totalPoint: 0,
-            }),
-          ],
-          [
-            BLUE,
-            new LiveObject({
-              name: BLUE,
-              totalPoint: 0,
-            }),
-          ],
-          [
-            PURPLE,
-            new LiveObject({
-              name: PURPLE,
-              totalPoint: 0,
-            }),
-          ],
-        ]),
-        animals: new LiveList(["Fido"]),
+        // totalPoints: new LiveMap([
+        //   [
+        //     RED,
+        //     new LiveObject({
+        //       name: RED,
+        //       totalPoint: 0,
+        //     }),
+        //   ],
+        //   [
+        //     BLUE,
+        //     new LiveObject({
+        //       name: BLUE,
+        //       totalPoint: 0,
+        //     }),
+        //   ],
+        //   [
+        //     PURPLE,
+        //     new LiveObject({
+        //       name: PURPLE,
+        //       totalPoint: 0,
+        //     }),
+        //   ],
+        // ]),
+        animals: new LiveList(["Fidoooo"]),
       }}
     >
-      <ClientSideSuspense fallback={<div>Loading…</div>}>{() => children}</ClientSideSuspense>
+      <ClientSideSuspense
+        fallback={
+          <div className="w-full h-full text-4xl font-audimat flex justify-center items-center ">
+            Loading…
+          </div>
+        }
+      >
+        {() => children}
+      </ClientSideSuspense>
     </RoomProvider>
   );
 }
