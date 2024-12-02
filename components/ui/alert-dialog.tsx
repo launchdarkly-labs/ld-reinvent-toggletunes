@@ -30,26 +30,26 @@ AlertDialogOverlay.displayName = AlertDialogPrimitive.Overlay.displayName;
 const AlertDialogContent = React.forwardRef(({ className, variant, ...props }, ref) => {
   let backgroundClass = "";
   switch (variant) {
-    case BLUE:
-      console.log("triggering blue");
-      backgroundClass =
-        "bg-[url('https://utfs.io/f/o5A3nMDIMFiPp3IQJ0VEzjHOnlDA2g81YXuS56xwGV7toJM3')] text-white";
-      break;
-    case RED:
-      console.log("triggering red");
-      backgroundClass =
-        "bg-[url('https://utfs.io/f/o5A3nMDIMFiPprQoyNVEzjHOnlDA2g81YXuS56xwGV7toJM3')] text-white";
-      break;
-    case PURPLE:
-      console.log("triggering purple");
-      backgroundClass =
-        "bg-[url('https://utfs.io/f/o5A3nMDIMFiPkLcbrVXp1wRZQP3KSqAyxbDeOHCdiYsvzWtB')] text-white";
-      break;
-    case GREEN:
-      console.log("triggering green");
-      backgroundClass =
-        "bg-[url('https://uploadthing.com/f/9ece43b7-0efc-442a-917c-d766ec1b2f8e-wkjqfr.gif')] text-black";
-      break;
+      case BLUE:
+        console.log("triggering blue");
+        backgroundClass =
+          "bg-[url('https://utfs.io/f/o5A3nMDIMFiPp3IQJ0VEzjHOnlDA2g81YXuS56xwGV7toJM3')] text-white";
+        break;
+      case PURPLE:
+        console.log("triggering purple");
+        backgroundClass =
+          "bg-[url('https://utfs.io/f/o5A3nMDIMFiPkLcbrVXp1wRZQP3KSqAyxbDeOHCdiYsvzWtB')] text-white";
+        break;
+      case RED:
+        console.log("triggering red");
+        backgroundClass =
+          "bg-[url('https://utfs.io/f/o5A3nMDIMFiPprQoyNVEzjHOnlDA2g81YXuS56xwGV7toJM3')] text-white";
+        break;
+      case GREEN:
+        console.log("triggering green");
+        backgroundClass =
+          "bg-[url('https://uploadthing.com/f/9ece43b7-0efc-442a-917c-d766ec1b2f8e-wkjqfr.gif')] text-black";
+        break;
     case "tie":
       console.log("triggering tie");
       backgroundClass = "bg-ldgray text-white";
@@ -60,6 +60,7 @@ const AlertDialogContent = React.forwardRef(({ className, variant, ...props }, r
     default:
       backgroundClass = "bg-transparent text-white";
       break;
+
   }
   return (
     <AlertDialogPortal>
