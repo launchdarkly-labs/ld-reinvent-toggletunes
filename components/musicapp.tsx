@@ -46,10 +46,12 @@ import {
   STEPFOURONECOMPLETE,
   STEPFOURCOMPLETE,
   STEPFIVECOMPLETE,
-  PERSONA_ROLE_DEVELOPER
+  PERSONA_ROLE_DEVELOPER,
+  WINNER,
 } from "@/lib/constant";
 import Navbar from "./Navbar";
 import LoginContext from "@/lib/LoginContext";
+import { Modal } from "./modal";
 
 //TODO: when you go into playlist 1 /2 or whatever, it should be specific per team1/ team 2 etc
 //TODO: i think release should be a really ugly version of spotify from 2012 and then release a new version
@@ -65,7 +67,6 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
   const { aiPlaylists, setAIPlaylists } = useContext(AIGeneratedPlaylistContext);
 
   // Check for `error` and `isLoading` before `threads` is defined
-  const { threads, error, isLoading } = useThreads();
 
   const [playlistAPI, setPlaylistAPI] = useState(playlists);
   const [songsAPI, setSongsAPI] = useState(songs);
@@ -79,7 +80,7 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
   const [flagFive, setFlagFive] = useState(false);
   const [totalPointAccumulation, setTotalPointAccumulation] = useState(0);
   const [isLoadingApp, setIsLoadingApp] = useState(false);
-
+  const [showWinnerModal, setShowWinnerModal] = useState(false);
   const [releaseReleaseGuardianButton, setReleaseReleaseGuardianButton] = useState(false);
   const [releaseAdSidebarManually, setReleaseAdSidebarManually] = useState(false);
   const [countNumReleaseGuardianAdSidebar, setCountNumReleaseGuardianAdSidebar] = useState(0);
@@ -104,7 +105,7 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
     aiModelName = "Meta Llama";
   } else if (releaseAIPlaylistCreatorLDFlag?.modelId?.includes("claude")) {
     aiModelName = "Anthropic Claude";
-  } 
+  }
 
   async function submitAIQuery(): Promise<void> {
     // const userInput = input;
@@ -250,7 +251,7 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
       }
     );
     const data = await response.json();
-console.log("release guardian data",data)
+    console.log("release guardian data", data);
     setIsLoadingApp(false);
 
     try {
@@ -266,10 +267,9 @@ console.log("release guardian data",data)
   }
 
   useEffect(() => {
-    if(router.pathname !== "/"){
+    if (router.pathname !== "/") {
       submitReleaseGuardianQuery();
     }
-
   }, []);
 
   const broadcast = useBroadcastEvent();
@@ -287,17 +287,27 @@ console.log("release guardian data",data)
     const triggerSteps = async () => {
       try {
         if (releaseTracklistLDFlag === true && flagOne === false) {
-          broadcast({ type: teamColor, complete: STEPONECOMPLETE, score: 20 });
-          setTotalPointAccumulation(prevPoints=>prevPoints+20);
+          setTotalPointAccumulation((prevPoints) => prevPoints + 20);
+          broadcast({
+            type: teamColor,
+            complete: STEPONECOMPLETE,
+            score: 20,
+            totalPointAccumulation: totalPointAccumulation,
+          });
           setFlagOne(true);
-          // await triggerStep("first step complete", "stepOneComplete");
+        
         } else {
           console.log("Step 1 not eligible for evaluation!");
         }
 
         if (releaseSavedPlaylistsSidebarLDFlag === true && flagTwoOne === false) {
-          broadcast({ type: teamColor, complete: STEPTWOONECOMPLETE, score: 10 });
-          setTotalPointAccumulation(prevPoints=>prevPoints+10);
+          setTotalPointAccumulation((prevPoints) => prevPoints + 10);
+          broadcast({
+            type: teamColor,
+            complete: STEPTWOONECOMPLETE,
+            score: 10,
+            totalPointAccumulation: totalPointAccumulation,
+          });
           setFlagTwoOne(true);
           // await triggerStep("second step complete", "stepTwoComplete");
         } else {
@@ -310,60 +320,64 @@ console.log("release guardian data",data)
           releaseSavedPlaylistsSidebarLDFlag === false &&
           flagTwo === false
         ) {
-          broadcast({ type: teamColor, complete: STEPTWOCOMPLETE, score: 10 });
-          setTotalPointAccumulation(prevPoints=>prevPoints+10);
+          setTotalPointAccumulation((prevPoints) => prevPoints + 10);
+          broadcast({
+            type: teamColor,
+            complete: STEPTWOCOMPLETE,
+            score: 10,
+            totalPointAccumulation: totalPointAccumulation,
+          });
           setFlagTwo(true);
           // await triggerStep("second step complete", "stepTwoComplete");
         } else {
           console.log("Step 2 not eligible for evaluation!");
         }
 
-        if (releaseNewUsersPlaylistLDFlag === true && flagThree === false && userObject.personarole === PERSONA_ROLE_DEVELOPER) {
+        if (
+          releaseNewUsersPlaylistLDFlag === true &&
+          flagThree === false &&
+          userObject.personarole === PERSONA_ROLE_DEVELOPER
+        ) {
+          setTotalPointAccumulation((prevPoints) => prevPoints + 20);
           broadcast({
             type: teamColor,
             complete: STEPTHREECOMPLETE,
             score: 20,
+            totalPointAccumulation: totalPointAccumulation,
           });
-          setTotalPointAccumulation(prevPoints=>prevPoints+20);
           setFlagThree(true);
           // await triggerStep("fourth step complete", "stepFourComplete");
         } else {
           console.log("Step 3 not eligible for evaluation!");
         }
 
-        if (
-          (aiModelName.includes(CLAUDE)) &&
-          aiPlaylists.length >= 1 &&
-          flagFourOne === false
-        ) {
+        if (aiModelName.includes(CLAUDE) && flagFourOne === false) {
+          setTotalPointAccumulation((prevPoints) => prevPoints + 10);
           broadcast({
             type: teamColor,
             complete: STEPFOURONECOMPLETE,
             score: 10,
+            totalPointAccumulation: totalPointAccumulation,
           });
-          setTotalPointAccumulation(prevPoints=>prevPoints+10);
           setFlagFourOne(true);
-          // await triggerStep("fifth step complete", "stepFiveComplete");
-
-
         } else {
           console.log("Step 4.1 not eligible for evaluation!");
         }
 
-       
         if (
           (aiModelName.includes(META) || aiModelName.includes(COHERE)) &&
           aiPlaylists.length >= 1 &&
-          flagFour === false && flagFourOne === true
+          flagFour === false &&
+          flagFourOne === true
         ) {
+          setTotalPointAccumulation((prevPoints) => prevPoints + 10);
           broadcast({
             type: teamColor,
             complete: STEPFOURCOMPLETE,
             score: 10,
+            totalPointAccumulation: totalPointAccumulation,
           });
-          setTotalPointAccumulation(prevPoints=>prevPoints+10);
           setFlagFour(true);
-          // await triggerStep("fifth step complete", "stepFiveComplete");
 
           setReleaseReleaseGuardianButton(true);
         } else {
@@ -375,37 +389,26 @@ console.log("release guardian data",data)
           releaseReleaseGuardianButton === true &&
           flagFive === false
         ) {
+          setTotalPointAccumulation((prevPoints) => prevPoints + 20);
           broadcast({
             type: teamColor,
             complete: STEPFIVECOMPLETE,
             score: 20,
+            totalPointAccumulation: totalPointAccumulation,
           });
-          setTotalPointAccumulation(prevPoints=>prevPoints+20);
           setFlagFive(true);
         } else {
           console.log("Step 5 not eligible for evaluation!");
+        }
+
+        if (flagFive === true && totalPointAccumulation >= 100) {
+          broadcast({ type: `${teamColor}${WINNER}` });
+          setShowWinnerModal(true);
         }
       } catch (err) {
         console.error(err);
       }
     };
-
-    // const triggerStep = async (event: any, stepCompleted: any) => {
-    //   const step = {
-    //     event,
-    //     team: {
-    //       name: `${teamColor}`,
-    //       stepCompleted,
-    //     },
-    //   };
-    //   const response = await fetch(`${apiURL}`, {
-    //     method: "POST",
-    //     headers: { "Content-Type": "application/json" },
-    //     body: JSON.stringify(step),
-    //   });
-
-    //   await console.log(response);
-    // };
 
     triggerSteps();
   }, [
@@ -416,6 +419,7 @@ console.log("release guardian data",data)
     releaseAdSidebarLDFlag,
     releaseAdSidebarManually,
     aiPlaylists,
+    totalPointAccumulation,
   ]);
 
   useEffect(() => {
@@ -558,16 +562,20 @@ console.log("release guardian data",data)
                   <section className={`flex flex-col gap-y-4 `}>
                     <h2 className="text-2xl font-bold">
                       Made For You{" "}
-                      {aiModelName !== "" && <span className="text-base text-gray-500 ml-2">
-                        Powered by{" "}
-                        <span
-                          style={{ color: aiModelColors(releaseAIPlaylistCreatorLDFlag?.modelId) }}
-                          className="font-bold"
-                        >
-                          {aiModelName}
+                      {aiModelName !== "" && (
+                        <span className="text-base text-gray-500 ml-2">
+                          Powered by{" "}
+                          <span
+                            style={{
+                              color: aiModelColors(releaseAIPlaylistCreatorLDFlag?.modelId),
+                            }}
+                            className="font-bold"
+                          >
+                            {aiModelName}
+                          </span>{" "}
+                          with <span className="text-amazonColor"> Amazon Bedrock</span>
                         </span>
-                        {" "}with <span className="text-amazonColor"> Amazon Bedrock</span>
-                      </span>}
+                      )}
                     </h2>
 
                     <div
@@ -576,8 +584,16 @@ console.log("release guardian data",data)
                     >
                       <button
                         onClick={() => submitAIQuery()}
-                        className={`${isLoadingApp || releaseAIPlaylistCreatorLDFlag.modelId ==="" ? "cursor-auto" : "cursor-pointer"}`}
-                        disabled={isLoadingApp || releaseAIPlaylistCreatorLDFlag.modelId ==="" ? true : false}
+                        className={`${
+                          isLoadingApp || releaseAIPlaylistCreatorLDFlag.modelId === ""
+                            ? "cursor-auto"
+                            : "cursor-pointer"
+                        }`}
+                        disabled={
+                          isLoadingApp || releaseAIPlaylistCreatorLDFlag.modelId === ""
+                            ? true
+                            : false
+                        }
                       >
                         <motion.div
                           initial={{ opacity: 0, scale: 0.25 }}
@@ -588,7 +604,9 @@ console.log("release guardian data",data)
                             delay: 1 * 0.2,
                           }}
                           className={`place-items-center border-white bg-ldinputback 
-                            rounded-md hover:bg-gray-900/50  inline-block p-4  ${releaseAIPlaylistCreatorLDFlag.modelId ==="" && "brightness-[25%]" }`}
+                            rounded-md hover:bg-gray-900/50  inline-block p-4  ${
+                              releaseAIPlaylistCreatorLDFlag.modelId === "" && "brightness-[25%]"
+                            }`}
                         >
                           {isLoadingApp ? (
                             <>
@@ -606,8 +624,10 @@ console.log("release guardian data",data)
                             </>
                           ) : (
                             <>
-                              <div className="flex items-center justify-center object-cover transition-all hover:scale-105 mb-4 h-48 w-48 rounded-lg px-3 py-2 text-sm 
-                              bg-blue-700">
+                              <div
+                                className="flex items-center justify-center object-cover transition-all hover:scale-105 mb-4 h-48 w-48 rounded-lg px-3 py-2 text-sm 
+                              bg-blue-700"
+                              >
                                 <BotIcon className="h-24 w-24 text-green-500" />
                               </div>
                               <div className="flex flex-col gap-y-2 items-center align-center break-words  max-w-[180px]">
@@ -719,6 +739,7 @@ console.log("release guardian data",data)
           <SimplePlayerScreen />
         )}
       </main>
+      {showWinnerModal ? <Modal winnerName={teamColor} /> : null}
     </Room>
   );
 }

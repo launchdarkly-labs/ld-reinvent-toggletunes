@@ -6,50 +6,36 @@ import {
   AlertDialogHeader,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { useEffect } from "react";
-import { PURPLE,RED,BLUE,GREEN } from "@/lib/constant";
+import { useEffect, useState } from "react";
+import { PURPLE, RED, BLUE, GREEN } from "@/lib/constant";
 
 export function Modal({
-  winnerState,
   winnerName,
-  setWinnerName,
-  setWinnerState,
-  setResetScores,
-}: any) {
-
+  setOpenStartModal,
+}: {
+  winnerName: string;
+  setOpenStartModal?: any;
+}) {
+  const [isOpen, setIsOpen] = useState(true);
   useEffect(() => {
-    console.log(winnerState);
-    const handleKeyDown = (event) => {
-      if (event.key === "r") {
-        setWinnerName(RED);
-      }
-      if (event.key === "b") {
-        setWinnerName(BLUE);
-      }
-      if (event.key === "g") {
-        setWinnerName(GREEN);
-      }
-      if (event.key === "p") {
-        setWinnerName(PURPLE);
-      }
-      if (event.key === "Enter") {
-        setWinnerName("");
-        setWinnerState(false);
-      }
-    };
-    document.addEventListener("keydown", handleKeyDown);
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [winnerName, winnerState]);
+    //hide the starting modal when you trigger manually the color winner
+    if (winnerName !== "" && setOpenStartModal) {
+      setOpenStartModal(false);
+      // setIsOpen(true);
+    }
+  }, [winnerName]);
 
-// they overwrote alert dialog with the winner gif
-//winnerState
+  // they overwrote alert dialog with the winner gif
   return (
     <>
       <AlertDialog open={true}>
-        <AlertDialogTrigger>
-          <AlertDialogContent variant={winnerName}>
+        <AlertDialogTrigger
+          // asChild
+          // onClick={() => {
+          //   setIsOpen(false);
+          // }}
+        >
+          <AlertDialogContent variant={winnerName} className="cursor-pointer">
             <AlertDialogHeader />
             <AlertDialogFooter></AlertDialogFooter>
           </AlertDialogContent>
