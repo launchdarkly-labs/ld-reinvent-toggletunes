@@ -4,7 +4,7 @@ import { Modal } from "@/components/modal";
 import { ProgressStatus } from "@/components/progress-screen";
 import { Room } from "@/components/room";
 import { StartModal } from "@/components/start-modal";
-import { useEventListener, useStorage, useHistory } from "@/liveblocks.config";
+import { useEventListener, useStorage, useMutation } from "@/liveblocks.config";
 import { setCookie } from "cookies-next";
 import { memo, useEffect, useState, useContext } from "react";
 import {
@@ -24,6 +24,7 @@ import {
 import Timer from "@/components/Timer";
 import { useTimer } from "@/lib/useTimer";
 import { formatTime } from "@/lib/utils";
+
 
 export default function Scoreboard() {
   const starterCompletionProgressObject = {
@@ -58,7 +59,9 @@ export default function Scoreboard() {
   const [animationStarted, setAnimationStarted] = useState(false);
 
   const { timeLeft, isActive, startTimer, pauseTimer, resetTimer, duration } = useTimer();
+  // const layerIds = useStorage((root) => root);
 
+  // console.log("layerIds", layerIds);
   const endGame = () => {
     const maxProgress = Math.max(greenProgress, redProgress, purpleProgress, blueProgress);
     let winners = [];
@@ -106,9 +109,23 @@ export default function Scoreboard() {
       endGame();
     }
   }, [greenProgress, redProgress, blueProgress, purpleProgress, winnerName]);
+  // const addAnimal = useMutation(({ storage }) => {
+  //   const animals = storage.get("animals");
+
+  //   // LiveList<["Fido"]>
+  //   console.log(animals);
+
+  //   animals.push("Felix");
+
+  //   // LiveList<["Fido", "Felix"]>
+  //   console.log(animals);
+  // });
+
+
+ 
 
   return (
-    <Room>
+    <>
       <EventListenerComponent
         setGreenProgress={setGreenProgress}
         setRedProgress={setRedProgress}
@@ -131,6 +148,7 @@ export default function Scoreboard() {
         resetTimer={resetTimer}
         timeLeft={timeLeft}
         duration={duration}
+        // addAnimal={addAnimal}
       />
       <main className="h-screen bg-black">
         <div
@@ -192,13 +210,8 @@ export default function Scoreboard() {
         animationStarted={animationStarted}
         setAnimationStarted={setAnimationStarted}
       />
-      {/* <KeyboardNavigation
-        setGreenProgress={setGreenProgress}
-        setRedProgress={setRedProgress}
-        setPurpleProgress={setPurpleProgress}
-        setBlueProgress={setBlueProgress}
-      /> */}
-    </Room>
+  
+    </>
   );
 }
 
@@ -228,6 +241,7 @@ const EventListenerComponent = memo(function EventListenerComponent({
   resetTimer,
   timeLeft,
   duration,
+  // addAnimal
 }) {
   console.log("Event listener online");
 
@@ -272,6 +286,7 @@ const EventListenerComponent = memo(function EventListenerComponent({
             console.log("this hits?")
             setPurpleProgress((prevProgress) => prevProgress + (event.totalPointAccumulation-prevProgress));
           }
+
           break;
         case BLUE:
           if (blueCompletionProgress[event.complete] === 0) {
