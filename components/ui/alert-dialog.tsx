@@ -27,10 +27,9 @@ const AlertDialogOverlay = React.forwardRef<
 ));
 AlertDialogOverlay.displayName = AlertDialogPrimitive.Overlay.displayName;
 
-const AlertDialogContent = React.forwardRef(
-  ({ className, variant, ...props }, ref) => {
-    let backgroundClass = "";
-    switch (variant) {
+const AlertDialogContent = React.forwardRef(({ className, variant, ...props }, ref) => {
+  let backgroundClass = "";
+  switch (variant) {
       case BLUE:
         console.log("triggering blue");
         backgroundClass =
@@ -51,71 +50,59 @@ const AlertDialogContent = React.forwardRef(
         backgroundClass =
           "bg-[url('https://uploadthing.com/f/9ece43b7-0efc-442a-917c-d766ec1b2f8e-wkjqfr.gif')] text-black";
         break;
-      case "tie":
-        console.log("triggering tie");
-        backgroundClass = "bg-ldgray text-white";
-        break;
-      case "start":
-        backgroundClass = "bg-ldgray text-white";
-        break;
-      default:
-        backgroundClass = "bg-transparent text-white";
-        break;
-    }
-    return (
-      <AlertDialogPortal>
-        <AlertDialogOverlay />
-        {variant != "start" ? (
-          <motion.div
-            initial={{ scale: 1, opacity: 0 }}
-            animate={{
-              opacity: [0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 0.95, 1],
-            }}
-            transition={{
-              duration: 1,
-            }}
-            ref={ref}
-            className={cn(
-              "fixed bg-cover z-50 grid w-screen h-screen translate-x-[-50%] translate-y-[-50%] gap-4 bg-slate-700 font-sohne p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg",
-              backgroundClass,
-              className
-            )}
-            {...props}
-          />
-        ) : (
-          <AlertDialogPrimitive.Content
-            ref={ref}
-            className={cn(
-              "fixed left-[50%] top-[50%] z-50 grid w-screen h-screen translate-x-[-50%] translate-y-[-50%] gap-4 bg-black text-white font-audimat p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg md:w-full",
-              className
-            )}
-            {...props}
-          ></AlertDialogPrimitive.Content>
-        )}
-      </AlertDialogPortal>
-    );
+    case "tie":
+      console.log("triggering tie");
+      backgroundClass = "bg-ldgray text-white";
+      break;
+    case "start":
+      backgroundClass = "bg-ldgray text-white";
+      break;
+    default:
+      backgroundClass = "bg-transparent text-white";
+      break;
+
   }
-);
+  return (
+    <AlertDialogPortal>
+      <AlertDialogOverlay />
+      {variant != "start" ? (
+        <motion.div
+          initial={{ scale: 1, opacity: 0 }}
+          animate={{
+            opacity: [0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 0.95, 1],
+          }}
+          transition={{
+            duration: 1,
+          }}
+          ref={ref}
+          className={cn(
+            "fixed bg-cover z-50 grid w-screen h-screen translate-x-[-50%] translate-y-[-50%] gap-4 bg-slate-700 font-sohne p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg",
+            backgroundClass,
+            className
+          )}
+          {...props}
+        />
+      ) : (
+        <AlertDialogPrimitive.Content
+          ref={ref}
+          className={cn(
+            "fixed left-[50%] top-[50%] z-50 grid w-screen h-screen translate-x-[-50%] translate-y-[-50%] gap-4 bg-black text-white font-audimat p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg md:w-full",
+            className
+          )}
+          {...props}
+        ></AlertDialogPrimitive.Content>
+      )}
+    </AlertDialogPortal>
+  );
+});
 AlertDialogContent.displayName = AlertDialogPrimitive.Content.displayName;
 
-const AlertDialogHeader = ({
-  className,
-  ...props
-}: React.HTMLAttributes<HTMLDivElement>) => (
-  <div
-    className={cn(
-      "flex flex-col space-y-2 text-center sm:text-left",
-      className
-    )}
-    {...props}
-  />
+const AlertDialogHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
+  <div className={cn("flex flex-col space-y-2 text-center sm:text-left", className)} {...props} />
 );
 AlertDialogHeader.displayName = "AlertDialogHeader";
 
-const AlertDialogFooter = ({
-  className,
-  ...props
-}: React.HTMLAttributes<HTMLDivElement>) => (
+const AlertDialogFooter = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
     className={cn(
       "flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2 items-end",
@@ -129,16 +116,7 @@ AlertDialogFooter.displayName = "AlertDialogFooter";
 const stringsArray = ["3", "2", "1", "GO!"];
 
 const AlertDialogTitle = React.forwardRef(
-  (
-    {
-      className,
-      animationStarted,
-      setAnimationStarted,
-      setOpenStartModal,
-      ...props
-    },
-    ref
-  ) => {
+  ({ className, animationStarted, setAnimationStarted, setOpenStartModal, ...props }, ref) => {
     const [currentIndex, setCurrentIndex] = React.useState(0);
     const lastIndex = stringsArray.length - 1;
     //animation settings
@@ -164,7 +142,7 @@ const AlertDialogTitle = React.forwardRef(
           setAnimationStarted(true);
         }
       };
-      
+
       document.addEventListener("keydown", handleKeyDown);
 
       if (animationStarted && currentIndex < stringsArray.length) {
@@ -224,8 +202,7 @@ const AlertDialogDescription = React.forwardRef<
     {...props}
   />
 ));
-AlertDialogDescription.displayName =
-  AlertDialogPrimitive.Description.displayName;
+AlertDialogDescription.displayName = AlertDialogPrimitive.Description.displayName;
 
 const AlertDialogAction = React.forwardRef<
   React.ElementRef<typeof AlertDialogPrimitive.Action>,
@@ -245,11 +222,7 @@ const AlertDialogCancel = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <AlertDialogPrimitive.Cancel
     ref={ref}
-    className={cn(
-      buttonVariants({ variant: "outline" }),
-      "mt-2 sm:mt-0",
-      className
-    )}
+    className={cn(buttonVariants({ variant: "outline" }), "mt-2 sm:mt-0", className)}
     {...props}
   />
 ));
