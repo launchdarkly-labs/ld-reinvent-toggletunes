@@ -15,6 +15,7 @@ import {
   useStorage,
   useThreads,
   useSelf,
+  useLostConnectionListener,
 } from "../liveblocks.config";
 
 import { Room } from "./room";
@@ -52,6 +53,7 @@ import {
 import Navbar from "./Navbar";
 import LoginContext from "@/lib/LoginContext";
 import { Modal } from "./modal";
+import { LostConnectionModal } from "./LostConnectionModal";
 
 //TODO: when you go into playlist 1 /2 or whatever, it should be specific per team1/ team 2 etc
 //TODO: i think release should be a really ugly version of spotify from 2012 and then release a new version
@@ -84,10 +86,32 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
   const [releaseReleaseGuardianButton, setReleaseReleaseGuardianButton] = useState(false);
   const [releaseAdSidebarManually, setReleaseAdSidebarManually] = useState(false);
   const [countNumReleaseGuardianAdSidebar, setCountNumReleaseGuardianAdSidebar] = useState(0);
-
+  const [showLostConnectionModal, setShowLostConnectionModal] = useState(false);
+  const layerIds = useStorage((root) => root);
+  // @ts-ignore
+  const layerIds2 = useStorage((root) => root.totalPoints);
+  console.log("layerIds", layerIds);
+  console.log("layerIds2", layerIds2);
   const API_KEY: string = process.env.NEXT_PUBLIC_LD_API_KEY as string;
 
   const { userObject } = useContext(LoginContext);
+
+  useLostConnectionListener((event) => {
+    switch (event) {
+      case "lost":
+        setShowLostConnectionModal(true);
+        break;
+
+      case "restored":
+        setShowLostConnectionModal(false);
+        break;
+
+      case "failed":
+        alert("Could not restore the connection");
+        setShowLostConnectionModal(true);
+        break;
+    }
+  });
 
   // const handleInputChange = (e: any): void => {
   //   setInput(e.target.value);
@@ -295,7 +319,6 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
             totalPointAccumulation: totalPointAccumulation,
           });
           setFlagOne(true);
-        
         } else {
           console.log("Step 1 not eligible for evaluation!");
         }
@@ -740,6 +763,9 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
         )}
       </main>
       {showWinnerModal ? <Modal winnerName={teamColor} /> : null}
+      {showLostConnectionModal ? (
+        <LostConnectionModal showLostConnectionModal={showLostConnectionModal} />
+      ) : null}
     </Room>
   );
 }
