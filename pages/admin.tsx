@@ -144,7 +144,7 @@ function GameAdminDashboard() {
         url: ${resp.url}`,
       ]);
       // @ts-ignore
-      console.log(resp);
+      console.log(resp);  
       setResetProgress(100);
       setResetProgressMessage("Reset Failed!");
       setDisplayErrorMessage(true);
