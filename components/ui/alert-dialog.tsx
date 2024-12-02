@@ -38,7 +38,7 @@ const AlertDialogContent = React.forwardRef(({ className, variant, ...props }, r
     case RED:
       console.log("triggering red");
       backgroundClass =
-        "bg-[url('https://utfs.io/f/o5A3nMDIMFiPprQoyNVEzjHOnlDA2g81YXuS56xwGV7toJM3')] text-white";
+        "bg-[url('/images/gifs/redWinner50mb.gif')] text-white";
       break;
     case PURPLE:
       console.log("triggering purple");
