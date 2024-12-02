@@ -21,29 +21,29 @@ export function Room({ children }: { children: ReactNode }) {
             }),
           ],
         ]),
-        // totalPoints: new LiveMap([
-        //   [
-        //     RED,
-        //     new LiveObject({
-        //       name: RED,
-        //       totalPoint: 0,
-        //     }),
-        //   ],
-        //   [
-        //     BLUE,
-        //     new LiveObject({
-        //       name: BLUE,
-        //       totalPoint: 0,
-        //     }),
-        //   ],
-        //   [
-        //     PURPLE,
-        //     new LiveObject({
-        //       name: PURPLE,
-        //       totalPoint: 0,
-        //     }),
-        //   ],
-        // ]),
+        totalPoints: new LiveMap([
+          [
+            RED,
+            new LiveObject({
+              name: RED,
+              totalPoint: 0,
+            }),
+          ],
+          [
+            BLUE,
+            new LiveObject({
+              name: BLUE,
+              totalPoint: 0,
+            }),
+          ],
+          [
+            PURPLE,
+            new LiveObject({
+              name: PURPLE,
+              totalPoint: 0,
+            }),
+          ],
+        ]),
         animals: new LiveList(["Fidoooo"]),
       }}
     >

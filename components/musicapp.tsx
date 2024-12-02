@@ -477,7 +477,7 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
   // };
 
   return (
-    <Room>
+    <>
       {/* 
 // @ts-ignore */}
       <EventListenerComponent reloadPage={reloadPage} />
@@ -766,7 +766,7 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
       {showLostConnectionModal ? (
         <LostConnectionModal showLostConnectionModal={showLostConnectionModal} />
       ) : null}
-    </Room>
+    </>
   );
 }
 // @ts-ignore
