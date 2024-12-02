@@ -286,7 +286,7 @@ function GameAdminDashboard() {
             </div>
 
             <div className="bg-gray-800 shadow rounded-lg p-4 mb-8">
-              <h2 className="text-xl font-semibold text-white mb-4">Manually Triggering Winner</h2>
+              <h2 className="text-xl font-semibold text-white mb-4">Manually Trigger Winner</h2>
 
               <div className="flex flex-wrap gap-8">
                 <Button
