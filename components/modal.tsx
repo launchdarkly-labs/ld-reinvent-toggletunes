@@ -16,6 +16,7 @@ export function Modal({
   setWinnerState,
   setResetScores,
 }: any) {
+
   useEffect(() => {
     console.log(winnerState);
     const handleKeyDown = (event) => {
@@ -41,11 +42,8 @@ export function Modal({
       document.removeEventListener("keydown", handleKeyDown);
     };
   }, [winnerName, winnerState]);
+
 // they overwrote alert dialog with the winner gif
-let x;
-useEffect(()=>{
-  const x =  Math.floor(Math.random() * 3)
-},[])
 //winnerState
   return (
     <>

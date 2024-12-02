@@ -18,6 +18,8 @@ import {
   Home,
   Archive,
   X,
+  Award,
+  Crown,Trophy
 } from "lucide-react";
 import Link from "next/link";
 
@@ -55,6 +57,11 @@ function GameAdminDashboard() {
   const handleStop = async () => {
     broadcast({ type: "stopTimer" });
   };
+
+  const handleColorWinner = async (winnerColor: string) => {
+    broadcast({ type: winnerColor });
+  };
+
   //40 sec and then go to the end when finish
   const handleReset = async () => {
     setArchivedMessage("");
@@ -85,7 +92,8 @@ function GameAdminDashboard() {
         } else if (40 < newProgress && newProgress <= 60) {
           setResetProgressMessage("Resetting Team 3 LD Env...");
         } else if (60 < newProgress && newProgress <= 80) {
-          setResetProgressMessage("Resetting Team 4 LD Env...");
+          setResetProgressMessage("Tying things up...");
+          // setResetProgressMessage("Resetting Team 4 LD Env...");
         } else {
           setResetProgressMessage("Tying things up...");
         }
@@ -102,7 +110,7 @@ function GameAdminDashboard() {
 
       respJson = await resp.json();
       console.log(respJson);
-      handleReload();
+      // handleReload();
       setCodeLogs((prevLogs) => [
         ...prevLogs,
         `Status: ${resp.status}, 
@@ -144,18 +152,18 @@ function GameAdminDashboard() {
     }
   };
 
-  const handleReload = async () => {
-    broadcast({ type: "reload" });
-  };
+  // const handleReload = async () => {
+  //   broadcast({ type: "reload" });
+  // };
 
-  const handleArchived = async () => {
-    setArchivedMessage("");
-    const resp = await fetch("/api/archived");
-    if (resp.ok) {
-      const data = await resp.json();
-      setArchivedMessage(data.message);
-    }
-  };
+  // const handleArchived = async () => {
+  //   setArchivedMessage("");
+  //   const resp = await fetch("/api/archived");
+  //   if (resp.ok) {
+  //     const data = await resp.json();
+  //     setArchivedMessage(data.message);
+  //   }
+  // };
 
   return (
     <div className="flex h-screen bg-gray-900 text-white font-mono">
@@ -265,21 +273,43 @@ function GameAdminDashboard() {
                 >
                   <RotateCcw className="mr-2 h-4 w-4" /> Reset
                 </Button>
-                <Button
-                  className="flex items-center bg-blue-600 hover:bg-blue-700 text-white"
-                  onClick={() => handleReload()}
-                  id="admin-reload"
-                  disabled={isDisabled}
-                >
-                  <RefreshCw className="mr-2 h-4 w-4" /> Reload
-                </Button>
-                <Button
+
+                {/* <Button
                   className="flex items-center bg-purple-600 hover:bg-purple-700 text-white"
                   onClick={() => handleArchived()}
                   id="admin-archive"
                   disabled={isDisabled}
                 >
                   <Archive className="mr-2 h-4 w-4" /> Archive
+                </Button> */}
+              </div>
+            </div>
+
+            <div className="bg-gray-800 shadow rounded-lg p-4 mb-8">
+              <h2 className="text-xl font-semibold text-white mb-4">Manually Trigger Winner</h2>
+
+              <div className="flex flex-wrap gap-8">
+                <Button
+                  className="flex items-center bg-gradient-blue-progress-bar hover:bg-ldblue text-white"
+                  onClick={() => handleColorWinner("blueWinner")}
+                  id="admin-blueWinner"
+                >
+                  <Award className="mr-2 h-4 w-4" /> Trigger Blue Winner
+                </Button>
+                <Button
+                  className="flex items-center bg-gradient-red-progress-bar hover:bg-ldred text-white"
+                  onClick={() => handleColorWinner("redWinner")}
+                  id="admin-redWinner"
+                >
+                  <Trophy className="mr-2 h-4 w-4" /> Trigger Red Winner
+                </Button>
+
+                <Button
+                  className="flex items-center bg-gradient-purple-progress-bar hover:bg-ldpurple text-white"
+                  onClick={() => handleColorWinner("purpleWinner")}
+                  id="admin-purpleWinner"
+                >
+                  <Crown className="mr-2 h-4 w-4" /> Trigger Purple Winner
                 </Button>
               </div>
             </div>

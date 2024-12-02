@@ -135,7 +135,6 @@ const AlertDialogTitle = React.forwardRef(
       animationStarted,
       setAnimationStarted,
       setOpenStartModal,
-      setIsTimerRunning,
       ...props
     },
     ref
@@ -154,8 +153,8 @@ const AlertDialogTitle = React.forwardRef(
       });
       if (stringsArray[currentIndex] === "GO!") {
         setOpenStartModal(false);
-        setIsTimerRunning(true);
         setAnimationStarted(false);
+        document.getElementById("timer-play-button")?.click();
       }
     };
 
@@ -165,6 +164,7 @@ const AlertDialogTitle = React.forwardRef(
           setAnimationStarted(true);
         }
       };
+      
       document.addEventListener("keydown", handleKeyDown);
 
       if (animationStarted && currentIndex < stringsArray.length) {

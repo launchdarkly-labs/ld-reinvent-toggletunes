@@ -21,8 +21,12 @@ import { Search, User } from "lucide-react";
 
 export default function Navbar({
   releaseReleaseGuardianButton,
+  submitReleaseGuardianQuery,
+  totalPointAccumulation,
 }: {
   releaseReleaseGuardianButton: boolean;
+  submitReleaseGuardianQuery: any;
+  totalPointAccumulation?: number;
 }) {
   const { loginUser, userObject, allUsers } = useContext(LoginContext);
 
@@ -57,7 +61,7 @@ export default function Navbar({
       {/* <Link href="/" className="text-2xl font-bold">
         Logo
       </Link> */}
-      <div className="empty"></div>
+      <div className="text-xl">Total Points: <span className="text-ldgreen text-2xl">{totalPointAccumulation}</span>/100</div>
       <form onSubmit={handleSearch} className="flex-1 max-w-md mx-4 ml-[14rem]">
         <div className="relative">
           <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
@@ -73,20 +77,26 @@ export default function Navbar({
 
       <div className="flex items-center">
         {releaseReleaseGuardianButton && (
-          <button className="mr-3 p-2 bg-red-500 rounded-full hover:brightness-125 active:bg-red-700">
+          <button
+            onClick={() => submitReleaseGuardianQuery()}
+            className="mr-3 p-2 bg-red-500 rounded-full hover:brightness-125 active:bg-red-700"
+          >
             Validate Release Guardian
           </button>
         )}
-        <h3 className="mr-3">
-          {userObject.personatier}, {userObject.personarole}
-        </h3>
+
         <DropdownMenu>
           <DropdownMenuTrigger asChild onClick={() => personaClicked()}>
-            <Avatar className="cursor-pointer">
-              <AvatarFallback>
-                <img src={userObject.personaimage} className="w-8 h-8 bg-blue-500 rounded-full" />
-              </AvatarFallback>
-            </Avatar>
+            <div className="flex items-center cursor-pointer">
+              <h3 className="mr-3 ">
+                {userObject.personatier}, {userObject.personarole}
+              </h3>
+              <Avatar>
+                <AvatarFallback>
+                  <img src={userObject.personaimage} className="w-8 h-8 bg-blue-500 rounded-full" />
+                </AvatarFallback>
+              </Avatar>
+            </div>
           </DropdownMenuTrigger>
           {/* <DropdownMenuContent align="end" className="w-56 bg-red-500">
           {isLoggedIn ? (

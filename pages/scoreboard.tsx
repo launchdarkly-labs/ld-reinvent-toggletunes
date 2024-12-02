@@ -4,82 +4,97 @@ import { Modal } from "@/components/modal";
 import { ProgressStatus } from "@/components/progress-screen";
 import { Room } from "@/components/room";
 import { StartModal } from "@/components/start-modal";
-import { useEventListener } from "@/liveblocks.config";
+import { useEventListener, useStorage, useHistory } from "@/liveblocks.config";
 import { setCookie } from "cookies-next";
-import { memo, useEffect, useState } from "react";
-import { RED, BLUE, PURPLE, GREEN } from "@/lib/constant";
+import { memo, useEffect, useState, useContext } from "react";
+import {
+  RED,
+  BLUE,
+  PURPLE,
+  GREEN,
+  STEPONECOMPLETE,
+  STEPTWOONECOMPLETE,
+  STEPTWOCOMPLETE,
+  STEPTHREECOMPLETE,
+  STEPFOURONECOMPLETE,
+  STEPFOURCOMPLETE,
+  STEPFIVECOMPLETE,
+} from "@/lib/constant";
+import Timer from "@/components/Timer";
+import { useTimer } from "@/lib/useTimer";
+import { formatTime } from "@/lib/utils";
 
-const defaultTimer = 900000; //15 min
 export default function Scoreboard() {
+  const starterCompletionProgressObject = {
+    [STEPONECOMPLETE]: 0,
+    [STEPTWOONECOMPLETE]: 0,
+    [STEPTWOCOMPLETE]: 0,
+    [STEPTHREECOMPLETE]: 0,
+    [STEPFOURONECOMPLETE]: 0,
+    [STEPFOURCOMPLETE]: 0,
+    [STEPFIVECOMPLETE]: 0,
+  };
+
   const [redProgress, setRedProgress] = useState<number>(0);
   const [purpleProgress, setPurpleProgress] = useState<number>(0);
   const [blueProgress, setBlueProgress] = useState<number>(0);
   const [greenProgress, setGreenProgress] = useState<number>(0);
+  const [redCompletionProgress, setRedCompletionProgress] = useState(
+    starterCompletionProgressObject
+  );
+  const [purpleCompletionProgress, setPurpleCompletionProgress] = useState<number>(
+    starterCompletionProgressObject
+  );
+  const [blueCompletionProgress, setBlueCompletionProgress] = useState<number>(
+    starterCompletionProgressObject
+  );
+  const [greenCompletionProgress, setGreenCompletionProgress] = useState<number>(
+    starterCompletionProgressObject
+  );
   const [winnerState, setWinnerState] = useState(false);
   const [winnerName, setWinnerName] = useState("");
-  const [isTimerRunning, setIsTimerRunning] = useState(false);
-  const [timer, setTimer] = useState(defaultTimer);
   const [openStartModal, setOpenStartModal] = useState(true);
   const [animationStarted, setAnimationStarted] = useState(false);
 
-  const decreaseMainTimer = () => {
-    if (isTimerRunning) {
-      setTimer((timer) => timer - 100);
-    }
-  };
-
-  useEffect(() => {
-    const timerInterval = setInterval(decreaseMainTimer, 100);
-    return () => {
-      clearInterval(timerInterval);
-    };
-  }, [isTimerRunning]);
-
-  const timerToMinutesSecondsMilliseconds = (timer: number): string => {
-    if (timer <= 0 && isTimerRunning) {
-      setIsTimerRunning(false);
-      endGame();
-    }
-    const minutes = Math.floor(timer / 60000);
-    const seconds = Math.floor((timer % 60000) / 1000);
-    return `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
-  };
-
-  async function configUser() {
-    await setCookie("team", "Scoreboard");
-  }
+  const { timeLeft, isActive, startTimer, pauseTimer, resetTimer, duration } = useTimer();
 
   const endGame = () => {
     const maxProgress = Math.max(greenProgress, redProgress, purpleProgress, blueProgress);
     let winners = [];
     let winnerName = "";
-    if (maxProgress === greenProgress) {
-      winners.push(GREEN);
+    if (maxProgress === blueProgress) {
+      winners.push(BLUE);
     }
     if (maxProgress === redProgress) {
       winners.push(RED);
     }
     if (maxProgress === purpleProgress) {
       winners.push(PURPLE);
-    }
-    if (maxProgress === blueProgress) {
-      winners.push(BLUE);
-    }
-    // TODO: Nothing happens on tie currently
-    if (winners.length > 1) {
-      winnerName = "";
     } else {
-      winnerName = winners[0];
+      //TIE SCENARIO
+      const ranNum = Math.floor(Math.random() * 3); //0 1 2
+      if (ranNum === 0) {
+        winners.push(BLUE);
+      } else if (ranNum === 1) {
+        winners.push(RED);
+      } else {
+        winners.push(PURPLE);
+      }
     }
-    setIsTimerRunning(false);
+
+    // if (winners.length > 1) {
+    //   winnerName = "";
+    // } else {
+    //   winnerName = winners[0];
+    // }
+
+    winnerName = winners[0];
+    document.getElementById("timer-reset-button")?.click();
     setWinnerName(winnerName);
     setWinnerState(true);
   };
 
-  useEffect(() => {
-    configUser();
-  }, []);
-
+  //todo: maybe change this to if all task completed for the object
   useEffect(() => {
     if (
       greenProgress >= 100 ||
@@ -89,7 +104,7 @@ export default function Scoreboard() {
     ) {
       endGame();
     }
-  }, [greenProgress, redProgress, blueProgress, purpleProgress, isTimerRunning, winnerName]);
+  }, [greenProgress, redProgress, blueProgress, purpleProgress, winnerName]);
 
   return (
     <Room>
@@ -98,18 +113,25 @@ export default function Scoreboard() {
         setRedProgress={setRedProgress}
         setPurpleProgress={setPurpleProgress}
         setBlueProgress={setBlueProgress}
-        setIsTimerRunning={setIsTimerRunning}
-        setTimer={setTimer}
         setOpenStartModal={setOpenStartModal}
         setAnimationStarted={setAnimationStarted}
         setWinnerState={setWinnerState}
         setWinnerName={setWinnerName}
+        setGreenCompletionProgress={setGreenCompletionProgress}
+        setRedCompletionProgress={setRedCompletionProgress}
+        setPurpleCompletionProgress={setPurpleCompletionProgress}
+        setBlueCompletionProgress={setBlueCompletionProgress}
+        greenCompletionProgress={greenCompletionProgress}
+        redCompletionProgress={redCompletionProgress}
+        purpleCompletionProgress={purpleCompletionProgress}
+        blueCompletionProgress={blueCompletionProgress}
+        starterCompletionProgressObject={starterCompletionProgressObject}
+        startTimer={startTimer}
+        resetTimer={resetTimer}
+        timeLeft={timeLeft}
+        duration={duration}
       />
-      <main
-        className="  
-       h-screen
-          bg-black"
-      >
+      <main className="h-screen bg-black">
         <div
           className="flex flex-col bg-[#191919] mx-auto max-w-8xl h-screen gap-y-10
         items-center justify-center py-4 px-10"
@@ -147,18 +169,14 @@ export default function Scoreboard() {
             redProgress={redProgress}
             blueProgress={blueProgress}
           />
+
           <section
             id="scoreboard-wrapper"
             className="flex sticky 
   place-items-center border border-zinc-500 
   w-1/3 xl:w-1/6 bg-gradient-scoreboard-timer-background justify-center rounded-md"
           >
-            <div
-              id="scoreboard-text"
-              className="flex text-8xl sm:text-6xl font-bold bg-transparent bg-gradient-scoreboard-timer-text text-transparent bg-clip-text font-audimat mt-4"
-            >
-              {timerToMinutesSecondsMilliseconds(timer)}
-            </div>
+            <Timer endGame={endGame} />
           </section>
         </div>
       </main>
@@ -170,18 +188,17 @@ export default function Scoreboard() {
         setWinnerName={setWinnerName}
       />
       <StartModal
-        setIsTimerRunning={setIsTimerRunning}
         openStartModal={openStartModal}
         setOpenStartModal={setOpenStartModal}
         animationStarted={animationStarted}
         setAnimationStarted={setAnimationStarted}
       />
-      <KeyboardNavigation
+      {/* <KeyboardNavigation
         setGreenProgress={setGreenProgress}
         setRedProgress={setRedProgress}
         setPurpleProgress={setPurpleProgress}
         setBlueProgress={setBlueProgress}
-      />
+      /> */}
     </Room>
   );
 }
@@ -191,58 +208,103 @@ const EventListenerComponent = memo(function EventListenerComponent({
   setRedProgress,
   setBlueProgress,
   setPurpleProgress,
-  setIsTimerRunning,
-  setTimer,
   setOpenStartModal,
   setAnimationStarted,
   setWinnerState,
   setWinnerName,
+  setGreenCompletionProgress,
+  setRedCompletionProgress,
+  setPurpleCompletionProgress,
+  setBlueCompletionProgress,
+  greenCompletionProgress,
+  redCompletionProgress,
+  purpleCompletionProgress,
+  blueCompletionProgress,
+  starterCompletionProgressObject,
+  startTimer,
+  resetTimer,
+  timeLeft,
+  duration,
 }) {
   console.log("Event listener online");
+
   useEventListener(({ event, user, connectionId }) => {
     console.log(user);
     console.log(connectionId);
-    // type: teamName, complete: "stepThreeComplete", value: 20
     console.log(event);
-    //TODO: here you can change event.type or event.complete or event.step and change type of progress for semi steps
     async function scoreRequest(event) {
       switch (event.type) {
         case GREEN:
-          console.log("green score");
-          setGreenProgress((prevProgress) => prevProgress + 20);
+          if (greenCompletionProgress[event.complete] === 0) {
+            console.log("green score");
+            setGreenProgress((prevProgress) => prevProgress + event.score);
+            setGreenCompletionProgress({ ...greenCompletionProgress, [event.complete]: 1 }); //to prevent user's from trigging the same flag over and over to get points
+            console.log("greenCompletionProgress", greenCompletionProgress);
+          }
           break;
         case RED:
-          console.log("red score");
-          setRedProgress((prevProgress) => prevProgress + 20);
+          if (redCompletionProgress[event.complete] === 0) {
+            console.log("red score");
+            setRedProgress((prevProgress) => prevProgress + event.score);
+            setRedCompletionProgress({ ...redCompletionProgress, [event.complete]: 1 }); //to prevent user's from trigging the same flag over and over to get points
+            console.log("redCompletionProgress", redCompletionProgress);
+          }
+
           break;
         case PURPLE:
-          console.log("purple score");
-          setPurpleProgress((prevProgress) => prevProgress + 20);
+          if (purpleCompletionProgress[event.complete] === 0) {
+            console.log("purple score");
+            setPurpleProgress((prevProgress) => prevProgress + event.score);
+            setPurpleCompletionProgress({ ...purpleCompletionProgress, [event.complete]: 1 }); //to prevent user's from trigging the same flag over and over to get points
+          }
           break;
         case BLUE:
-          console.log("blue score");
-          setBlueProgress((prevProgress) => prevProgress + 20);
+          if (blueCompletionProgress[event.complete] === 0) {
+            console.log("blue score");
+            setBlueProgress((prevProgress) => prevProgress + event.score);
+            setBlueCompletionProgress({ ...blueCompletionProgress, [event.complete]: 1 }); //to prevent user's from trigging the same flag over and over to get points
+          }
           break;
         case "startTimer":
           console.log("starting timer");
-          setIsTimerRunning(true);
-          setAnimationStarted(true);
+
+          const updatedTimeLeft = document.getElementById("timer-time")?.innerHTML;
+          if (updatedTimeLeft < formatTime(duration)) {
+            document.getElementById("timer-play-button")?.click();
+          }
+
+          if (updatedTimeLeft == formatTime(duration)) {
+            setAnimationStarted(true);
+          }
+
           break;
         case "stopTimer":
           console.log("stopping timer");
-          setIsTimerRunning(false);
+          document.getElementById("timer-pause-button")?.click();
+          break;
+        case "redWinner":
+          setWinnerName(RED);
+          break;
+        case "blueWinner":
+          setWinnerName(BLUE);
+          break;
+        case "purpleWinner":
+          setWinnerName(PURPLE);
           break;
         case "resetTimer":
           console.log("resetting scoreboard");
-          setIsTimerRunning(false);
+          document.getElementById("timer-reset-button")?.click();
           setOpenStartModal(true);
-          setTimer(defaultTimer);
           setWinnerState(false);
           setWinnerName("");
           setGreenProgress(0);
           setRedProgress(0);
           setBlueProgress(0);
           setPurpleProgress(0);
+          setGreenCompletionProgress(starterCompletionProgressObject);
+          setRedCompletionProgress(starterCompletionProgressObject);
+          setPurpleCompletionProgress(starterCompletionProgressObject);
+          setBlueCompletionProgress(starterCompletionProgressObject);
           break;
         default:
           console.log(event.type);

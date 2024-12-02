@@ -3,9 +3,9 @@ import MusicApp from "@/components/musicapp";
 import { asyncWithLDProvider } from "launchdarkly-react-client-sdk";
 import { Room } from "@/components/room";
 import { setCookie } from "cookies-next";
-import { PERSONA_TIER_STANARD, PERSONA_ROLE_USER } from "@/lib/constant";
+import { PERSONA_TIER_STANARD, PERSONA_ROLE_USER, GREEN } from "@/lib/constant";
 import { LoginProvider } from "@/lib/LoginContext";
-import { TEAM4, BLUE } from "@/lib/constant";
+import { TEAM4 } from "@/lib/constant";
 let Team4;
 
 if (typeof window !== "undefined") {
@@ -50,7 +50,7 @@ if (typeof window !== "undefined") {
         {isConfigured && (
           <Room>
             <LoginProvider>
-              <MusicApp teamColor={BLUE} teamName={TEAM4} />
+              <MusicApp teamColor={GREEN} teamName={TEAM4} />
             </LoginProvider>
           </Room>
         )}
