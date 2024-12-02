@@ -284,6 +284,10 @@ const EventListenerComponent = memo(function EventListenerComponent({
           console.log("stopping timer");
           document.getElementById("timer-pause-button")?.click();
           break;
+        case "reloadScreen":
+          setOpenStartModal(true);
+          document.getElementById("timer-reset-button")?.click();
+          break;
         case `${RED}${WINNER}`:
           setWinnerName(RED);
           break;

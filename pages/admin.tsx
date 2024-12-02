@@ -19,7 +19,9 @@ import {
   Archive,
   X,
   Award,
-  Crown,Trophy
+  Crown,
+  Trophy,
+  ListRestart,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -27,6 +29,7 @@ import { Room } from "@/components/room";
 import { useBroadcastEvent } from "@/liveblocks.config";
 import { wait } from "@/lib/utils";
 import { WINNER, BLUE, RED, PURPLE } from "@/lib/constant";
+import { is } from "drizzle-orm";
 
 export default function Admin() {
   return (
@@ -47,24 +50,36 @@ function GameAdminDashboard() {
   const broadcast = useBroadcastEvent();
   const [displayErrorMessage, setDisplayErrorMessage] = useState(false);
   const [archivedMessage, setArchivedMessage] = useState("");
+  const [buttonFeedback, setButtonFeedback] = useState("");
 
   const handleStart = async () => {
     setArchivedMessage("");
     setDisplayErrorMessage(false);
     setIsResetting(false);
+
     broadcast({ type: "startTimer" });
+
+    setButtonFeedback("Starting new game!");
+    await wait(10);
+    setButtonFeedback("");
   };
 
   const handleStop = async () => {
     broadcast({ type: "stopTimer" });
+    setButtonFeedback("Stopped time!");
   };
 
   const handleColorWinner = async (winnerColor: string) => {
     broadcast({ type: winnerColor });
+
+    setButtonFeedback(`Triggered ${winnerColor}`);
+    await wait(10);
+    setButtonFeedback("");
   };
 
   //40 sec and then go to the end when finish
   const handleReset = async () => {
+    setButtonFeedback("Resetting the game and flags!");
     setArchivedMessage("");
     setResetProgressMessage("Start Resetting");
     setDisplayErrorMessage(false);
@@ -111,7 +126,7 @@ function GameAdminDashboard() {
 
       respJson = await resp.json();
       console.log(respJson);
-      // handleReload();
+
       setCodeLogs((prevLogs) => [
         ...prevLogs,
         `Status: ${resp.status}, 
@@ -125,6 +140,7 @@ function GameAdminDashboard() {
 
       if (resp.status === 200) {
         setResetProgressMessage("Reset Complete!");
+        setButtonFeedback("");
       } else {
         setResetProgressMessage("Check the code log for more information.");
       }
@@ -145,7 +161,7 @@ function GameAdminDashboard() {
         url: ${resp.url}`,
       ]);
       // @ts-ignore
-      console.log(resp);  
+      console.log(resp);
       setResetProgress(100);
       setResetProgressMessage("Reset Failed!");
       setDisplayErrorMessage(true);
@@ -153,9 +169,12 @@ function GameAdminDashboard() {
     }
   };
 
-  // const handleReload = async () => {
-  //   broadcast({ type: "reload" });
-  // };
+  const handleReload = async () => {
+    broadcast({ type: "resetTimer" });
+    setButtonFeedback("Reset points back to the start");
+    await wait(8);
+    setButtonFeedback("");
+  };
 
   // const handleArchived = async () => {
   //   setArchivedMessage("");
@@ -240,7 +259,7 @@ function GameAdminDashboard() {
             </div> */}
 
             {/* Game Controls */}
-
+            <h2 className="text-2xl font-semibold text-yellow-500 mb-6">{buttonFeedback}</h2>
             <div className="bg-gray-800 shadow rounded-lg p-4 mb-8">
               <h2 className="text-xl font-semibold text-white mb-4">Game Controls</h2>
               {!resetProgressMessage.includes("complete") ||
@@ -249,6 +268,7 @@ function GameAdminDashboard() {
                     Buttons are disabled due to resetting.
                   </p>
                 ))}
+
               <div className="flex flex-wrap gap-8">
                 <Button
                   className="flex items-center bg-green-600 hover:brightness-125 text-white"
@@ -266,13 +286,23 @@ function GameAdminDashboard() {
                 >
                   <XIcon className="mr-2 h-4 w-4" /> Stop
                 </Button>
+
+                <Button
+                  className="flex items-center bg-purple-600 hover:brightness-125 text-white"
+                  onClick={() => handleReload()}
+                  id="admin-reload"
+                  disabled={isDisabled}
+                >
+                  <ListRestart className="mr-2 h-4 w-4" /> Quick Reset without Reset Flag
+                </Button>
+
                 <Button
                   className="flex items-center bg-yellow-600 hover:brightness-125 text-white"
                   onClick={() => handleReset()}
                   id="admin-reset"
                   disabled={isDisabled}
                 >
-                  <RotateCcw className="mr-2 h-4 w-4" /> Reset
+                  <RotateCcw className="mr-2 h-4 w-4" /> Reset Game and Flag
                 </Button>
 
                 {/* <Button
@@ -294,6 +324,7 @@ function GameAdminDashboard() {
                   className="flex items-center bg-gradient-blue-progress-bar  hover:brightness-125 text-white"
                   onClick={() => handleColorWinner(`${BLUE}${WINNER}`)}
                   id="admin-blueWinner"
+                  disabled={isDisabled}
                 >
                   <Award className="mr-2 h-4 w-4" /> Trigger Blue Winner
                 </Button>
@@ -301,6 +332,7 @@ function GameAdminDashboard() {
                   className="flex items-center bg-gradient-red-progress-bar  hover:brightness-125 text-white"
                   onClick={() => handleColorWinner(`${RED}${WINNER}`)}
                   id="admin-redWinner"
+                  disabled={isDisabled}
                 >
                   <Trophy className="mr-2 h-4 w-4" /> Trigger Red Winner
                 </Button>
@@ -309,6 +341,7 @@ function GameAdminDashboard() {
                   className="flex items-center bg-gradient-purple-progress-bar  hover:brightness-125 text-white"
                   onClick={() => handleColorWinner(`${PURPLE}${WINNER}`)}
                   id="admin-purpleWinner"
+                  disabled={isDisabled}
                 >
                   <Crown className="mr-2 h-4 w-4" /> Trigger Purple Winner
                 </Button>
