@@ -251,7 +251,7 @@ function GameAdminDashboard() {
                 ))}
               <div className="flex flex-wrap gap-8">
                 <Button
-                  className="flex items-center bg-green-600 hover:bg-green-700 text-white"
+                  className="flex items-center bg-green-600 hover:brightness-125 text-white"
                   onClick={() => handleStart()}
                   id="admin-start"
                   disabled={isDisabled}
@@ -259,7 +259,7 @@ function GameAdminDashboard() {
                   <Play className="mr-2 h-4 w-4" /> Start
                 </Button>
                 <Button
-                  className="flex items-center bg-red-600 hover:bg-red-700 text-white"
+                  className="flex items-center bg-red-600  hover:brightness-125 text-white"
                   onClick={() => handleStop()}
                   id="admin-stop"
                   disabled={isDisabled}
@@ -267,7 +267,7 @@ function GameAdminDashboard() {
                   <XIcon className="mr-2 h-4 w-4" /> Stop
                 </Button>
                 <Button
-                  className="flex items-center bg-yellow-600 hover:bg-yellow-700 text-white"
+                  className="flex items-center bg-yellow-600 hover:brightness-125 text-white"
                   onClick={() => handleReset()}
                   id="admin-reset"
                   disabled={isDisabled}
@@ -291,14 +291,14 @@ function GameAdminDashboard() {
 
               <div className="flex flex-wrap gap-8">
                 <Button
-                  className="flex items-center bg-gradient-blue-progress-bar hover:bg-ldblue text-white"
+                  className="flex items-center bg-gradient-blue-progress-bar  hover:brightness-125 text-white"
                   onClick={() => handleColorWinner(`${BLUE}${WINNER}`)}
                   id="admin-blueWinner"
                 >
                   <Award className="mr-2 h-4 w-4" /> Trigger Blue Winner
                 </Button>
                 <Button
-                  className="flex items-center bg-gradient-red-progress-bar hover:bg-ldred text-white"
+                  className="flex items-center bg-gradient-red-progress-bar  hover:brightness-125 text-white"
                   onClick={() => handleColorWinner(`${RED}${WINNER}`)}
                   id="admin-redWinner"
                 >
@@ -306,7 +306,7 @@ function GameAdminDashboard() {
                 </Button>
 
                 <Button
-                  className="flex items-center bg-gradient-purple-progress-bar hover:bg-ldpurple text-white"
+                  className="flex items-center bg-gradient-purple-progress-bar  hover:brightness-125 text-white"
                   onClick={() => handleColorWinner(`${PURPLE}${WINNER}`)}
                   id="admin-purpleWinner"
                 >

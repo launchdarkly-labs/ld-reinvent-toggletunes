@@ -7,7 +7,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { useEffect } from "react";
-import { PURPLE,RED,BLUE,GREEN } from "@/lib/constant";
+import { PURPLE, RED, BLUE, GREEN } from "@/lib/constant";
 
 export function Modal({
   winnerState,
@@ -15,36 +15,17 @@ export function Modal({
   setWinnerName,
   setWinnerState,
   setResetScores,
+  setOpenStartModal
 }: any) {
 
-  useEffect(() => {
-    console.log(winnerState);
-    const handleKeyDown = (event) => {
-      if (event.key === "r") {
-        setWinnerName(RED);
-      }
-      if (event.key === "b") {
-        setWinnerName(BLUE);
-      }
-      if (event.key === "g") {
-        setWinnerName(GREEN);
-      }
-      if (event.key === "p") {
-        setWinnerName(PURPLE);
-      }
-      if (event.key === "Enter") {
-        setWinnerName("");
-        setWinnerState(false);
-      }
-    };
-    document.addEventListener("keydown", handleKeyDown);
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [winnerName, winnerState]);
+  useEffect(() => { //hide the starting modal when you trigger manually the color winner
+    if (winnerName !== "") {
+      setOpenStartModal(false);
+    }
+  }, [winnerName]);
 
-// they overwrote alert dialog with the winner gif
-//winnerState
+  // they overwrote alert dialog with the winner gif
+  //winnerState
   return (
     <>
       <AlertDialog open={true}>

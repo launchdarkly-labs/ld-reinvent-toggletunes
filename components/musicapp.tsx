@@ -343,7 +343,7 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
           });
           setTotalPointAccumulation((prevPoints) => prevPoints + 10);
           setFlagFourOne(true);
-          // await triggerStep("fifth step complete", "stepFiveComplete");
+    
         } else {
           console.log("Step 4.1 not eligible for evaluation!");
         }

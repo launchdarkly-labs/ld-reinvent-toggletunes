@@ -187,6 +187,7 @@ export default function Scoreboard() {
         setWinnerState={setWinnerState}
         winnerName={winnerName}
         setWinnerName={setWinnerName}
+        setOpenStartModal={setOpenStartModal}
       />
       <StartModal
         openStartModal={openStartModal}
