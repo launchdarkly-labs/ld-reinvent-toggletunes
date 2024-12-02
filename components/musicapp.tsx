@@ -287,17 +287,27 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
     const triggerSteps = async () => {
       try {
         if (releaseTracklistLDFlag === true && flagOne === false) {
-          broadcast({ type: teamColor, complete: STEPONECOMPLETE, score: 20 });
           setTotalPointAccumulation((prevPoints) => prevPoints + 20);
+          broadcast({
+            type: teamColor,
+            complete: STEPONECOMPLETE,
+            score: 20,
+            totalPointAccumulation: totalPointAccumulation,
+          });
           setFlagOne(true);
-          // await triggerStep("first step complete", "stepOneComplete");
+        
         } else {
           console.log("Step 1 not eligible for evaluation!");
         }
 
         if (releaseSavedPlaylistsSidebarLDFlag === true && flagTwoOne === false) {
-          broadcast({ type: teamColor, complete: STEPTWOONECOMPLETE, score: 10 });
           setTotalPointAccumulation((prevPoints) => prevPoints + 10);
+          broadcast({
+            type: teamColor,
+            complete: STEPTWOONECOMPLETE,
+            score: 10,
+            totalPointAccumulation: totalPointAccumulation,
+          });
           setFlagTwoOne(true);
           // await triggerStep("second step complete", "stepTwoComplete");
         } else {
@@ -310,8 +320,13 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
           releaseSavedPlaylistsSidebarLDFlag === false &&
           flagTwo === false
         ) {
-          broadcast({ type: teamColor, complete: STEPTWOCOMPLETE, score: 10 });
           setTotalPointAccumulation((prevPoints) => prevPoints + 10);
+          broadcast({
+            type: teamColor,
+            complete: STEPTWOCOMPLETE,
+            score: 10,
+            totalPointAccumulation: totalPointAccumulation,
+          });
           setFlagTwo(true);
           // await triggerStep("second step complete", "stepTwoComplete");
         } else {
@@ -323,12 +338,13 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
           flagThree === false &&
           userObject.personarole === PERSONA_ROLE_DEVELOPER
         ) {
+          setTotalPointAccumulation((prevPoints) => prevPoints + 20);
           broadcast({
             type: teamColor,
             complete: STEPTHREECOMPLETE,
             score: 20,
+            totalPointAccumulation: totalPointAccumulation,
           });
-          setTotalPointAccumulation((prevPoints) => prevPoints + 20);
           setFlagThree(true);
           // await triggerStep("fourth step complete", "stepFourComplete");
         } else {
@@ -336,12 +352,13 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
         }
 
         if (aiModelName.includes(CLAUDE) && flagFourOne === false) {
+          setTotalPointAccumulation((prevPoints) => prevPoints + 10);
           broadcast({
             type: teamColor,
             complete: STEPFOURONECOMPLETE,
             score: 10,
+            totalPointAccumulation: totalPointAccumulation,
           });
-          setTotalPointAccumulation((prevPoints) => prevPoints + 10);
           setFlagFourOne(true);
         } else {
           console.log("Step 4.1 not eligible for evaluation!");
@@ -353,14 +370,14 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
           flagFour === false &&
           flagFourOne === true
         ) {
+          setTotalPointAccumulation((prevPoints) => prevPoints + 10);
           broadcast({
             type: teamColor,
             complete: STEPFOURCOMPLETE,
             score: 10,
+            totalPointAccumulation: totalPointAccumulation,
           });
-          setTotalPointAccumulation((prevPoints) => prevPoints + 10);
           setFlagFour(true);
-          // await triggerStep("fifth step complete", "stepFiveComplete");
 
           setReleaseReleaseGuardianButton(true);
         } else {
@@ -372,12 +389,13 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
           releaseReleaseGuardianButton === true &&
           flagFive === false
         ) {
+          setTotalPointAccumulation((prevPoints) => prevPoints + 20);
           broadcast({
             type: teamColor,
             complete: STEPFIVECOMPLETE,
             score: 20,
+            totalPointAccumulation: totalPointAccumulation,
           });
-          setTotalPointAccumulation((prevPoints) => prevPoints + 20);
           setFlagFive(true);
         } else {
           console.log("Step 5 not eligible for evaluation!");

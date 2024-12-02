@@ -21,21 +21,21 @@ export function Modal({
     //hide the starting modal when you trigger manually the color winner
     if (winnerName !== "" && setOpenStartModal) {
       setOpenStartModal(false);
-      setIsOpen(true);
+      // setIsOpen(true);
     }
   }, [winnerName]);
 
   // they overwrote alert dialog with the winner gif
   return (
     <>
-      <AlertDialog open={isOpen}>
+      <AlertDialog open={true}>
         <AlertDialogTrigger
-          asChild
+          // asChild
           // onClick={() => {
           //   setIsOpen(false);
           // }}
         >
-          <AlertDialogContent variant={winnerName} >
+          <AlertDialogContent variant={winnerName} className="cursor-pointer">
             <AlertDialogHeader />
             <AlertDialogFooter></AlertDialogFooter>
           </AlertDialogContent>
