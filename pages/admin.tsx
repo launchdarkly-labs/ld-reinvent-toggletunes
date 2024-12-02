@@ -59,9 +59,18 @@ function GameAdminDashboard() {
 
     broadcast({ type: "startTimer" });
 
-    setButtonFeedback("Starting new game!");
-    await wait(10);
-    setButtonFeedback("");
+    if(buttonFeedback.includes("Stopped")){
+      setButtonFeedback("Continue with the game!");
+      await wait(10);
+      setButtonFeedback("");
+    } else if (buttonFeedback.includes("Continue")){
+      setButtonFeedback("");
+    }else{
+      setButtonFeedback("Starting new game!");
+      await wait(10);
+      setButtonFeedback("");
+    }
+   
   };
 
   const handleStop = async () => {
