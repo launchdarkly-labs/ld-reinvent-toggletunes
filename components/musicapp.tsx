@@ -335,7 +335,7 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
           console.log("Step 3 not eligible for evaluation!");
         }
 
-        if (aiModelName.includes(CLAUDE) && aiPlaylists.length >= 1 && flagFourOne === false) {
+        if (aiModelName.includes(CLAUDE) && flagFourOne === false) {
           broadcast({
             type: teamColor,
             complete: STEPFOURONECOMPLETE,
