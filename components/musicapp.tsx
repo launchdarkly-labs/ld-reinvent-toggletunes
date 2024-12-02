@@ -66,7 +66,6 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
   const { aiPlaylists, setAIPlaylists } = useContext(AIGeneratedPlaylistContext);
 
   // Check for `error` and `isLoading` before `threads` is defined
-  const { threads, error, isLoading } = useThreads();
 
   const [playlistAPI, setPlaylistAPI] = useState(playlists);
   const [songsAPI, setSongsAPI] = useState(songs);

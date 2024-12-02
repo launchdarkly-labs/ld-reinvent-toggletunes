@@ -287,6 +287,13 @@ const EventListenerComponent = memo(function EventListenerComponent({
         case "reloadScreen":
           setOpenStartModal(true);
           document.getElementById("timer-reset-button")?.click();
+          setOpenStartModal(true);
+          setWinnerState(false);
+          setWinnerName("");
+          setGreenCompletionProgress(starterCompletionProgressObject);
+          setRedCompletionProgress(starterCompletionProgressObject);
+          setPurpleCompletionProgress(starterCompletionProgressObject);
+          setBlueCompletionProgress(starterCompletionProgressObject);
           break;
         case `${RED}${WINNER}`:
           setWinnerName(RED);

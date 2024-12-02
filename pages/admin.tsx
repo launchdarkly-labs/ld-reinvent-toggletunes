@@ -177,7 +177,7 @@ function GameAdminDashboard() {
   };
 
   const handleReload = async () => {
-    broadcast({ type: "resetTimer" });
+    broadcast({ type: "reloadScreen" });
     setButtonFeedback("Reset points back to the start");
     await wait(8);
     setButtonFeedback("");
