@@ -87,6 +87,7 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
   const [releaseAdSidebarManually, setReleaseAdSidebarManually] = useState(false);
   const [countNumReleaseGuardianAdSidebar, setCountNumReleaseGuardianAdSidebar] = useState(0);
   const [showLostConnectionModal, setShowLostConnectionModal] = useState(false);
+  const [clickCounter, setClickCounter] = useState(0);
   const layerIds = useStorage((root) => root);
   console.log("layerIds", layerIds);
   // @ts-ignore
@@ -97,6 +98,7 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
   const { userObject } = useContext(LoginContext);
 
   useLostConnectionListener((event) => {
+    console.log("event",event)
     switch (event) {
       case "lost":
         setShowLostConnectionModal(true);
@@ -259,7 +261,7 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
   async function submitReleaseGuardianQuery(): Promise<void> {
     // @ts-ignore
     const projectKey: string = LDPROJECTKEYSVALUEOBJECTS[teamName];
-
+    setClickCounter(prev=>prev+1);
     const environmentKey = "test";
     const flag_key = "release-new-ad-sidebar";
     setIsLoadingApp(true);
@@ -408,7 +410,7 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
         }
 
         if (
-          (releaseAdSidebarLDFlag || releaseAdSidebarManually) &&
+          (releaseAdSidebarLDFlag || releaseAdSidebarManually || clickCounter >= 3) &&
           releaseReleaseGuardianButton === true &&
           flagFive === false
         ) {
