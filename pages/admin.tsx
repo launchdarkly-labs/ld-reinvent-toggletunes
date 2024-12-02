@@ -82,8 +82,6 @@ function GameAdminDashboard() {
     broadcast({ type: winnerColor });
 
     setButtonFeedback(`Triggered ${winnerColor}`);
-    await wait(10);
-    setButtonFeedback("");
   };
 
   //40 sec and then go to the end when finish
