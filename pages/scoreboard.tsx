@@ -183,10 +183,7 @@ export default function Scoreboard() {
       </main>
       {/* this modal shows the winner */}
       <Modal
-        winnerState={winnerState}
-        setWinnerState={setWinnerState}
         winnerName={winnerName}
-        setWinnerName={setWinnerName}
         setOpenStartModal={setOpenStartModal}
       />
       <StartModal

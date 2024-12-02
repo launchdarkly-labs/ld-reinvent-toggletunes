@@ -51,6 +51,7 @@ import {
 } from "@/lib/constant";
 import Navbar from "./Navbar";
 import LoginContext from "@/lib/LoginContext";
+import { Modal } from "./modal";
 
 //TODO: when you go into playlist 1 /2 or whatever, it should be specific per team1/ team 2 etc
 //TODO: i think release should be a really ugly version of spotify from 2012 and then release a new version
@@ -79,7 +80,7 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
   const [flagFive, setFlagFive] = useState(false);
   const [totalPointAccumulation, setTotalPointAccumulation] = useState(0);
   const [isLoadingApp, setIsLoadingApp] = useState(false);
-
+  const [showWinnerModal, setShowWinnerModal] = useState(false);
   const [releaseReleaseGuardianButton, setReleaseReleaseGuardianButton] = useState(false);
   const [releaseAdSidebarManually, setReleaseAdSidebarManually] = useState(false);
   const [countNumReleaseGuardianAdSidebar, setCountNumReleaseGuardianAdSidebar] = useState(0);
@@ -342,7 +343,6 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
           });
           setTotalPointAccumulation((prevPoints) => prevPoints + 10);
           setFlagFourOne(true);
-    
         } else {
           console.log("Step 4.1 not eligible for evaluation!");
         }
@@ -385,7 +385,7 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
 
         if (flagFive === true && totalPointAccumulation >= 100) {
           broadcast({ type: `${teamColor}${WINNER}` });
-          console.log("awefawefawefivvnovo")
+          setShowWinnerModal(true);
         }
       } catch (err) {
         console.error(err);
@@ -721,6 +721,7 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
           <SimplePlayerScreen />
         )}
       </main>
+      {showWinnerModal ? <Modal winnerName={teamColor} /> : null}
     </Room>
   );
 }
