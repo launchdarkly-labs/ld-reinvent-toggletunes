@@ -295,7 +295,7 @@ function GameAdminDashboard() {
                 </Button>
 
                 <Button
-                  className="flex items-center bg-purple-600 hover:brightness-125 text-white"
+                  className="flex items-center bg-purple-600 hover:brightness-125 text-white  p-2"
                   onClick={() => handleReload()}
                   id="admin-reload"
                   disabled={isDisabled}
