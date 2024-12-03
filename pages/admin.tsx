@@ -80,7 +80,6 @@ function GameAdminDashboard() {
 
   const handleColorWinner = async (winnerColor: string) => {
     broadcast({ type: winnerColor });
-
     setButtonFeedback(`Triggered ${winnerColor}`);
   };
 

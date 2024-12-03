@@ -74,10 +74,6 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
 
   // Check for `error` and `isLoading` before `threads` is defined
 
-  const randNum = Math.floor(Math.random() * 5);
-  //@ts-ignore
-  const chosenSong = RANDOMSONGOBJECT[randNum];
-  const audio = new Audio(chosenSong);
   const [playlistAPI, setPlaylistAPI] = useState(playlists);
   const [songsAPI, setSongsAPI] = useState(songs);
   // const [setUpgradeAd] = useState(true);
@@ -425,8 +421,13 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
           setFlagFive(true);
 
           broadcast({ type: `${teamColor}${WINNER}` });
-          setWinnerName(teamColor)
-          // setShowWinnerModal(true);
+          setWinnerName(teamColor);
+          setShowWinnerModal(true);
+
+          //@ts-ignore
+          const chosenSong = RANDOMSONGOBJECT[teamColor];
+          const audio = new Audio(chosenSong);
+          audio.loop = true;
 
           audio.play();
         } else {
@@ -775,7 +776,7 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
           <SimplePlayerScreen />
         )}
       </main>
-      {showWinnerModal ?      <Modal winnerName={winnerName} setWinnerName={setWinnerName} />: null}
+      {showWinnerModal ? <Modal winnerName={winnerName} setWinnerName={setWinnerName} /> : null}
       {showLostConnectionModal ? (
         <LostConnectionModal showLostConnectionModal={showLostConnectionModal} />
       ) : null}
@@ -786,22 +787,17 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
 const EventListenerComponent = memo(function EventListenerComponent({
   reloadPage,
   setShowWinnerModal,
-  setWinnerName
+  setWinnerName,
 }: {
   reloadPage: any;
   setShowWinnerModal: any;
-  setWinnerName:any;
+  setWinnerName: any;
 }) {
   console.log("Event listener online");
   useEventListener(({ event, user, connectionId }) => {
     async function resetFlagSteps(event: any) {
       console.log(event);
 
-      const randNum = Math.floor(Math.random() * 5);
-      //@ts-ignore
-      const chosenSong = RANDOMSONGOBJECT[randNum];
-      const audio = new Audio(chosenSong);
-      audio.loop = true;
       switch (event.type) {
         case "resetTimer":
           await reloadPage(); // Call reloadPage when event type is "resetTimer"
@@ -812,18 +808,30 @@ const EventListenerComponent = memo(function EventListenerComponent({
         case `${RED}${WINNER}`:
           setWinnerName(RED);
           setShowWinnerModal(true);
+
+          const chosenSong = RANDOMSONGOBJECT[RED];
+          const audio = new Audio(chosenSong);
+          audio.loop = true;
           audio.play();
+
           break;
         case `${BLUE}${WINNER}`:
           setWinnerName(BLUE);
           setShowWinnerModal(true);
-          audio.play();
+          const chosenSong2 = RANDOMSONGOBJECT[BLUE];
+          const audio2 = new Audio(chosenSong2);
+          audio2.loop = true;
+          audio2.play();
           break;
         case `${PURPLE}${WINNER}`:
           setWinnerName(PURPLE);
           setShowWinnerModal(true);
-          audio.play();
+          const chosenSong3 = RANDOMSONGOBJECT[PURPLE];
+          const audio3 = new Audio(chosenSong3);
+          audio3.loop = true;
+          audio3.play();
           break;
+
         default:
           console.log("invalid event type");
       }
