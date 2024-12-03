@@ -52,7 +52,7 @@ import {
   RED,
   BLUE,
   PURPLE,
-  RANDOMSONGOBJECT
+  RANDOMSONGOBJECT,
 } from "@/lib/constant";
 import Navbar from "./Navbar";
 import LoginContext from "@/lib/LoginContext";
@@ -74,6 +74,10 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
 
   // Check for `error` and `isLoading` before `threads` is defined
 
+  const randNum = Math.floor(Math.random() * 5);
+  //@ts-ignore
+  const chosenSong = RANDOMSONGOBJECT[randNum];
+  const audio = new Audio(chosenSong);
   const [playlistAPI, setPlaylistAPI] = useState(playlists);
   const [songsAPI, setSongsAPI] = useState(songs);
   // const [setUpgradeAd] = useState(true);
@@ -92,13 +96,14 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
   const [countNumReleaseGuardianAdSidebar, setCountNumReleaseGuardianAdSidebar] = useState(0);
   const [showLostConnectionModal, setShowLostConnectionModal] = useState(false);
   const [clickCounter, setClickCounter] = useState(0);
+  const [winnerName, setWinnerName] = useState("");
   const layerIds = useStorage((root) => root);
   console.log("layerIds", layerIds);
   // @ts-ignore
   // const layerIds2 = useStorage((root) => root.totalPoints);
   // console.log("layerIds2", layerIds2);
   const API_KEY: string = process.env.NEXT_PUBLIC_LD_API_KEY as string;
-  const [winnerName, setWinnerName] = useState("");
+
   const { userObject } = useContext(LoginContext);
 
   useLostConnectionListener((event) => {
@@ -313,7 +318,6 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
     await router.reload();
   };
 
-
   useEffect(() => {
     const triggerSteps = async () => {
       try {
@@ -323,7 +327,6 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
             type: teamColor,
             complete: STEPONECOMPLETE,
             score: 20,
-       
           });
           setFlagOne(true);
         } else {
@@ -336,7 +339,6 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
             type: teamColor,
             complete: STEPTWOONECOMPLETE,
             score: 10,
-         
           });
           setFlagTwoOne(true);
           // await triggerStep("second step complete", "stepTwoComplete");
@@ -355,7 +357,6 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
             type: teamColor,
             complete: STEPTWOCOMPLETE,
             score: 10,
-  
           });
           setFlagTwo(true);
           // await triggerStep("second step complete", "stepTwoComplete");
@@ -373,7 +374,6 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
             type: teamColor,
             complete: STEPTHREECOMPLETE,
             score: 20,
-           
           });
           setFlagThree(true);
           // await triggerStep("fourth step complete", "stepFourComplete");
@@ -387,7 +387,6 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
             type: teamColor,
             complete: STEPFOURONECOMPLETE,
             score: 10,
-           
           });
           setFlagFourOne(true);
         } else {
@@ -405,7 +404,6 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
             type: teamColor,
             complete: STEPFOURCOMPLETE,
             score: 10,
-          
           });
           setFlagFour(true);
 
@@ -423,16 +421,13 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
             type: teamColor,
             complete: STEPFIVECOMPLETE,
             score: 20,
-            
           });
           setFlagFive(true);
 
           broadcast({ type: `${teamColor}${WINNER}` });
-          setShowWinnerModal(true);
-          const randNum = Math.floor(Math.random() * 4);
-          //@ts-ignore
-          const chosenSong = RANDOMSONGOBJECT[randNum];
-          const audio = new Audio(chosenSong);
+          setWinnerName(teamColor)
+          // setShowWinnerModal(true);
+
           audio.play();
         } else {
           console.log("Step 5 not eligible for evaluation!");
@@ -457,7 +452,7 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
     releaseAdSidebarLDFlag,
     releaseAdSidebarManually,
     aiPlaylists,
-    clickCounter
+    clickCounter,
   ]);
 
   useEffect(() => {
@@ -497,6 +492,7 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
         // @ts-ignore
         reloadPage={reloadPage}
         setShowWinnerModal={setShowWinnerModal}
+        setWinnerName={setWinnerName}
       />
       <main className="flex flex-col gap-2 font-sohne bg-black overflow-y-visible h-screen lg:overflow-y-hidden">
         {releaseTracklistLDFlag && (
@@ -779,7 +775,7 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
           <SimplePlayerScreen />
         )}
       </main>
-      {showWinnerModal ? <Modal winnerName={teamColor} /> : null}
+      {showWinnerModal ?      <Modal winnerName={winnerName} setWinnerName={setWinnerName} />: null}
       {showLostConnectionModal ? (
         <LostConnectionModal showLostConnectionModal={showLostConnectionModal} />
       ) : null}
@@ -790,14 +786,22 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
 const EventListenerComponent = memo(function EventListenerComponent({
   reloadPage,
   setShowWinnerModal,
+  setWinnerName
 }: {
   reloadPage: any;
   setShowWinnerModal: any;
+  setWinnerName:any;
 }) {
   console.log("Event listener online");
   useEventListener(({ event, user, connectionId }) => {
     async function resetFlagSteps(event: any) {
       console.log(event);
+
+      const randNum = Math.floor(Math.random() * 5);
+      //@ts-ignore
+      const chosenSong = RANDOMSONGOBJECT[randNum];
+      const audio = new Audio(chosenSong);
+      audio.loop = true;
       switch (event.type) {
         case "resetTimer":
           await reloadPage(); // Call reloadPage when event type is "resetTimer"
@@ -806,13 +810,19 @@ const EventListenerComponent = memo(function EventListenerComponent({
           await reloadPage();
           break;
         case `${RED}${WINNER}`:
+          setWinnerName(RED);
           setShowWinnerModal(true);
+          audio.play();
           break;
         case `${BLUE}${WINNER}`:
+          setWinnerName(BLUE);
           setShowWinnerModal(true);
+          audio.play();
           break;
         case `${PURPLE}${WINNER}`:
+          setWinnerName(PURPLE);
           setShowWinnerModal(true);
+          audio.play();
           break;
         default:
           console.log("invalid event type");

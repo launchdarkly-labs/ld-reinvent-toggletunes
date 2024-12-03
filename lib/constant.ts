@@ -56,4 +56,5 @@ export const RANDOMSONGOBJECT = {
   1: "audio/hardwell-ifeellikedancing.mp3",
   2: "audio/zedd-clarity.mp3",
   3: "audio/djkhaled-allDoWin.mp3",
+  4: "audio/usher-yeah2.mp3",
 };
