@@ -33,7 +33,7 @@ const AlertDialogContent = React.forwardRef(({ className, variant, ...props }, r
     case BLUE:
       console.log("triggering blue");
       backgroundClass =
-        "bg-[url('https://utfs.io/f/o5A3nMDIMFiPp3IQJ0VEzjHOnlDA2g81YXuS56xwGV7toJM3')] text-white";
+        "bg-[url('/images/gifs/blueWinner50mb.gif')] text-white";
       break;
     case RED:
       console.log("triggering red");
@@ -43,7 +43,7 @@ const AlertDialogContent = React.forwardRef(({ className, variant, ...props }, r
     case PURPLE:
       console.log("triggering purple");
       backgroundClass =
-        "bg-[url('https://utfs.io/f/o5A3nMDIMFiPkLcbrVXp1wRZQP3KSqAyxbDeOHCdiYsvzWtB')] text-white";
+        "bg-[url('/images/gifs/purpleWinner50mb.gif')] text-white";
       break;
     case GREEN:
       console.log("triggering green");
