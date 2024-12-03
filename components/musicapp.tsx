@@ -312,6 +312,7 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
     await router.reload();
   };
 
+
   useEffect(() => {
     const triggerSteps = async () => {
       try {
@@ -321,7 +322,7 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
             type: teamColor,
             complete: STEPONECOMPLETE,
             score: 20,
-            totalPointAccumulation: totalPointAccumulation,
+       
           });
           setFlagOne(true);
         } else {
@@ -334,7 +335,7 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
             type: teamColor,
             complete: STEPTWOONECOMPLETE,
             score: 10,
-            totalPointAccumulation: totalPointAccumulation,
+         
           });
           setFlagTwoOne(true);
           // await triggerStep("second step complete", "stepTwoComplete");
@@ -353,7 +354,7 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
             type: teamColor,
             complete: STEPTWOCOMPLETE,
             score: 10,
-            totalPointAccumulation: totalPointAccumulation,
+  
           });
           setFlagTwo(true);
           // await triggerStep("second step complete", "stepTwoComplete");
@@ -371,7 +372,7 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
             type: teamColor,
             complete: STEPTHREECOMPLETE,
             score: 20,
-            totalPointAccumulation: totalPointAccumulation,
+           
           });
           setFlagThree(true);
           // await triggerStep("fourth step complete", "stepFourComplete");
@@ -385,7 +386,7 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
             type: teamColor,
             complete: STEPFOURONECOMPLETE,
             score: 10,
-            totalPointAccumulation: totalPointAccumulation,
+           
           });
           setFlagFourOne(true);
         } else {
@@ -403,7 +404,7 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
             type: teamColor,
             complete: STEPFOURCOMPLETE,
             score: 10,
-            totalPointAccumulation: totalPointAccumulation,
+          
           });
           setFlagFour(true);
 
@@ -413,7 +414,7 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
         }
 
         if (
-          (releaseAdSidebarLDFlag || releaseAdSidebarManually || clickCounter >= 3) &&
+          (releaseAdSidebarLDFlag || releaseAdSidebarManually || clickCounter >= 2) &&
           releaseReleaseGuardianButton === true
         ) {
           setTotalPointAccumulation((prevPoints) => prevPoints + 20);
@@ -421,18 +422,21 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
             type: teamColor,
             complete: STEPFIVECOMPLETE,
             score: 20,
-            totalPointAccumulation: totalPointAccumulation,
+            
           });
           setFlagFive(true);
+
+          broadcast({ type: `${teamColor}${WINNER}` });
+          setShowWinnerModal(true);
         } else {
           console.log("Step 5 not eligible for evaluation!");
         }
 
-        if (flagFive === true && totalPointAccumulation >= 80) {
-          //if you get flagFive true and points above 80 still
-          broadcast({ type: `${teamColor}${WINNER}` });
-          setShowWinnerModal(true);
-        }
+        // if (flagFive === true && totalPointAccumulation >= 80) {
+        //   //if you get flagFive true and points above 80 still
+        //   broadcast({ type: `${teamColor}${WINNER}` });
+        //   setShowWinnerModal(true);
+        // }
       } catch (err) {
         console.error(err);
       }
@@ -447,7 +451,7 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
     releaseAdSidebarLDFlag,
     releaseAdSidebarManually,
     aiPlaylists,
-    totalPointAccumulation,
+    clickCounter
   ]);
 
   useEffect(() => {
@@ -795,15 +799,15 @@ const EventListenerComponent = memo(function EventListenerComponent({
         case "reload":
           await reloadPage();
           break;
-        case `${RED}${WINNER}`:
-          setShowWinnerModal(true);
-          break;
-        case `${BLUE}${WINNER}`:
-          setShowWinnerModal(true);
-          break;
-        case `${PURPLE}${WINNER}`:
-          setShowWinnerModal(true);
-          break;
+        // case `${RED}${WINNER}`:
+        //   setShowWinnerModal(true);
+        //   break;
+        // case `${BLUE}${WINNER}`:
+        //   setShowWinnerModal(true);
+        //   break;
+        // case `${PURPLE}${WINNER}`:
+        //   setShowWinnerModal(true);
+        //   break;
         default:
           console.log("invalid event type");
       }

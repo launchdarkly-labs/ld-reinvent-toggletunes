@@ -264,9 +264,6 @@ const EventListenerComponent = memo(function EventListenerComponent({
             setGreenCompletionProgress({ ...greenCompletionProgress, [event.complete]: 1 }); //to prevent user's from trigging the same flag over and over to get points
           }
 
-          if(event.totalPointAccumulation > greenProgress){
-            setGreenProgress(event.totalPointAccumulation); //correction in case broadcast didn't send score properly
-          }
 
           break;
         case RED:
@@ -276,9 +273,6 @@ const EventListenerComponent = memo(function EventListenerComponent({
             setRedCompletionProgress({ ...redCompletionProgress, [event.complete]: 1 }); //to prevent user's from trigging the same flag over and over to get points
           }
 
-          if(event.totalPointAccumulation > redProgress){
-            setRedProgress(event.totalPointAccumulation);
-          }
 
           break;
         case PURPLE:
@@ -288,10 +282,7 @@ const EventListenerComponent = memo(function EventListenerComponent({
             setPurpleCompletionProgress({ ...purpleCompletionProgress, [event.complete]: 1 }); //to prevent user's from trigging the same flag over and over to get points
           }
 
-          if(event.totalPointAccumulation > purpleProgress){
-            console.log("this hits?")
-            setPurpleProgress((prevProgress) => prevProgress + (event.totalPointAccumulation-prevProgress));
-          }
+        
 
           break;
         case BLUE:
@@ -301,9 +292,7 @@ const EventListenerComponent = memo(function EventListenerComponent({
             setBlueCompletionProgress({ ...blueCompletionProgress, [event.complete]: 1 }); //to prevent user's from trigging the same flag over and over to get points
           }
 
-          if(event.totalPointAccumulation > blueProgress){
-            setBlueProgress(event.totalPointAccumulation);
-          }
+         
           break;
         case "startTimer":
           console.log("starting timer");
