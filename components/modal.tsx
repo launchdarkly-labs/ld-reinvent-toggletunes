@@ -20,7 +20,7 @@ export function Modal({
   setWinnerName?: any;
   // winnerState
 }) {
-  const [isOpen, setIsOpen] = useState(true);
+  //const [isOpen, setIsOpen] = useState(true);
   useEffect(() => {
     //hide the starting modal when you trigger manually the color winner
     if (winnerName !== "" && setOpenStartModal) {

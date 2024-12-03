@@ -24,6 +24,7 @@ import {
 import Timer from "@/components/Timer";
 import { useTimer } from "@/lib/useTimer";
 import { formatTime } from "@/lib/utils";
+import { useRouter } from "next/router";
 
 
 export default function Scoreboard() {
@@ -121,8 +122,11 @@ export default function Scoreboard() {
   //   console.log(animals);
   // });
 
+  const router = useRouter();
 
- 
+  const reloadPage = async () => {
+    await router.reload();
+  };
 
   return (
     <>
@@ -148,6 +152,7 @@ export default function Scoreboard() {
         resetTimer={resetTimer}
         timeLeft={timeLeft}
         duration={duration}
+        reloadPage={reloadPage}
         // addAnimal={addAnimal}
       />
       <main className="h-screen bg-black">
@@ -340,6 +345,7 @@ const EventListenerComponent = memo(function EventListenerComponent({
           setRedCompletionProgress(starterCompletionProgressObject);
           setPurpleCompletionProgress(starterCompletionProgressObject);
           setBlueCompletionProgress(starterCompletionProgressObject);
+          reloadPage();
           break;
         default:
           console.log(event.type);

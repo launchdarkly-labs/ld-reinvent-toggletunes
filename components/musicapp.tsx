@@ -49,6 +49,9 @@ import {
   STEPFIVECOMPLETE,
   PERSONA_ROLE_DEVELOPER,
   WINNER,
+  RED,
+  BLUE,
+  PURPLE,
 } from "@/lib/constant";
 import Navbar from "./Navbar";
 import LoginContext from "@/lib/LoginContext";
@@ -94,11 +97,11 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
   // const layerIds2 = useStorage((root) => root.totalPoints);
   // console.log("layerIds2", layerIds2);
   const API_KEY: string = process.env.NEXT_PUBLIC_LD_API_KEY as string;
-
+  const [winnerName, setWinnerName] = useState("");
   const { userObject } = useContext(LoginContext);
 
   useLostConnectionListener((event) => {
-    console.log("event",event)
+    console.log("event", event);
     switch (event) {
       case "lost":
         setShowLostConnectionModal(true);
@@ -261,7 +264,7 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
   async function submitReleaseGuardianQuery(): Promise<void> {
     // @ts-ignore
     const projectKey: string = LDPROJECTKEYSVALUEOBJECTS[teamName];
-    setClickCounter(prev=>prev+1);
+    setClickCounter((prev) => prev + 1);
     const environmentKey = "test";
     const flag_key = "release-new-ad-sidebar";
     setIsLoadingApp(true);
@@ -411,7 +414,7 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
 
         if (
           (releaseAdSidebarLDFlag || releaseAdSidebarManually || clickCounter >= 3) &&
-          releaseReleaseGuardianButton === true 
+          releaseReleaseGuardianButton === true
         ) {
           setTotalPointAccumulation((prevPoints) => prevPoints + 20);
           broadcast({
@@ -425,7 +428,8 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
           console.log("Step 5 not eligible for evaluation!");
         }
 
-        if (flagFive === true && totalPointAccumulation >= 80 ) { //if you get flagFive true and points above 80 still
+        if (flagFive === true && totalPointAccumulation >= 80) {
+          //if you get flagFive true and points above 80 still
           broadcast({ type: `${teamColor}${WINNER}` });
           setShowWinnerModal(true);
         }
@@ -479,9 +483,11 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
 
   return (
     <>
-      {/* 
-// @ts-ignore */}
-      <EventListenerComponent reloadPage={reloadPage} />
+      <EventListenerComponent
+        // @ts-ignore
+        reloadPage={reloadPage}
+        setShowWinnerModal={setShowWinnerModal}
+      />
       <main className="flex flex-col gap-2 font-sohne bg-black overflow-y-visible h-screen lg:overflow-y-hidden">
         {releaseTracklistLDFlag && (
           <section className="w-full flex flex-col ">
@@ -772,8 +778,11 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
 }
 // @ts-ignore
 const EventListenerComponent = memo(function EventListenerComponent({
-  // @ts-ignore
   reloadPage,
+  setShowWinnerModal,
+}: {
+  reloadPage: any;
+  setShowWinnerModal: any;
 }) {
   console.log("Event listener online");
   useEventListener(({ event, user, connectionId }) => {
@@ -785,6 +794,15 @@ const EventListenerComponent = memo(function EventListenerComponent({
           break;
         case "reload":
           await reloadPage();
+          break;
+        case `${RED}${WINNER}`:
+          setShowWinnerModal(true);
+          break;
+        case `${BLUE}${WINNER}`:
+          setShowWinnerModal(true);
+          break;
+        case `${PURPLE}${WINNER}`:
+          setShowWinnerModal(true);
           break;
         default:
           console.log("invalid event type");
