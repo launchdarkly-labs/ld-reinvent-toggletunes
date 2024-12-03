@@ -50,3 +50,10 @@ export const LDPROJECTKEYSVALUEOBJECTS: {
 };
 
 export const WINNER = "Winner";
+
+export const RANDOMSONGOBJECT = {
+  0: "audio/usher-yeah.mp3",
+  1: "audio/hardwell-ifeellikedancing.mp3",
+  2: "audio/zedd-clarity.mp3",
+  3: "audio/djkhaled-allDoWin.mp3",
+};

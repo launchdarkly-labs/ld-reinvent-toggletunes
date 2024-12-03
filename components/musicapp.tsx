@@ -52,6 +52,7 @@ import {
   RED,
   BLUE,
   PURPLE,
+  RANDOMSONGOBJECT
 } from "@/lib/constant";
 import Navbar from "./Navbar";
 import LoginContext from "@/lib/LoginContext";
@@ -428,6 +429,11 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
 
           broadcast({ type: `${teamColor}${WINNER}` });
           setShowWinnerModal(true);
+          const randNum = Math.floor(Math.random() * 4);
+          //@ts-ignore
+          const chosenSong = RANDOMSONGOBJECT[randNum];
+          const audio = new Audio(chosenSong);
+          audio.play();
         } else {
           console.log("Step 5 not eligible for evaluation!");
         }
@@ -799,15 +805,15 @@ const EventListenerComponent = memo(function EventListenerComponent({
         case "reload":
           await reloadPage();
           break;
-        // case `${RED}${WINNER}`:
-        //   setShowWinnerModal(true);
-        //   break;
-        // case `${BLUE}${WINNER}`:
-        //   setShowWinnerModal(true);
-        //   break;
-        // case `${PURPLE}${WINNER}`:
-        //   setShowWinnerModal(true);
-        //   break;
+        case `${RED}${WINNER}`:
+          setShowWinnerModal(true);
+          break;
+        case `${BLUE}${WINNER}`:
+          setShowWinnerModal(true);
+          break;
+        case `${PURPLE}${WINNER}`:
+          setShowWinnerModal(true);
+          break;
         default:
           console.log("invalid event type");
       }
