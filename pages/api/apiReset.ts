@@ -397,8 +397,8 @@ async function createFlags(projectKey: string) {
     kind: "JSON",
     variations: [
       {
-        name: "Claude Haiku",
-        description: "This is Claude Haiku's AI model for quick response and cost saving",
+        name: "Anthropic Claude Instant",
+        description: "This is Claude Instant's AI model for quick response and cost saving",
         value: {
           max_tokens_to_sample: 0,
           modelId: "",
@@ -407,8 +407,8 @@ async function createFlags(projectKey: string) {
         },
       },
       {
-        name: "Cohere Coral",
-        description: "This is Cohere Coral AI model for balance between precision and creativity",
+        name: "Cohere Command",
+        description: "This is Cohere Command AI model for balance between precision and creativity",
         value: {
           max_tokens: 0,
           modelId: "",
@@ -416,16 +416,7 @@ async function createFlags(projectKey: string) {
           temperature: 0,
         },
       },
-      {
-        name: "Meta Llama",
-        description: "This is Meta's Llama AI model for more creative responses",
-        value: {
-          max_gen_len: 0,
-          modelId: "",
-          temperature: 0,
-          top_p: 0,
-        },
-      },
+      
     ],
     defaults: {
       onVariation: 0,
