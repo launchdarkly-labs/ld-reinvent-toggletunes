@@ -60,6 +60,7 @@ const AlertDialogContent = React.forwardRef(({ className, variant, ...props }, r
     default:
       backgroundClass = "bg-transparent text-white";
       break;
+
   }
   return (
     <AlertDialogPortal>
