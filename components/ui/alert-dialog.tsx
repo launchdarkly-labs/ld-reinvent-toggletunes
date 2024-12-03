@@ -146,7 +146,7 @@ const AlertDialogTitle = React.forwardRef(
       document.addEventListener("keydown", handleKeyDown);
 
       if (animationStarted && currentIndex < stringsArray.length) {
-        const timeout = setTimeout(onAnimationComplete, 2000);
+        const timeout = setTimeout(onAnimationComplete, 1500);
         return () => {
           clearTimeout(timeout);
         };
