@@ -4,7 +4,7 @@ import NoSSRWrapper from "@/components/nossr";
 import { Room } from "@/components/room";
 import { AIGeneratedPlaylistProvider } from "@/lib/AIGeneratedPlaylistContext";
 
-let c;
+let c; 
 
 if (typeof window !== "undefined") {
   c = ({ Component, pageProps }: AppProps) => {

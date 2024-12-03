@@ -87,6 +87,7 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
   const [releaseAdSidebarManually, setReleaseAdSidebarManually] = useState(false);
   const [countNumReleaseGuardianAdSidebar, setCountNumReleaseGuardianAdSidebar] = useState(0);
   const [showLostConnectionModal, setShowLostConnectionModal] = useState(false);
+  const [clickCounter, setClickCounter] = useState(0);
   const layerIds = useStorage((root) => root);
   console.log("layerIds", layerIds);
   // @ts-ignore
@@ -97,6 +98,7 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
   const { userObject } = useContext(LoginContext);
 
   useLostConnectionListener((event) => {
+    console.log("event",event)
     switch (event) {
       case "lost":
         setShowLostConnectionModal(true);
@@ -259,7 +261,7 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
   async function submitReleaseGuardianQuery(): Promise<void> {
     // @ts-ignore
     const projectKey: string = LDPROJECTKEYSVALUEOBJECTS[teamName];
-
+    setClickCounter(prev=>prev+1);
     const environmentKey = "test";
     const flag_key = "release-new-ad-sidebar";
     setIsLoadingApp(true);
@@ -408,9 +410,8 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
         }
 
         if (
-          (releaseAdSidebarLDFlag || releaseAdSidebarManually) &&
-          releaseReleaseGuardianButton === true &&
-          flagFive === false
+          (releaseAdSidebarLDFlag || releaseAdSidebarManually || clickCounter >= 3) &&
+          releaseReleaseGuardianButton === true 
         ) {
           setTotalPointAccumulation((prevPoints) => prevPoints + 20);
           broadcast({
@@ -424,7 +425,7 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
           console.log("Step 5 not eligible for evaluation!");
         }
 
-        if (flagFive === true && totalPointAccumulation >= 100) {
+        if (flagFive === true && totalPointAccumulation >= 80 ) { //if you get flagFive true and points above 80 still
           broadcast({ type: `${teamColor}${WINNER}` });
           setShowWinnerModal(true);
         }

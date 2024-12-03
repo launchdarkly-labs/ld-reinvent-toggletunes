@@ -86,6 +86,7 @@ function GameAdminDashboard() {
 
   //40 sec and then go to the end when finish
   const handleReset = async () => {
+    broadcast({ type: "resetTimer" });
     setButtonFeedback("Resetting the game and flags!");
     setArchivedMessage("");
     setResetProgressMessage("Start Resetting");
@@ -94,7 +95,6 @@ function GameAdminDashboard() {
     setCodeLogs([]);
     setIsDisabled(true);
     setIsResetting(true);
-    broadcast({ type: "resetTimer" });
 
     //TODO: need to show green for success. maybe a change in messaging when reached to 90%?
     const interval = setInterval(() => {
