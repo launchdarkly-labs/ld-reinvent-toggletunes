@@ -411,8 +411,7 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
 
         if (
           (releaseAdSidebarLDFlag || releaseAdSidebarManually || clickCounter >= 3) &&
-          releaseReleaseGuardianButton === true &&
-          flagFive === false
+          releaseReleaseGuardianButton === true 
         ) {
           setTotalPointAccumulation((prevPoints) => prevPoints + 20);
           broadcast({
@@ -426,7 +425,7 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
           console.log("Step 5 not eligible for evaluation!");
         }
 
-        if (flagFive === true && totalPointAccumulation >= 100) {
+        if (flagFive === true && totalPointAccumulation >= 80 ) { //if you get flagFive true and points above 80 still
           broadcast({ type: `${teamColor}${WINNER}` });
           setShowWinnerModal(true);
         }

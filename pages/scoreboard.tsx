@@ -203,6 +203,7 @@ export default function Scoreboard() {
       <Modal
         winnerName={winnerName}
         setOpenStartModal={setOpenStartModal}
+        setWinnerName={setWinnerName}
       />
       <StartModal
         openStartModal={openStartModal}
