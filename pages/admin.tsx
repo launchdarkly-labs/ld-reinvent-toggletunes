@@ -22,14 +22,17 @@ import {
   Crown,
   Trophy,
   ListRestart,
+  MinusCircle,
 } from "lucide-react";
 import Link from "next/link";
 
 import { Room } from "@/components/room";
 import { useBroadcastEvent } from "@/liveblocks.config";
 import { wait } from "@/lib/utils";
-import { WINNER, BLUE, RED, PURPLE } from "@/lib/constant";
+import { WINNER, BLUE, RED, PURPLE,
+  COLORBACKGROUNDGRADIENT, } from "@/lib/constant";
 import { is } from "drizzle-orm";
+import { PlusCircle } from "lucide-react";
 
 export default function Admin() {
   return (
@@ -59,18 +62,17 @@ function GameAdminDashboard() {
 
     broadcast({ type: "startTimer" });
 
-    if(buttonFeedback.includes("Stopped")){
+    if (buttonFeedback.includes("Stopped")) {
       setButtonFeedback("Continue with the game!");
       await wait(10);
       setButtonFeedback("");
-    } else if (buttonFeedback.includes("Continue")){
+    } else if (buttonFeedback.includes("Continue")) {
       setButtonFeedback("");
-    }else{
+    } else {
       setButtonFeedback("Starting new game!");
       await wait(10);
       setButtonFeedback("");
     }
-   
   };
 
   const handleStop = async () => {
@@ -81,6 +83,11 @@ function GameAdminDashboard() {
   const handleColorWinner = async (winnerColor: string) => {
     broadcast({ type: winnerColor });
     setButtonFeedback(`Triggered ${winnerColor}`);
+  };
+
+  const handleManualPointTrigger = (colorTeam: string, points: number) => {
+    broadcast({ type: `${colorTeam}ManualPoints`, score: points });
+    setButtonFeedback(`Sent ${points} pts to ${colorTeam}`);
   };
 
   //40 sec and then go to the end when finish
@@ -266,7 +273,7 @@ function GameAdminDashboard() {
 
             {/* Game Controls */}
             <h2 className="text-2xl font-semibold text-yellow-500 mb-6">{buttonFeedback}</h2>
-            <div className="bg-gray-800 shadow rounded-lg p-4 mb-8">
+            <section className="bg-gray-800 shadow rounded-lg p-4 mb-8">
               <h2 className="text-xl font-semibold text-white mb-4">Game Controls</h2>
               {!resetProgressMessage.includes("complete") ||
                 (!resetProgressMessage.includes("") && (
@@ -320,9 +327,9 @@ function GameAdminDashboard() {
                   <Archive className="mr-2 h-4 w-4" /> Archive
                 </Button> */}
               </div>
-            </div>
+            </section>
 
-            <div className="bg-gray-800 shadow rounded-lg p-4 mb-8">
+            <section className="bg-gray-800 shadow rounded-lg p-4 mb-8">
               <h2 className="text-xl font-semibold text-white mb-4">Manually Trigger Winner</h2>
 
               <div className="flex flex-wrap gap-8">
@@ -352,7 +359,55 @@ function GameAdminDashboard() {
                   <Crown className="mr-2 h-4 w-4" /> Trigger Purple Winner
                 </Button>
               </div>
-            </div>
+            </section>
+
+            {[BLUE, RED, PURPLE].map((color, index) => {
+              return (
+                // @ts-ignore
+                <section className={`${COLORBACKGROUNDGRADIENT[color]} shadow rounded-lg p-4 mb-8`} key={index}>
+                  <h2 className="text-xl font-semibold text-white mb-4">
+                   {` Manually Trigger ${color.toUpperCase()} Points`}
+                  </h2>
+
+                  <div className="flex flex-wrap gap-8">
+                    <Button
+                      className="flex items-center bg-ldblue  hover:brightness-125 text-white"
+                      onClick={() => handleManualPointTrigger(color, 20)}
+                      id="admin-bluepoints20plus"
+                      disabled={isDisabled}
+                    >
+                      <PlusCircle className="mr-2 h-4 w-4" /> +20 pts
+                    </Button>
+                    <Button
+                      className="flex items-center bg-ldred hover:brightness-125 text-white"
+                      onClick={() => handleManualPointTrigger(color, -20)}
+                      id="admin-bluepoints20minus"
+                      disabled={isDisabled}
+                    >
+                      <MinusCircle className="mr-2 h-4 w-4" /> -20 pts
+                    </Button>
+
+                    <Button
+                      className="flex items-center bg-lddblue  hover:brightness-125 text-white"
+                      onClick={() => handleManualPointTrigger(color, 10)}
+                      id="admin-bluepoints10plus"
+                      disabled={isDisabled}
+                    >
+                      <PlusCircle className="mr-2 h-4 w-4" /> +10 pts
+                    </Button>
+
+                    <Button
+                      className="flex items-center bg-lddred  hover:brightness-125 text-white"
+                      onClick={() => handleManualPointTrigger(color, -10)}
+                      id="admin-bluepoints10minus"
+                      disabled={isDisabled}
+                    >
+                      <MinusCircle className="mr-2 h-4 w-4" /> -10 pts
+                    </Button>
+                  </div>
+                </section>
+              );
+            })}
 
             {/* Error Message Bar Card */}
             {displayErrorMessage || archivedMessage !== "" ? (

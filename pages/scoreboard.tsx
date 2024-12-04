@@ -99,6 +99,7 @@ export default function Scoreboard() {
     winnerName = winners[0];
     document.getElementById("timer-reset-button")?.click();
     setWinnerName(winnerName);
+    setShowWinnerModal(true);
   };
 
   //todo: maybe change this to if all task completed for the object
@@ -145,6 +146,10 @@ export default function Scoreboard() {
         setPurpleCompletionProgress={setPurpleCompletionProgress}
         setBlueCompletionProgress={setBlueCompletionProgress}
         greenCompletionProgress={greenCompletionProgress}
+        redProgress={redProgress}
+        greenProgress={greenProgress}
+        blueProgress={blueProgress}
+        purpleProgress={purpleProgress}
         //@ts-ignore
         redCompletionProgress={redCompletionProgress}
         purpleCompletionProgress={purpleCompletionProgress}
@@ -156,6 +161,7 @@ export default function Scoreboard() {
         duration={duration}
         reloadPage={reloadPage}
         setShowWinnerModal={setShowWinnerModal}
+        endGame={endGame}
         // addAnimal={addAnimal}
       />
       <Head>
@@ -251,6 +257,11 @@ const EventListenerComponent = memo(function EventListenerComponent({
   duration,
   reloadPage,
   setShowWinnerModal,
+  redProgress,
+  greenProgress,
+  blueProgress,
+  purpleProgress,
+  endGame,
 }: // addAnimal
 {
   setGreenProgress: any;
@@ -272,6 +283,11 @@ const EventListenerComponent = memo(function EventListenerComponent({
   duration: number;
   reloadPage: any;
   setShowWinnerModal: any;
+  redProgress: number;
+  greenProgress: number;
+  blueProgress: number;
+  purpleProgress: number;
+  endGame: any;
 }) {
   console.log("Event listener online");
 
@@ -350,6 +366,24 @@ const EventListenerComponent = memo(function EventListenerComponent({
         case `${PURPLE}${WINNER}`:
           setWinnerName(PURPLE);
           setShowWinnerModal(true);
+          break;
+        case `${RED}ManualPoints`:
+          setRedProgress((prevProgress: number) => prevProgress + event.score);
+          if (redProgress >= 100) {
+            endGame();
+          }
+          break;
+        case `${BLUE}ManualPoints`:
+          setBlueProgress((prevProgress: number) => prevProgress + event.score);
+          if (blueProgress >= 100) {
+            endGame();
+          }
+          break;
+        case `${PURPLE}ManualPoints`:
+          setPurpleProgress((prevProgress: number) => prevProgress + event.score);
+          if (purpleProgress >= 100) {
+            endGame();
+          }
           break;
         case "resetTimer":
           console.log("resetting scoreboard");

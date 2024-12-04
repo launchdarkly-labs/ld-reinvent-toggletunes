@@ -70,3 +70,9 @@ export const IMAGECOLORSRCMAP = {
   [BLUE]: "/images/gifs/blueWinnerImg.svg",
   [PURPLE]: "/images/gifs/purpleWinnerImg.svg",
 };
+
+export const COLORBACKGROUNDGRADIENT = {
+  [RED]: "bg-gradient-red-winner-background",
+  [BLUE]: "bg-gradient-blue-winner-background",
+  [PURPLE]: "bg-gradient-purple-winner-background",
+};
