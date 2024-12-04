@@ -19,13 +19,14 @@ import {
   STEPFOURONECOMPLETE,
   STEPFOURCOMPLETE,
   STEPFIVECOMPLETE,
-  WINNER
+  WINNER,
+  GIFCOLORSRCMAP,
 } from "@/lib/constant";
 import Timer from "@/components/Timer";
 import { useTimer } from "@/lib/useTimer";
 import { formatTime } from "@/lib/utils";
 import { useRouter } from "next/router";
-
+import Head from "next/head";
 
 export default function Scoreboard() {
   const starterCompletionProgressObject = {
@@ -155,7 +156,7 @@ export default function Scoreboard() {
         reloadPage={reloadPage}
         // addAnimal={addAnimal}
       />
-          <Head>
+      <Head>
         {/* @ts-ignore */}
         <link rel="preload" href={GIFCOLORSRCMAP[RED]} as="image" />
         <link rel="preload" href={GIFCOLORSRCMAP[BLUE]} as="image" />
@@ -222,7 +223,6 @@ export default function Scoreboard() {
         animationStarted={animationStarted}
         setAnimationStarted={setAnimationStarted}
       />
-  
     </>
   );
 }
@@ -270,7 +270,6 @@ const EventListenerComponent = memo(function EventListenerComponent({
             setGreenCompletionProgress({ ...greenCompletionProgress, [event.complete]: 1 }); //to prevent user's from trigging the same flag over and over to get points
           }
 
-
           break;
         case RED:
           if (redCompletionProgress[event.complete] === 0) {
@@ -278,7 +277,6 @@ const EventListenerComponent = memo(function EventListenerComponent({
             setRedProgress((prevProgress) => prevProgress + event.score);
             setRedCompletionProgress({ ...redCompletionProgress, [event.complete]: 1 }); //to prevent user's from trigging the same flag over and over to get points
           }
-
 
           break;
         case PURPLE:
@@ -288,8 +286,6 @@ const EventListenerComponent = memo(function EventListenerComponent({
             setPurpleCompletionProgress({ ...purpleCompletionProgress, [event.complete]: 1 }); //to prevent user's from trigging the same flag over and over to get points
           }
 
-        
-
           break;
         case BLUE:
           if (blueCompletionProgress[event.complete] === 0) {
@@ -298,7 +294,6 @@ const EventListenerComponent = memo(function EventListenerComponent({
             setBlueCompletionProgress({ ...blueCompletionProgress, [event.complete]: 1 }); //to prevent user's from trigging the same flag over and over to get points
           }
 
-         
           break;
         case "startTimer":
           console.log("starting timer");

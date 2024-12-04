@@ -1,4 +1,4 @@
-// @ts-ignore
+
 import ItemCard from "@/components/ItemCard";
 import SideBar from "@/components/Sidebar";
 import { motion } from "framer-motion";
