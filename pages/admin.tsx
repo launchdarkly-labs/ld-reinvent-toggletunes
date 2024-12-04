@@ -181,7 +181,11 @@ function GameAdminDashboard() {
       setIsDisabled(false);
     }
   };
-
+  const COLORBACKGROUNDGRADIENT2 = {
+    [RED]: "bg-gradient-red-winner-background",
+    [BLUE]: "bg-gradient-blue-winner-background",
+    [PURPLE]: "bg-gradient-purple-winner-background",
+  };
   const handleReload = async () => {
     broadcast({ type: "resetTimer" });
     setButtonFeedback("Reset points back to the start");
@@ -364,7 +368,7 @@ function GameAdminDashboard() {
             {[BLUE, RED, PURPLE].map((color, index) => {
               return (
                 // @ts-ignore
-                <section className={`${COLORBACKGROUNDGRADIENT[color]} shadow rounded-lg p-4 mb-8`} key={index}>
+                <section className={`${COLORBACKGROUNDGRADIENT2[color]} shadow rounded-lg p-4 mb-8`} key={index}>
                   <h2 className="text-xl font-semibold text-white mb-4">
                    {` Manually Trigger ${color.toUpperCase()} Points`}
                   </h2>
