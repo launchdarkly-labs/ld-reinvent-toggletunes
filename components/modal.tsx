@@ -34,7 +34,7 @@ export function Modal({
     if (!setWinnerName) {
       return;
     }
-    const handleKeyDown = (event) => {
+    const handleKeyDown = (event:any) => {
       if (event.key === "r") {
         setWinnerName(RED);
       }
