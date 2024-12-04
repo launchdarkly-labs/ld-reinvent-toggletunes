@@ -514,6 +514,7 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
         <link rel="preload" href={"/images/Launch Party Jams cover.png"} as="image" />
         <link rel="preload" href={"/images/Cosmic vibes cover.png"} as="image" />
         <link rel="preload" href={"/images/Codebreaker blues cover.png"} as="image" />
+        <link rel="preload" href={"/images/ToggleTunes.png"} as="image" />
       </Head>
       <main className="flex flex-col gap-2 font-sohne bg-black overflow-y-visible h-screen lg:overflow-y-hidden">
         {releaseTracklistLDFlag && (
