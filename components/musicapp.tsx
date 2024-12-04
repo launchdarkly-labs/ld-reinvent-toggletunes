@@ -500,10 +500,10 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
         setWinnerName={setWinnerName}
       />
 
-      <Head>
-        {/* @ts-ignore */}
+      {/* <Head>
+   
         <link rel="preload" href={GIFCOLORSRCMAP[teamColor]} as="image" />
-      </Head>
+      </Head> */}
       <main className="flex flex-col gap-2 font-sohne bg-black overflow-y-visible h-screen lg:overflow-y-hidden">
         {releaseTracklistLDFlag && (
           <section className="w-full flex flex-col ">
@@ -691,7 +691,7 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
 
                       {aiPlaylists.map((playlist: PlaylistInterface) => {
                         return (
-                          <Link key={playlist.id} href={`/playlist/${playlist.id}`}>
+                          // <Link key={playlist.id} href={`/playlist/${playlist.id}`}>
                             <motion.div
                               initial={{ opacity: 0, scale: 0.25 }}
                               animate={{ opacity: 1, scale: 1 }}
@@ -725,7 +725,7 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
                                 </p>
                               </div>
                             </motion.div>
-                          </Link>
+                          //  </Link> 
                         );
                       })}
                     </div>
