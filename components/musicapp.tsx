@@ -17,6 +17,7 @@ import {
   useSelf,
   useLostConnectionListener,
 } from "../liveblocks.config";
+import Head from "next/head";
 
 import { Room } from "./room";
 import SimplePlayerScreen from "./SimplePlayerScreen";
@@ -429,7 +430,7 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
           setShowWinnerModal(true);
 
           audio.pause(); //cause audio to stop
-          audio.currentTime=0;
+          audio.currentTime = 0;
 
           audio.play();
         } else {
@@ -497,6 +498,10 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
         setShowWinnerModal={setShowWinnerModal}
         setWinnerName={setWinnerName}
       />
+
+      <Head>
+        <link rel="preload" href="/images/gifs/blueWinner50mb.gif" as="image" />
+      </Head>
       <main className="flex flex-col gap-2 font-sohne bg-black overflow-y-visible h-screen lg:overflow-y-hidden">
         {releaseTracklistLDFlag && (
           <section className="w-full flex flex-col ">
@@ -816,7 +821,7 @@ const EventListenerComponent = memo(function EventListenerComponent({
           audio.loop = true;
 
           audio.pause(); //cause audio to stop
-          audio.currentTime=0;
+          audio.currentTime = 0;
           audio.play();
 
           break;
@@ -828,7 +833,7 @@ const EventListenerComponent = memo(function EventListenerComponent({
           audio2.loop = true;
 
           audio2.pause(); //cause audio to stop
-          audio2.currentTime=0;
+          audio2.currentTime = 0;
           audio2.play();
           break;
         case `${PURPLE}${WINNER}`:
@@ -839,7 +844,7 @@ const EventListenerComponent = memo(function EventListenerComponent({
           audio3.loop = true;
 
           audio3.pause(); //cause audio to stop
-          audio3.currentTime=0;
+          audio3.currentTime = 0;
           audio3.play();
           break;
 
