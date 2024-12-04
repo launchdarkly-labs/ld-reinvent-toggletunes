@@ -54,7 +54,7 @@ import {
   BLUE,
   PURPLE,
   RANDOMSONGOBJECT,
-  GIFCOLORSRCMAP
+  IMAGECOLORSRCMAP
 } from "@/lib/constant";
 import Navbar from "./Navbar";
 import LoginContext from "@/lib/LoginContext";
@@ -500,10 +500,10 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
         setWinnerName={setWinnerName}
       />
 
-      {/* <Head>
+      <Head>
    
-        <link rel="preload" href={GIFCOLORSRCMAP[teamColor]} as="image" />
-      </Head> */}
+        <link rel="preload" href={IMAGECOLORSRCMAP[teamColor]} as="image" />
+      </Head>
       <main className="flex flex-col gap-2 font-sohne bg-black overflow-y-visible h-screen lg:overflow-y-hidden">
         {releaseTracklistLDFlag && (
           <section className="w-full flex flex-col ">

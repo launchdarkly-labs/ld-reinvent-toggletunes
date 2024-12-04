@@ -20,7 +20,7 @@ import {
   STEPFOURCOMPLETE,
   STEPFIVECOMPLETE,
   WINNER,
-  GIFCOLORSRCMAP,
+  IMAGECOLORSRCMAP,
 } from "@/lib/constant";
 import Timer from "@/components/Timer";
 import { useTimer } from "@/lib/useTimer";
@@ -156,12 +156,12 @@ export default function Scoreboard() {
         reloadPage={reloadPage}
         // addAnimal={addAnimal}
       />
-      {/* <Head>
+      <Head>
 
-        <link rel="preload" href={GIFCOLORSRCMAP[RED]} as="image" />
-        <link rel="preload" href={GIFCOLORSRCMAP[BLUE]} as="image" />
-        <link rel="preload" href={GIFCOLORSRCMAP[PURPLE]} as="image" />
-      </Head> */}
+        <link rel="preload" href={IMAGECOLORSRCMAP[RED]} as="image" />
+        <link rel="preload" href={IMAGECOLORSRCMAP[BLUE]} as="image" />
+        <link rel="preload" href={IMAGECOLORSRCMAP[PURPLE]} as="image" />
+      </Head>
       <main className="h-screen bg-black">
         <div
           className="flex flex-col bg-[#191919] mx-auto max-w-8xl h-screen gap-y-10

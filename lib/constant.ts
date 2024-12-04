@@ -64,3 +64,9 @@ export const GIFCOLORSRCMAP = {
   [PURPLE]: '/images/gifs/purpleWinner50mb.gif',
   [RED]: '/images/gifs/redWinner50mb.gif',
 }
+
+export const IMAGECOLORSRCMAP = {
+  [RED]: "/images/gifs/redWinnerImg.svg",
+  [BLUE]: "/images/gifs/blueWinnerImg.svg",
+  [PURPLE]: "/images/gifs/purpleWinnerImg.svg",
+};
