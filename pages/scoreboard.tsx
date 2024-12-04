@@ -155,6 +155,12 @@ export default function Scoreboard() {
         reloadPage={reloadPage}
         // addAnimal={addAnimal}
       />
+          <Head>
+        {/* @ts-ignore */}
+        <link rel="preload" href={GIFCOLORSRCMAP[RED]} as="image" />
+        <link rel="preload" href={GIFCOLORSRCMAP[BLUE]} as="image" />
+        <link rel="preload" href={GIFCOLORSRCMAP[PURPLE]} as="image" />
+      </Head>
       <main className="h-screen bg-black">
         <div
           className="flex flex-col bg-[#191919] mx-auto max-w-8xl h-screen gap-y-10
