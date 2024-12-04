@@ -503,6 +503,17 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
       <Head>
    {/* @ts-ignore */}
         <link rel="preload" href={IMAGECOLORSRCMAP[teamColor]} as="image" />
+        <link rel="preload" href={"/images/Casette.png"} as="image" />
+        <link rel="preload" href={"/images/Code me maybe.png"} as="image" />
+        <link rel="preload" href={"/images/Spotlight.png"} as="image" />
+        <link rel="preload" href={"/images/Kill switcher cover.png"} as="image" />
+        <link rel="preload" href={"/images/Used to code me cover.png"} as="image" />
+        <link rel="preload" href={"/images/heart.png"} as="image" />
+        <link rel="preload" href={"/images/Shipper beats cover.png"} as="image" />
+        <link rel="preload" href={"/images/Rollback Mix cover.png"} as="image" />
+        <link rel="preload" href={"/images/Launch Party Jams cover.png"} as="image" />
+        <link rel="preload" href={"/images/Cosmic vibes cover.png"} as="image" />
+        <link rel="preload" href={"/images/Codebreaker blues cover.png"} as="image" />
       </Head>
       <main className="flex flex-col gap-2 font-sohne bg-black overflow-y-visible h-screen lg:overflow-y-hidden">
         {releaseTracklistLDFlag && (
