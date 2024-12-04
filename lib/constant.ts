@@ -58,3 +58,9 @@ export const RANDOMSONGOBJECT = {
   [RED]: "audio/djkhaled-allDoWin.mp3",
   // 4: "audio/usher-yeah2.mp3",
 };
+
+export const GIFCOLORSRCMAP = {
+  [BLUE]: "/images/gifs/blueWinner50mb.gif",
+  [PURPLE]: '/images/gifs/purpleWinner50mb.gif',
+  [RED]: '/images/gifs/redWinner50mb.gif',
+}

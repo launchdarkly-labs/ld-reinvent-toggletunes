@@ -54,6 +54,7 @@ import {
   BLUE,
   PURPLE,
   RANDOMSONGOBJECT,
+  GIFCOLORSRCMAP
 } from "@/lib/constant";
 import Navbar from "./Navbar";
 import LoginContext from "@/lib/LoginContext";
@@ -500,7 +501,8 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
       />
 
       <Head>
-        <link rel="preload" href="/images/gifs/blueWinner50mb.gif" as="image" />
+        {/* @ts-ignore */}
+        <link rel="preload" href={GIFCOLORSRCMAP[teamColor]} as="image" />
       </Head>
       <main className="flex flex-col gap-2 font-sohne bg-black overflow-y-visible h-screen lg:overflow-y-hidden">
         {releaseTracklistLDFlag && (
