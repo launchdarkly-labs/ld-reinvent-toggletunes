@@ -95,8 +95,8 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
   const [showLostConnectionModal, setShowLostConnectionModal] = useState(false);
   const [clickCounter, setClickCounter] = useState(0);
   const [winnerName, setWinnerName] = useState("");
-  const layerIds = useStorage((root) => root);
-  console.log("layerIds", layerIds);
+  // const layerIds = useStorage((root) => root);
+  // console.log("layerIds", layerIds);
   // @ts-ignore
   // const layerIds2 = useStorage((root) => root.totalPoints);
   // console.log("layerIds2", layerIds2);
