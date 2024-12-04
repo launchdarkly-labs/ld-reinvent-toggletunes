@@ -162,6 +162,7 @@ export default function Scoreboard() {
         <link rel="preload" href={IMAGECOLORSRCMAP[RED]} as="image" />
         <link rel="preload" href={IMAGECOLORSRCMAP[BLUE]} as="image" />
         <link rel="preload" href={IMAGECOLORSRCMAP[PURPLE]} as="image" />
+        <link rel="preload" href={"/images/ld-logo.svg"} as="image" />
       </Head>
       <main className="h-screen bg-black">
         <div
