@@ -1,4 +1,3 @@
-//@ts-nocheck
 import {
   AlertDialog,
   AlertDialogContent,
@@ -8,6 +7,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { useEffect, useState } from "react";
 import { PURPLE, RED, BLUE, GREEN } from "@/lib/constant";
+import { useRouter } from "next/router";
 
 export function Modal({
   winnerName,
@@ -28,6 +28,7 @@ export function Modal({
       // setIsOpen(true);
     }
   }, [winnerName]);
+  const router = useRouter();
 
   useEffect(() => {
     if (!setWinnerName) {
@@ -56,6 +57,18 @@ export function Modal({
     };
   }, [winnerName]);
 
+  const colorWinnerImage = {
+    [RED]: "/images/gifs/redWinnerImg.svg",
+    [BLUE]: "/images/gifs/blueWinnerImg.svg",
+    [PURPLE]: "/images/gifs/purpleWinnerImg.svg",
+  };
+
+  const colorBackgroundImage = {
+    [RED]: "bg-gradient-red-winner-background",
+    [BLUE]: "bg-gradient-blue-winner-background",
+    [PURPLE]: "bg-gradient-purple-winner-background",
+  };
+
   // they overwrote alert dialog with the winner gif
   return (
     <>
@@ -66,9 +79,23 @@ export function Modal({
         //   setIsOpen(false);
         // }}
         >
-          <AlertDialogContent variant={winnerName} className="cursor-pointer">
-            <AlertDialogHeader />
-            <AlertDialogFooter></AlertDialogFooter>
+          {/* @ts-ignore */}
+          <AlertDialogContent
+            className={`${
+              // @ts-ignore
+              winnerName !== "" && `${colorBackgroundImage[winnerName]} flex items-center`
+            }`}
+          >
+            {winnerName == "" ? null : (
+              <img
+                // @ts-ignore
+                src={colorWinnerImage[winnerName]}
+                alt="winner oclor"
+                className={` w-full h-full ${
+                  router.pathname === "/scoreboard" ? "object-cover" : "object-fit"
+                }`}
+              />
+            )}
           </AlertDialogContent>
         </AlertDialogTrigger>
       </AlertDialog>
