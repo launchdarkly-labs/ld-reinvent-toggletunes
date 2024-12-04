@@ -246,7 +246,7 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
       id: uuidv4().slice(0, 4),
       title:
         aiGeneratedSonglistAnswerFormatted[randomNumberGen(aiGeneratedSonglistAnswerFormatted)]
-          .playlistName,
+          ?.playlistName,
       color:
         randomNumDefaultListOfGeneratedSongs === 0
           ? colors.emerald
@@ -313,6 +313,10 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
   const reloadPage = async () => {
     await router.reload();
   };
+  //@ts-ignore
+  const chosenSong = RANDOMSONGOBJECT[teamColor];
+  const audio = new Audio(chosenSong);
+  audio.loop = true;
 
   useEffect(() => {
     const triggerSteps = async () => {
@@ -424,10 +428,8 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
           setWinnerName(teamColor);
           setShowWinnerModal(true);
 
-          //@ts-ignore
-          const chosenSong = RANDOMSONGOBJECT[teamColor];
-          const audio = new Audio(chosenSong);
-          audio.loop = true;
+          audio.pause(); //cause audio to stop
+          audio.currentTime=0;
 
           audio.play();
         } else {
@@ -812,6 +814,9 @@ const EventListenerComponent = memo(function EventListenerComponent({
           const chosenSong = RANDOMSONGOBJECT[RED];
           const audio = new Audio(chosenSong);
           audio.loop = true;
+
+          audio.pause(); //cause audio to stop
+          audio.currentTime=0;
           audio.play();
 
           break;
@@ -821,6 +826,9 @@ const EventListenerComponent = memo(function EventListenerComponent({
           const chosenSong2 = RANDOMSONGOBJECT[BLUE];
           const audio2 = new Audio(chosenSong2);
           audio2.loop = true;
+
+          audio2.pause(); //cause audio to stop
+          audio2.currentTime=0;
           audio2.play();
           break;
         case `${PURPLE}${WINNER}`:
@@ -829,6 +837,9 @@ const EventListenerComponent = memo(function EventListenerComponent({
           const chosenSong3 = RANDOMSONGOBJECT[PURPLE];
           const audio3 = new Audio(chosenSong3);
           audio3.loop = true;
+
+          audio3.pause(); //cause audio to stop
+          audio3.currentTime=0;
           audio3.play();
           break;
 
