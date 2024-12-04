@@ -64,6 +64,12 @@ export function Modal({
     };
   }, [winnerName]);
 
+   const COLORBACKGROUNDGRADIENT2 = {
+    [RED]: "bg-gradient-red-winner-background",
+    [BLUE]: "bg-gradient-blue-winner-background",
+    [PURPLE]: "bg-gradient-purple-winner-background",
+  };
+
   // they overwrote alert dialog with the winner gif
   return (
     <>
@@ -78,7 +84,7 @@ export function Modal({
           <AlertDialogContent
             className={`${
               // @ts-ignore
-              winnerName !== "" && `${COLORBACKGROUNDGRADIENT[winnerName]} flex items-center`
+              winnerName !== "" && `${COLORBACKGROUNDGRADIENT2[winnerName]} flex items-center`
             }`}
           >
             {winnerName == "" ? null : (
