@@ -501,7 +501,7 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
       />
 
       <Head>
-   
+   {/* @ts-ignore */}
         <link rel="preload" href={IMAGECOLORSRCMAP[teamColor]} as="image" />
       </Head>
       <main className="flex flex-col gap-2 font-sohne bg-black overflow-y-visible h-screen lg:overflow-y-hidden">
