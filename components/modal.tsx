@@ -1,4 +1,3 @@
-//@ts-nocheck
 import {
   AlertDialog,
   AlertDialogContent,
@@ -7,7 +6,15 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { useEffect, useState } from "react";
-import { PURPLE, RED, BLUE, GREEN } from "@/lib/constant";
+import {
+  PURPLE,
+  RED,
+  BLUE,
+  GREEN,
+  IMAGECOLORSRCMAP,
+  COLORBACKGROUNDGRADIENT,
+} from "@/lib/constant";
+import { useRouter } from "next/router";
 
 export function Modal({
   winnerName,
@@ -20,7 +27,7 @@ export function Modal({
   setWinnerName?: any;
   // winnerState
 }) {
-  const [isOpen, setIsOpen] = useState(true);
+  //const [isOpen, setIsOpen] = useState(true);
   useEffect(() => {
     //hide the starting modal when you trigger manually the color winner
     if (winnerName !== "" && setOpenStartModal) {
@@ -28,12 +35,13 @@ export function Modal({
       // setIsOpen(true);
     }
   }, [winnerName]);
+  const router = useRouter();
 
   useEffect(() => {
     if (!setWinnerName) {
       return;
     }
-    const handleKeyDown = (event) => {
+    const handleKeyDown = (event: any) => {
       if (event.key === "r") {
         setWinnerName(RED);
       }
@@ -56,6 +64,12 @@ export function Modal({
     };
   }, [winnerName]);
 
+   const COLORBACKGROUNDGRADIENT2 = {
+    [RED]: "bg-gradient-red-winner-background",
+    [BLUE]: "bg-gradient-blue-winner-background",
+    [PURPLE]: "bg-gradient-purple-winner-background",
+  };
+
   // they overwrote alert dialog with the winner gif
   return (
     <>
@@ -66,9 +80,23 @@ export function Modal({
         //   setIsOpen(false);
         // }}
         >
-          <AlertDialogContent variant={winnerName} className="cursor-pointer">
-            <AlertDialogHeader />
-            <AlertDialogFooter></AlertDialogFooter>
+          {/* @ts-ignore */}
+          <AlertDialogContent
+            className={`${
+              // @ts-ignore
+              winnerName !== "" && `${COLORBACKGROUNDGRADIENT2[winnerName]} flex items-center`
+            }`}
+          >
+            {winnerName == "" ? null : (
+              <img
+                // @ts-ignore
+                src={IMAGECOLORSRCMAP[winnerName]}
+                alt="winner oclor"
+                className={` w-full h-full ${
+                  router.pathname === "/scoreboard" ? "object-cover" : "object-fit"
+                }`}
+              />
+            )}
           </AlertDialogContent>
         </AlertDialogTrigger>
       </AlertDialog>

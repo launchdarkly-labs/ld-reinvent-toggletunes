@@ -1,4 +1,3 @@
-//@ts-nocheck
 import KeyboardNavigation from "@/components/KeyboardNavigation";
 import { Modal } from "@/components/modal";
 import { ProgressStatus } from "@/components/progress-screen";
@@ -19,12 +18,14 @@ import {
   STEPFOURONECOMPLETE,
   STEPFOURCOMPLETE,
   STEPFIVECOMPLETE,
-  WINNER
+  WINNER,
+  IMAGECOLORSRCMAP,
 } from "@/lib/constant";
 import Timer from "@/components/Timer";
 import { useTimer } from "@/lib/useTimer";
 import { formatTime } from "@/lib/utils";
-
+import { useRouter } from "next/router";
+import Head from "next/head";
 
 export default function Scoreboard() {
   const starterCompletionProgressObject = {
@@ -45,19 +46,22 @@ export default function Scoreboard() {
     starterCompletionProgressObject
   );
   const [purpleCompletionProgress, setPurpleCompletionProgress] = useState<number>(
+    //@ts-ignore
     starterCompletionProgressObject
   );
   const [blueCompletionProgress, setBlueCompletionProgress] = useState<number>(
+    //@ts-ignore
     starterCompletionProgressObject
   );
   const [greenCompletionProgress, setGreenCompletionProgress] = useState<number>(
+    //@ts-ignore
     starterCompletionProgressObject
   );
-  const [winnerState, setWinnerState] = useState(false);
+
   const [winnerName, setWinnerName] = useState("");
   const [openStartModal, setOpenStartModal] = useState(true);
   const [animationStarted, setAnimationStarted] = useState(false);
-
+  const [showWinnerModal, setShowWinnerModal] = useState(false);
   const { timeLeft, isActive, startTimer, pauseTimer, resetTimer, duration } = useTimer();
   // const layerIds = useStorage((root) => root);
 
@@ -95,7 +99,7 @@ export default function Scoreboard() {
     winnerName = winners[0];
     document.getElementById("timer-reset-button")?.click();
     setWinnerName(winnerName);
-    setWinnerState(true);
+    setShowWinnerModal(true);
   };
 
   //todo: maybe change this to if all task completed for the object
@@ -121,8 +125,11 @@ export default function Scoreboard() {
   //   console.log(animals);
   // });
 
+  const router = useRouter();
 
- 
+  const reloadPage = async () => {
+    await router.reload();
+  };
 
   return (
     <>
@@ -133,13 +140,17 @@ export default function Scoreboard() {
         setBlueProgress={setBlueProgress}
         setOpenStartModal={setOpenStartModal}
         setAnimationStarted={setAnimationStarted}
-        setWinnerState={setWinnerState}
         setWinnerName={setWinnerName}
         setGreenCompletionProgress={setGreenCompletionProgress}
         setRedCompletionProgress={setRedCompletionProgress}
         setPurpleCompletionProgress={setPurpleCompletionProgress}
         setBlueCompletionProgress={setBlueCompletionProgress}
         greenCompletionProgress={greenCompletionProgress}
+        redProgress={redProgress}
+        greenProgress={greenProgress}
+        blueProgress={blueProgress}
+        purpleProgress={purpleProgress}
+        //@ts-ignore
         redCompletionProgress={redCompletionProgress}
         purpleCompletionProgress={purpleCompletionProgress}
         blueCompletionProgress={blueCompletionProgress}
@@ -148,8 +159,17 @@ export default function Scoreboard() {
         resetTimer={resetTimer}
         timeLeft={timeLeft}
         duration={duration}
+        reloadPage={reloadPage}
+        setShowWinnerModal={setShowWinnerModal}
+        endGame={endGame}
         // addAnimal={addAnimal}
       />
+      <Head>
+        <link rel="preload" href={IMAGECOLORSRCMAP[RED]} as="image" />
+        <link rel="preload" href={IMAGECOLORSRCMAP[BLUE]} as="image" />
+        <link rel="preload" href={IMAGECOLORSRCMAP[PURPLE]} as="image" />
+        <link rel="preload" href={"/images/ld-logo.svg"} as="image" />
+      </Head>
       <main className="h-screen bg-black">
         <div
           className="flex flex-col bg-[#191919] mx-auto max-w-8xl h-screen gap-y-10
@@ -200,18 +220,19 @@ export default function Scoreboard() {
         </div>
       </main>
       {/* this modal shows the winner */}
-      <Modal
-        winnerName={winnerName}
-        setOpenStartModal={setOpenStartModal}
-        setWinnerName={setWinnerName}
-      />
+      {showWinnerModal && (
+        <Modal
+          winnerName={winnerName}
+          setOpenStartModal={setOpenStartModal}
+          setWinnerName={setWinnerName}
+        />
+      )}
       <StartModal
         openStartModal={openStartModal}
         setOpenStartModal={setOpenStartModal}
         animationStarted={animationStarted}
         setAnimationStarted={setAnimationStarted}
       />
-  
     </>
   );
 }
@@ -221,13 +242,8 @@ const EventListenerComponent = memo(function EventListenerComponent({
   setRedProgress,
   setBlueProgress,
   setPurpleProgress,
-  greenProgress,
-  purpleProgress,
-  redProgress,
-  blueProgress,
   setOpenStartModal,
   setAnimationStarted,
-  setWinnerState,
   setWinnerName,
   setGreenCompletionProgress,
   setRedCompletionProgress,
@@ -238,11 +254,40 @@ const EventListenerComponent = memo(function EventListenerComponent({
   purpleCompletionProgress,
   blueCompletionProgress,
   starterCompletionProgressObject,
-  startTimer,
-  resetTimer,
-  timeLeft,
   duration,
-  // addAnimal
+  reloadPage,
+  setShowWinnerModal,
+  redProgress,
+  greenProgress,
+  blueProgress,
+  purpleProgress,
+  endGame,
+}: // addAnimal
+{
+  setGreenProgress: any;
+  setRedProgress: any;
+  setBlueProgress: any;
+  setPurpleProgress: any;
+  setOpenStartModal: any;
+  setAnimationStarted: any;
+  setWinnerName: any;
+  setGreenCompletionProgress: any;
+  setRedCompletionProgress: any;
+  setPurpleCompletionProgress: any;
+  setBlueCompletionProgress: any;
+  greenCompletionProgress: number;
+  redCompletionProgress: number;
+  purpleCompletionProgress: number;
+  blueCompletionProgress: number;
+  starterCompletionProgressObject: any;
+  duration: number;
+  reloadPage: any;
+  setShowWinnerModal: any;
+  redProgress: number;
+  greenProgress: number;
+  blueProgress: number;
+  purpleProgress: number;
+  endGame: any;
 }) {
   console.log("Event listener online");
 
@@ -250,60 +295,53 @@ const EventListenerComponent = memo(function EventListenerComponent({
     console.log(user);
     console.log(connectionId);
     console.log(event);
-    async function scoreRequest(event) {
+    async function scoreRequest(event: any) {
       switch (event.type) {
         case GREEN:
+          //@ts-ignore
           if (greenCompletionProgress[event.complete] === 0) {
             console.log("green score");
-            setGreenProgress((prevProgress) => prevProgress + event.score);
+            setGreenProgress((prevProgress: number) => prevProgress + event.score);
+            //@ts-ignore
             setGreenCompletionProgress({ ...greenCompletionProgress, [event.complete]: 1 }); //to prevent user's from trigging the same flag over and over to get points
-          }
-
-          if(event.totalPointAccumulation > greenProgress){
-            setGreenProgress(event.totalPointAccumulation); //correction in case broadcast didn't send score properly
           }
 
           break;
         case RED:
+          //@ts-ignore
           if (redCompletionProgress[event.complete] === 0) {
             console.log("red score");
-            setRedProgress((prevProgress) => prevProgress + event.score);
+            setRedProgress((prevProgress: number) => prevProgress + event.score);
+            //@ts-ignore
             setRedCompletionProgress({ ...redCompletionProgress, [event.complete]: 1 }); //to prevent user's from trigging the same flag over and over to get points
-          }
-
-          if(event.totalPointAccumulation > redProgress){
-            setRedProgress(event.totalPointAccumulation);
           }
 
           break;
         case PURPLE:
+          //@ts-ignore
           if (purpleCompletionProgress[event.complete] === 0) {
             console.log("purple score");
-            setPurpleProgress((prevProgress) => prevProgress + event.score);
+            setPurpleProgress((prevProgress: number) => prevProgress + event.score);
+            //@ts-ignore
             setPurpleCompletionProgress({ ...purpleCompletionProgress, [event.complete]: 1 }); //to prevent user's from trigging the same flag over and over to get points
-          }
-
-          if(event.totalPointAccumulation > purpleProgress){
-            console.log("this hits?")
-            setPurpleProgress((prevProgress) => prevProgress + (event.totalPointAccumulation-prevProgress));
           }
 
           break;
         case BLUE:
+          //@ts-ignore
           if (blueCompletionProgress[event.complete] === 0) {
             console.log("blue score");
-            setBlueProgress((prevProgress) => prevProgress + event.score);
+            setBlueProgress((prevProgress: number) => prevProgress + event.score);
+            //@ts-ignore
             setBlueCompletionProgress({ ...blueCompletionProgress, [event.complete]: 1 }); //to prevent user's from trigging the same flag over and over to get points
           }
 
-          if(event.totalPointAccumulation > blueProgress){
-            setBlueProgress(event.totalPointAccumulation);
-          }
           break;
         case "startTimer":
           console.log("starting timer");
 
           const updatedTimeLeft = document.getElementById("timer-time")?.innerHTML;
+          // @ts-ignore
           if (updatedTimeLeft < formatTime(duration)) {
             document.getElementById("timer-play-button")?.click();
           }
@@ -319,18 +357,38 @@ const EventListenerComponent = memo(function EventListenerComponent({
           break;
         case `${RED}${WINNER}`:
           setWinnerName(RED);
+          setShowWinnerModal(true);
           break;
         case `${BLUE}${WINNER}`:
           setWinnerName(BLUE);
+          setShowWinnerModal(true);
           break;
         case `${PURPLE}${WINNER}`:
           setWinnerName(PURPLE);
+          setShowWinnerModal(true);
+          break;
+        case `${RED}ManualPoints`:
+          setRedProgress((prevProgress: number) => prevProgress + event.score);
+          if (redProgress >= 100) {
+            endGame();
+          }
+          break;
+        case `${BLUE}ManualPoints`:
+          setBlueProgress((prevProgress: number) => prevProgress + event.score);
+          if (blueProgress >= 100) {
+            endGame();
+          }
+          break;
+        case `${PURPLE}ManualPoints`:
+          setPurpleProgress((prevProgress: number) => prevProgress + event.score);
+          if (purpleProgress >= 100) {
+            endGame();
+          }
           break;
         case "resetTimer":
           console.log("resetting scoreboard");
           document.getElementById("timer-reset-button")?.click();
           setOpenStartModal(true);
-          setWinnerState(false);
           setWinnerName("");
           setGreenProgress(0);
           setRedProgress(0);
@@ -340,6 +398,7 @@ const EventListenerComponent = memo(function EventListenerComponent({
           setRedCompletionProgress(starterCompletionProgressObject);
           setPurpleCompletionProgress(starterCompletionProgressObject);
           setBlueCompletionProgress(starterCompletionProgressObject);
+          reloadPage();
           break;
         default:
           console.log(event.type);

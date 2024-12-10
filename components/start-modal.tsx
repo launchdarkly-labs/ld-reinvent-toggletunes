@@ -15,11 +15,7 @@ export function StartModal({
   animationStarted,
   setAnimationStarted,
 }) {
-  const onComplete = () => {
-    // Play notification sound
-    const audio = new Audio("/notification.mp3");
-    audio.play();
-  };
+ 
   const { timeLeft, isActive, startTimer, pauseTimer, resetTimer, duration } = useTimer();
 
   function handleClick() {
