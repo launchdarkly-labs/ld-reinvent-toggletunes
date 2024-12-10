@@ -29,8 +29,7 @@ import Link from "next/link";
 import { Room } from "@/components/room";
 import { useBroadcastEvent } from "@/liveblocks.config";
 import { wait } from "@/lib/utils";
-import { WINNER, BLUE, RED, PURPLE,
-  COLORBACKGROUNDGRADIENT, } from "@/lib/constant";
+import { WINNER, BLUE, RED, PURPLE, COLORBACKGROUNDGRADIENT } from "@/lib/constant";
 import { is } from "drizzle-orm";
 import { PlusCircle } from "lucide-react";
 
@@ -333,6 +332,70 @@ function GameAdminDashboard() {
               </div>
             </section>
 
+            {/* Error Message Bar Card */}
+            {displayErrorMessage || archivedMessage !== "" ? (
+              <section className="bg-gray-800 shadow rounded-lg p-4 mb-8">
+                <h2 className="text-xl font-semibold text-white mb-4">Error Message</h2>
+                <div
+                  className=" text-lg text-yellow-800 bg-yellow-50 dark:bg-gray-800 dark:text-yellow-300"
+                  role="alert"
+                >
+                  {displayErrorMessage && (
+                    <h3>
+                      Reset <span className="font-bold text-xl text-red-500">failed</span>! Please
+                      try running it again or refreshing the page.
+                    </h3>
+                  )}
+                  {archivedMessage !== "" && <h3>{archivedMessage}</h3>}
+                </div>
+              </section>
+            ) : null}
+
+            {/* Progress Bar Card */}
+            {isResetting && (
+              <section className="bg-gray-800 shadow rounded-lg p-4 mb-8">
+                <div className="flex justify-between mb-4">
+                  <h2 className="text-xl font-semibold text-white ">Reset Progress</h2>
+                  {resetProgress === 100 && (
+                    <button onClick={() => setIsResetting(false)}>
+                      <XIcon />
+                    </button>
+                  )}
+                </div>
+
+                <p className="text-base text-white mb-4">{resetProgressMessage}</p>
+                <div className="w-full bg-gray-700 rounded-full h-4 mb-4">
+                  <div
+                    className="bg-purple-600 h-4 rounded-full transition-all duration-500 ease-out"
+                    style={{ width: `${resetProgress}%` }}
+                  ></div>
+                </div>
+                <p className="text-gray-300">Progress: {resetProgress}%</p>
+              </section>
+            )}
+
+            {/* Code Logs Card */}
+            {(isResetting || displayErrorMessage) && (
+              <section className="bg-gray-800 shadow rounded-lg p-4 mb-8">
+                <div className="flex justify-between mb-4">
+                  <h2 className="text-xl font-semibold text-white ">Code Logs</h2>
+                  {resetProgress === 100 && (
+                    <button onClick={() => setIsResetting(false)}>
+                      <XIcon />
+                    </button>
+                  )}
+                </div>
+
+                <div className="bg-gray-900 p-4 rounded-lg h-48 overflow-y-auto">
+                  {codeLogs.map((log, index) => (
+                    <p key={index} className="text-gray-300 font-mono whitespace-pre-line">
+                      {log}
+                    </p>
+                  ))}
+                </div>
+              </section>
+            )}
+
             <section className="bg-gray-800 shadow rounded-lg p-4 mb-8">
               <h2 className="text-xl font-semibold text-white mb-4">Manually Trigger Winner</h2>
 
@@ -367,10 +430,13 @@ function GameAdminDashboard() {
 
             {[BLUE, RED, PURPLE].map((color, index) => {
               return (
-                // @ts-ignore
-                <section className={`${COLORBACKGROUNDGRADIENT2[color]} shadow rounded-lg p-4 mb-8`} key={index}>
+                <section
+                  // @ts-ignore
+                  className={`${COLORBACKGROUNDGRADIENT2[color]} shadow rounded-lg p-4 mb-8`}
+                  key={index}
+                >
                   <h2 className="text-xl font-semibold text-white mb-4">
-                   {` Manually Trigger ${color.toUpperCase()} Points`}
+                    {` Manually Trigger ${color.toUpperCase()} Points`}
                   </h2>
 
                   <div className="flex flex-wrap gap-8">
@@ -412,70 +478,6 @@ function GameAdminDashboard() {
                 </section>
               );
             })}
-
-            {/* Error Message Bar Card */}
-            {displayErrorMessage || archivedMessage !== "" ? (
-              <div className="bg-gray-800 shadow rounded-lg p-4 mb-8">
-                <h2 className="text-xl font-semibold text-white mb-4">Error Message</h2>
-                <div
-                  className=" text-lg text-yellow-800 bg-yellow-50 dark:bg-gray-800 dark:text-yellow-300"
-                  role="alert"
-                >
-                  {displayErrorMessage && (
-                    <h3>
-                      Reset <span className="font-bold text-xl text-red-500">failed</span>! Please
-                      try running it again or refreshing the page.
-                    </h3>
-                  )}
-                  {archivedMessage !== "" && <h3>{archivedMessage}</h3>}
-                </div>
-              </div>
-            ) : null}
-
-            {/* Progress Bar Card */}
-            {isResetting && (
-              <div className="bg-gray-800 shadow rounded-lg p-4 mb-8">
-                <div className="flex justify-between mb-4">
-                  <h2 className="text-xl font-semibold text-white ">Reset Progress</h2>
-                  {resetProgress === 100 && (
-                    <button onClick={() => setIsResetting(false)}>
-                      <XIcon />
-                    </button>
-                  )}
-                </div>
-
-                <p className="text-base text-white mb-4">{resetProgressMessage}</p>
-                <div className="w-full bg-gray-700 rounded-full h-4 mb-4">
-                  <div
-                    className="bg-purple-600 h-4 rounded-full transition-all duration-500 ease-out"
-                    style={{ width: `${resetProgress}%` }}
-                  ></div>
-                </div>
-                <p className="text-gray-300">Progress: {resetProgress}%</p>
-              </div>
-            )}
-
-            {/* Code Logs Card */}
-            {(isResetting || displayErrorMessage) && (
-              <div className="bg-gray-800 shadow rounded-lg p-4 mb-8">
-                <div className="flex justify-between mb-4">
-                  <h2 className="text-xl font-semibold text-white ">Code Logs</h2>
-                  {resetProgress === 100 && (
-                    <button onClick={() => setIsResetting(false)}>
-                      <XIcon />
-                    </button>
-                  )}
-                </div>
-
-                <div className="bg-gray-900 p-4 rounded-lg h-48 overflow-y-auto">
-                  {codeLogs.map((log, index) => (
-                    <p key={index} className="text-gray-300 font-mono whitespace-pre-line">
-                      {log}
-                    </p>
-                  ))}
-                </div>
-              </div>
-            )}
 
             {/* Player Management */}
             {/* <div className="bg-gray-800 shadow rounded-lg p-4 mb-8">
