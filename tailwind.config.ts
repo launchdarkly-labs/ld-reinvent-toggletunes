@@ -24,6 +24,12 @@ const config: Config = {
           "linear-gradient(126.05deg, #FFFFFF 50.31%, rgba(255, 255, 255, 0) 123.98%)",
         "gradient-scoreboard-timer-background":
           "linear-gradient(180deg, #151515 0%, rgba(125, 125, 125, 0) 100%)",
+        "gradient-purple-winner-background":
+          "linear-gradient(218.69deg, #405BFF 2.83%, #A34FDE 105.13%)",
+        "gradient-red-winner-background":
+          "linear-gradient(223.42deg, #FF386B -1.29%, #A34FDE 110.16%)",
+        "gradient-blue-winner-background":
+          "linear-gradient(224.68deg, #405BFF -5.3%, #3DD6F5 112.86%)",
       },
       colors: {
         context: "var(--context-color)",

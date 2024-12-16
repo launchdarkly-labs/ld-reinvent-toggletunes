@@ -30,26 +30,26 @@ AlertDialogOverlay.displayName = AlertDialogPrimitive.Overlay.displayName;
 const AlertDialogContent = React.forwardRef(({ className, variant, ...props }, ref) => {
   let backgroundClass = "";
   switch (variant) {
-      case BLUE:
-        console.log("triggering blue");
-        backgroundClass =
-          "bg-[url('https://utfs.io/f/o5A3nMDIMFiPp3IQJ0VEzjHOnlDA2g81YXuS56xwGV7toJM3')] text-white";
-        break;
-      case PURPLE:
-        console.log("triggering purple");
-        backgroundClass =
-          "bg-[url('https://utfs.io/f/o5A3nMDIMFiPkLcbrVXp1wRZQP3KSqAyxbDeOHCdiYsvzWtB')] text-white";
-        break;
-      case RED:
-        console.log("triggering red");
-        backgroundClass =
-          "bg-[url('https://utfs.io/f/o5A3nMDIMFiPprQoyNVEzjHOnlDA2g81YXuS56xwGV7toJM3')] text-white";
-        break;
-      case GREEN:
-        console.log("triggering green");
-        backgroundClass =
-          "bg-[url('https://uploadthing.com/f/9ece43b7-0efc-442a-917c-d766ec1b2f8e-wkjqfr.gif')] text-black";
-        break;
+    case BLUE:
+      console.log("triggering blue");
+      backgroundClass =
+        "bg-[url('/images/gifs/blueWinner50mb.gif')] text-white";
+      break;
+    case RED:
+      console.log("triggering red");
+      backgroundClass =
+        "bg-[url('/images/gifs/redWinner50mb.gif')] text-white";
+      break;
+    case PURPLE:
+      console.log("triggering purple");
+      backgroundClass =
+        "bg-[url('/images/gifs/purpleWinner50mb.gif')] text-white";
+      break;
+    case GREEN:
+      console.log("triggering green");
+      backgroundClass =
+        "bg-[url('https://uploadthing.com/f/9ece43b7-0efc-442a-917c-d766ec1b2f8e-wkjqfr.gif')] text-black";
+      break;
     case "tie":
       console.log("triggering tie");
       backgroundClass = "bg-ldgray text-white";
@@ -76,7 +76,7 @@ const AlertDialogContent = React.forwardRef(({ className, variant, ...props }, r
           }}
           ref={ref}
           className={cn(
-            "fixed bg-cover z-50 grid w-screen h-screen translate-x-[-50%] translate-y-[-50%] gap-4 bg-slate-700 font-sohne p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg",
+            "fixed bg-cover z-50 grid w-screen h-screen ",
             backgroundClass,
             className
           )}
@@ -146,7 +146,7 @@ const AlertDialogTitle = React.forwardRef(
       document.addEventListener("keydown", handleKeyDown);
 
       if (animationStarted && currentIndex < stringsArray.length) {
-        const timeout = setTimeout(onAnimationComplete, 2000);
+        const timeout = setTimeout(onAnimationComplete, 1500);
         return () => {
           clearTimeout(timeout);
         };

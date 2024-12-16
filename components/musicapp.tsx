@@ -1,4 +1,4 @@
-// @ts-ignore
+
 import ItemCard from "@/components/ItemCard";
 import SideBar from "@/components/Sidebar";
 import { motion } from "framer-motion";
@@ -17,6 +17,7 @@ import {
   useSelf,
   useLostConnectionListener,
 } from "../liveblocks.config";
+import Head from "next/head";
 
 import { Room } from "./room";
 import SimplePlayerScreen from "./SimplePlayerScreen";
@@ -49,6 +50,11 @@ import {
   STEPFIVECOMPLETE,
   PERSONA_ROLE_DEVELOPER,
   WINNER,
+  RED,
+  BLUE,
+  PURPLE,
+  RANDOMSONGOBJECT,
+  IMAGECOLORSRCMAP
 } from "@/lib/constant";
 import Navbar from "./Navbar";
 import LoginContext from "@/lib/LoginContext";
@@ -88,8 +94,9 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
   const [countNumReleaseGuardianAdSidebar, setCountNumReleaseGuardianAdSidebar] = useState(0);
   const [showLostConnectionModal, setShowLostConnectionModal] = useState(false);
   const [clickCounter, setClickCounter] = useState(0);
-  const layerIds = useStorage((root) => root);
-  console.log("layerIds", layerIds);
+  const [winnerName, setWinnerName] = useState("");
+  // const layerIds = useStorage((root) => root);
+  // console.log("layerIds", layerIds);
   // @ts-ignore
   // const layerIds2 = useStorage((root) => root.totalPoints);
   // console.log("layerIds2", layerIds2);
@@ -98,7 +105,7 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
   const { userObject } = useContext(LoginContext);
 
   useLostConnectionListener((event) => {
-    console.log("event",event)
+    console.log("event", event);
     switch (event) {
       case "lost":
         setShowLostConnectionModal(true);
@@ -241,7 +248,7 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
       id: uuidv4().slice(0, 4),
       title:
         aiGeneratedSonglistAnswerFormatted[randomNumberGen(aiGeneratedSonglistAnswerFormatted)]
-          .playlistName,
+          ?.playlistName,
       color:
         randomNumDefaultListOfGeneratedSongs === 0
           ? colors.emerald
@@ -261,7 +268,7 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
   async function submitReleaseGuardianQuery(): Promise<void> {
     // @ts-ignore
     const projectKey: string = LDPROJECTKEYSVALUEOBJECTS[teamName];
-    setClickCounter(prev=>prev+1);
+    setClickCounter((prev) => prev + 1);
     const environmentKey = "test";
     const flag_key = "release-new-ad-sidebar";
     setIsLoadingApp(true);
@@ -308,6 +315,10 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
   const reloadPage = async () => {
     await router.reload();
   };
+  //@ts-ignore
+  const chosenSong = RANDOMSONGOBJECT[teamColor];
+  const audio = new Audio(chosenSong);
+  audio.loop = true;
 
   useEffect(() => {
     const triggerSteps = async () => {
@@ -318,7 +329,6 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
             type: teamColor,
             complete: STEPONECOMPLETE,
             score: 20,
-            totalPointAccumulation: totalPointAccumulation,
           });
           setFlagOne(true);
         } else {
@@ -331,7 +341,6 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
             type: teamColor,
             complete: STEPTWOONECOMPLETE,
             score: 10,
-            totalPointAccumulation: totalPointAccumulation,
           });
           setFlagTwoOne(true);
           // await triggerStep("second step complete", "stepTwoComplete");
@@ -350,7 +359,6 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
             type: teamColor,
             complete: STEPTWOCOMPLETE,
             score: 10,
-            totalPointAccumulation: totalPointAccumulation,
           });
           setFlagTwo(true);
           // await triggerStep("second step complete", "stepTwoComplete");
@@ -368,7 +376,6 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
             type: teamColor,
             complete: STEPTHREECOMPLETE,
             score: 20,
-            totalPointAccumulation: totalPointAccumulation,
           });
           setFlagThree(true);
           // await triggerStep("fourth step complete", "stepFourComplete");
@@ -382,7 +389,6 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
             type: teamColor,
             complete: STEPFOURONECOMPLETE,
             score: 10,
-            totalPointAccumulation: totalPointAccumulation,
           });
           setFlagFourOne(true);
         } else {
@@ -400,7 +406,6 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
             type: teamColor,
             complete: STEPFOURCOMPLETE,
             score: 10,
-            totalPointAccumulation: totalPointAccumulation,
           });
           setFlagFour(true);
 
@@ -410,25 +415,34 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
         }
 
         if (
-          (releaseAdSidebarLDFlag || releaseAdSidebarManually || clickCounter >= 3) &&
-          releaseReleaseGuardianButton === true 
+          (releaseAdSidebarLDFlag || releaseAdSidebarManually || clickCounter >= 2) &&
+          releaseReleaseGuardianButton === true
         ) {
           setTotalPointAccumulation((prevPoints) => prevPoints + 20);
           broadcast({
             type: teamColor,
             complete: STEPFIVECOMPLETE,
             score: 20,
-            totalPointAccumulation: totalPointAccumulation,
           });
           setFlagFive(true);
+
+          broadcast({ type: `${teamColor}${WINNER}` });
+          setWinnerName(teamColor);
+          setShowWinnerModal(true);
+
+          audio.pause(); //cause audio to stop
+          audio.currentTime = 0;
+
+          audio.play();
         } else {
           console.log("Step 5 not eligible for evaluation!");
         }
 
-        if (flagFive === true && totalPointAccumulation >= 80 ) { //if you get flagFive true and points above 80 still
-          broadcast({ type: `${teamColor}${WINNER}` });
-          setShowWinnerModal(true);
-        }
+        // if (flagFive === true && totalPointAccumulation >= 80) {
+        //   //if you get flagFive true and points above 80 still
+        //   broadcast({ type: `${teamColor}${WINNER}` });
+        //   setShowWinnerModal(true);
+        // }
       } catch (err) {
         console.error(err);
       }
@@ -443,7 +457,7 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
     releaseAdSidebarLDFlag,
     releaseAdSidebarManually,
     aiPlaylists,
-    totalPointAccumulation,
+    clickCounter,
   ]);
 
   useEffect(() => {
@@ -479,9 +493,29 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
 
   return (
     <>
-      {/* 
-// @ts-ignore */}
-      <EventListenerComponent reloadPage={reloadPage} />
+      <EventListenerComponent
+        // @ts-ignore
+        reloadPage={reloadPage}
+        setShowWinnerModal={setShowWinnerModal}
+        setWinnerName={setWinnerName}
+      />
+
+      <Head>
+   {/* @ts-ignore */}
+        <link rel="preload" href={IMAGECOLORSRCMAP[teamColor]} as="image" />
+        <link rel="preload" href={"/images/Casette.png"} as="image" />
+        <link rel="preload" href={"/images/Code me maybe.png"} as="image" />
+        <link rel="preload" href={"/images/Spotlight.png"} as="image" />
+        <link rel="preload" href={"/images/Kill switcher cover.png"} as="image" />
+        <link rel="preload" href={"/images/Used to code me cover.png"} as="image" />
+        <link rel="preload" href={"/images/heart.png"} as="image" />
+        <link rel="preload" href={"/images/Shipper beats cover.png"} as="image" />
+        <link rel="preload" href={"/images/Rollback Mix cover.png"} as="image" />
+        <link rel="preload" href={"/images/Launch Party Jams cover.png"} as="image" />
+        <link rel="preload" href={"/images/Cosmic vibes cover.png"} as="image" />
+        <link rel="preload" href={"/images/Codebreaker blues cover.png"} as="image" />
+        <link rel="preload" href={"/images/ToggleTunes.png"} as="image" />
+      </Head>
       <main className="flex flex-col gap-2 font-sohne bg-black overflow-y-visible h-screen lg:overflow-y-hidden">
         {releaseTracklistLDFlag && (
           <section className="w-full flex flex-col ">
@@ -669,7 +703,7 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
 
                       {aiPlaylists.map((playlist: PlaylistInterface) => {
                         return (
-                          <Link key={playlist.id} href={`/playlist/${playlist.id}`}>
+                          // <Link key={playlist.id} href={`/playlist/${playlist.id}`}>
                             <motion.div
                               initial={{ opacity: 0, scale: 0.25 }}
                               animate={{ opacity: 1, scale: 1 }}
@@ -703,7 +737,7 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
                                 </p>
                               </div>
                             </motion.div>
-                          </Link>
+                          //  </Link> 
                         );
                       })}
                     </div>
@@ -763,7 +797,7 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
           <SimplePlayerScreen />
         )}
       </main>
-      {showWinnerModal ? <Modal winnerName={teamColor} /> : null}
+      {showWinnerModal ? <Modal winnerName={winnerName} setWinnerName={setWinnerName} /> : null}
       {showLostConnectionModal ? (
         <LostConnectionModal showLostConnectionModal={showLostConnectionModal} />
       ) : null}
@@ -772,13 +806,19 @@ export default function MusicApp({ teamColor, teamName }: { teamColor: string; t
 }
 // @ts-ignore
 const EventListenerComponent = memo(function EventListenerComponent({
-  // @ts-ignore
   reloadPage,
+  setShowWinnerModal,
+  setWinnerName,
+}: {
+  reloadPage: any;
+  setShowWinnerModal: any;
+  setWinnerName: any;
 }) {
   console.log("Event listener online");
   useEventListener(({ event, user, connectionId }) => {
     async function resetFlagSteps(event: any) {
       console.log(event);
+
       switch (event.type) {
         case "resetTimer":
           await reloadPage(); // Call reloadPage when event type is "resetTimer"
@@ -786,6 +826,42 @@ const EventListenerComponent = memo(function EventListenerComponent({
         case "reload":
           await reloadPage();
           break;
+        case `${RED}${WINNER}`:
+          setWinnerName(RED);
+          setShowWinnerModal(true);
+
+          const chosenSong = RANDOMSONGOBJECT[RED];
+          const audio = new Audio(chosenSong);
+          audio.loop = true;
+
+          audio.pause(); //cause audio to stop
+          audio.currentTime = 0;
+          audio.play();
+
+          break;
+        case `${BLUE}${WINNER}`:
+          setWinnerName(BLUE);
+          setShowWinnerModal(true);
+          const chosenSong2 = RANDOMSONGOBJECT[BLUE];
+          const audio2 = new Audio(chosenSong2);
+          audio2.loop = true;
+
+          audio2.pause(); //cause audio to stop
+          audio2.currentTime = 0;
+          audio2.play();
+          break;
+        case `${PURPLE}${WINNER}`:
+          setWinnerName(PURPLE);
+          setShowWinnerModal(true);
+          const chosenSong3 = RANDOMSONGOBJECT[PURPLE];
+          const audio3 = new Audio(chosenSong3);
+          audio3.loop = true;
+
+          audio3.pause(); //cause audio to stop
+          audio3.currentTime = 0;
+          audio3.play();
+          break;
+
         default:
           console.log("invalid event type");
       }

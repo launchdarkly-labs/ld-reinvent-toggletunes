@@ -50,3 +50,29 @@ export const LDPROJECTKEYSVALUEOBJECTS: {
 };
 
 export const WINNER = "Winner";
+
+export const RANDOMSONGOBJECT = {
+  // [RED]: "audio/usher-yeah.mp3",
+  [BLUE]: "audio/hardwell-ifeellikedancing.mp3",
+  [PURPLE]: "audio/zedd-clarity.mp3",
+  [RED]: "audio/djkhaled-allDoWin.mp3",
+  // 4: "audio/usher-yeah2.mp3",
+};
+
+export const GIFCOLORSRCMAP = {
+  [BLUE]: "/images/gifs/blueWinner50mb.gif",
+  [PURPLE]: '/images/gifs/purpleWinner50mb.gif',
+  [RED]: '/images/gifs/redWinner50mb.gif',
+}
+
+export const IMAGECOLORSRCMAP = {
+  [RED]: "/images/gifs/redWinnerImg.svg",
+  [BLUE]: "/images/gifs/blueWinnerImg.svg",
+  [PURPLE]: "/images/gifs/purpleWinnerImg.svg",
+};
+
+export const COLORBACKGROUNDGRADIENT = {
+  [RED]: "bg-gradient-red-winner-background",
+  [BLUE]: "bg-gradient-blue-winner-background",
+  [PURPLE]: "bg-gradient-purple-winner-background",
+};
